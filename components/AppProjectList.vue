@@ -62,7 +62,7 @@
                         :is_project_with_duration="item.content.isprojectwithduration"
                         :date_end="item.content.dateend"
                         :is-report="isReport"
-                        :is-modus-project="item.content.projecttype === 'modus'"
+                        :project-type="item.content.projecttype"
                 />
               </div>
             </template>
@@ -92,7 +92,7 @@
                         :is_project_with_duration="item.content.isprojectwithduration"
                         :date_end="item.content.dateend"
                         :is-report="isReport"
-                        :is-modus-project="item.content.projecttype === 'modus'"
+                        :project-type="item.content.projecttype"
                 />
               </div>
             </template>

@@ -1,7 +1,7 @@
 <template>
     <app-item-card
         :card-type="'default'"
-        :is-modus="isModusProject"
+        :project-type="projectType"
         :img-src="img_src"
         :object-position="object_position"
         :date-label="formatDateRange(date_start, date_end)"
@@ -33,7 +33,7 @@ const props = defineProps<{
     is_project_with_duration?: "true" | "false",
     date_end?: string,
     isReport?: boolean,
-    isModusProject?: boolean,
+    projectType?: string,
 }>()
 
 const status: ComputedRef<null | 'En cours' | 'Terminé'> = computed(() => {

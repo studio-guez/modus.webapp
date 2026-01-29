@@ -2,7 +2,7 @@
     <section class="v-app-item-card"
              :class="[
                  cardTypeClass,
-                 { 'v-app-item-card--modus': isModus }
+                 { 'v-app-item-card--modus': projectType === 'modus' }
              ]"
              @click="$emit('click')"
     >
@@ -73,7 +73,7 @@ defineEmits<{
 
 const props = withDefaults(defineProps<{
     cardType?: 'default' | 'video' | 'podcast' | 'report' | 'tool'
-    isModus?: boolean
+    projectType?: string
     imgSrc?: string
     objectPosition?: string
     dateLabel?: string
