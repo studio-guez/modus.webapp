@@ -1,7 +1,6 @@
 export interface IApiPage {
     "options": {
         "showInNav": boolean,
-        "showNewsletter": boolean,
         "headerTitle": string,
         "headerImage": IApiImage | null
         dateStart: string,
@@ -313,7 +312,6 @@ export interface IApiImage {
 export interface IApiProjects {
     "options": {
         "showInNav": boolean,
-        "showNewsletter": boolean,
         "headerTitle": string,
         "headerImage": IApiImage | null
     },
@@ -329,7 +327,6 @@ export interface IApiSingleProject {
         "title": string,
         "headerimage": string,
         "showinnav": "false" | "true",
-        "shownewsletter": "true" | "false",
         "headertitle": string,
         "body": IApiBody,
         "pdffile": string,
@@ -360,9 +357,6 @@ export interface IApiSiteInfoChildren {
     },
     "showinnav": {
         "value": "false" | "true"
-    },
-    "shownewsletter": {
-        "value": "true" | "false"
     },
     "headertitle": {
         "value": string
