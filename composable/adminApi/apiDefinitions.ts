@@ -1,51 +1,9 @@
-export type ApiProjectType =
-    'platform'
-    | 'laboratory'
-    | 'library'
-    | 'imaginary'
-    | 'planting'
-
-export type ApiProjectMap = {[key in ApiProjectType]: string}
-
-export const apiProjectMap: ApiProjectMap = {
-    'imaginary' : 'La Fabrique des Imaginaires',
-    'laboratory' : 'Le Laboratoire',
-    'platform' : 'La Plateforme',
-    'planting' : 'La Plantation',
-    'library' : 'La Bibliothèque',
-}
-
-const apiProjectTypes: ApiProjectType[] = (() => {
-    return [
-        'platform',
-        'laboratory',
-        'library',
-        'imaginary',
-        'planting',
-    ];
-})();
-
-export const isApiProjectType = (str: string): str is ApiProjectType => {
-    return apiProjectTypes.includes(str as ApiProjectType);
-};
-
-export const imageUrlMap: ApiProjectMap = {
-    'library':   'img_bibliotheque.svg',
-    'imaginary':   'img_imaginaires.svg',
-    'laboratory': 'img_laboratoire.svg',
-    'planting':  'img_plantation.svg',
-    'platform':  'img_plateforme.svg',
-}
-
-
-
 export interface IApiPage {
     "options": {
         "showInNav": boolean,
         "showNewsletter": boolean,
         "headerTitle": string,
         "headerImage": IApiImage | null
-        "category": ApiProjectType | undefined
         dateStart: string,
         isProjectWithDuration: "true" | "false",
         dateEnd: string,
@@ -376,10 +334,10 @@ export interface IApiSingleProject {
         "body": IApiBody,
         "pdffile": string,
         "uuid": string,
-        device: ApiProjectType
         datestart: string,
         isprojectwithduration: "true" | "false",
         dateend: string,
+        tags?: string[],
     }
 }
 

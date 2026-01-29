@@ -16,7 +16,7 @@
             </div>
             <div class="v-app-project-theme__header__bottom">
                 <h4 class="v-app-project-theme__header__type"
-                >{{ apiProjectMap[projectType] }}</h4>
+                >{{ projectType }}</h4>
             </div>
         </div>
 
@@ -47,15 +47,14 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import {ApiProjectMap, apiProjectMap, ApiProjectType} from "~/composable/adminApi/apiDefinitions";
 
 const props = defineProps<{
-    projectType?: ApiProjectType
+    projectType?: string
     title?: string
     content?: string
 }>()
 
-const imageUrlMap: ApiProjectMap = {
+const imageUrlMap: Record<string, string> = {
     'library':   'img_bibliotheque.svg',
     'imaginary':   'img_imaginaires.svg',
     'laboratory': 'img_laboratoire.svg',
@@ -63,7 +62,7 @@ const imageUrlMap: ApiProjectMap = {
     'platform':  'img_plateforme.svg',
 }
 
-const imgSrcMap: ApiProjectMap = {
+const imgSrcMap: Record<string, string> = {
     'library': '240603_Modus-bibliothque.jpg',
     'imaginary':  '240603_Modus-fabriquedesimaginaires.jpg',
     'laboratory':  '240603_Modus-laboratoire.jpg',

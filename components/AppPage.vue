@@ -34,18 +34,8 @@
             <div class="v-app-page__path__content app-font-small">
                 <nuxt-link href="/">Home</nuxt-link> / <nuxt-link href="/projects/">Les Projets Modus</nuxt-link> <span class="v-app-page__path__content__title">/ {{headerText?.split(' ').slice(0, 8).join(' ')}}…</span>
                 <div style="padding-top: .5rem; display: flex; justify-content: space-between; flex-direction: row; gap: 1rem; flex-wrap: wrap"
-                     v-if="category"
+                     v-if="status"
                 >
-                  <div style="
-                          font-weight: 600;
-                          font-size: .75rem;
-                          border: solid;
-                          display: block;
-                          border-radius: 2rem;
-                          padding: .15rem .5rem .25rem;
-                          color: white;
-                          background: var(--app-color-main--dark);
-                        ">{{apiProjectMap[category]}}</div>
                   <div class="v-app-page__status-button"
                        style="
                           font-weight: 600;
@@ -60,7 +50,6 @@
                           min-width: 3rem;
                           text-align: center;
                           "
-                       v-if="status"
                   >{{status}}</div>
                 </div>
             </div>
@@ -268,9 +257,6 @@
 import { defineProps } from 'vue'
 import {useIsIntersected} from "~/composable/main";
 import {
-    apiProjectMap,
-    ApiProjectMap,
-    ApiProjectType,
     IApiBody,
     IApiPage__subpage
 } from "~/composable/adminApi/apiDefinitions";
@@ -290,7 +276,6 @@ const props = defineProps<{
   withoutBody?: boolean
   titleContent?: string
   path?: boolean
-  category?: ApiProjectType
   date_start?: string,
   is_project_with_duration?: "true" | "false",
   date_end?: string,

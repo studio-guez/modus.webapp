@@ -1,6 +1,6 @@
 <template>
     <section
-        class="v-project-slug"
+        class="v-report-slug"
     >
         <app-page
             :header-cover="headerCover"
@@ -11,11 +11,9 @@
             :header-size="'small'"
             :header-text="headerText"
             :date_start="dateStart"
-            :is_project_with_duration="isProjectWithDuration"
-            :date_end="dateEnd"
-            :power_subpages="powerSubpages"
+            :tags="tags"
         />
-        <div class="v-project-slug__footer">
+        <div class="v-report-slug__footer">
           <div style="display: flex; justify-content: center; flex-direction: column; align-items: center; gap: .5rem; cursor: pointer"
                @click="shareClicked"
           >
@@ -34,9 +32,9 @@
 
 
 <script setup lang="ts">
-import {defineProps, Ref, UnwrapRef} from 'vue'
+import {Ref, UnwrapRef} from 'vue'
 import AppPage from "~/components/AppPage.vue";
-import {IApiBody, IApiPage__subpage} from "~/composable/adminApi/apiDefinitions";
+import {IApiBody} from "~/composable/adminApi/apiDefinitions";
 import {ApiFetchPage} from "~/composable/adminApi/apiFetch";
 import {copyCurrentUrlToClipboard} from "~/utils/copyCurrentUrlToClipboard";
 
@@ -47,18 +45,15 @@ const headerText: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 const bodyTitle: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 const bodyContent: Ref<UnwrapRef<undefined | IApiBody>> = ref(undefined)
 
-const dateStart: Ref<UnwrapRef<undefined | string>>              = ref(undefined)
-const isProjectWithDuration: Ref<UnwrapRef<undefined | string>>  = ref(undefined)
-const dateEnd: Ref<UnwrapRef<undefined | string>>                = ref(undefined)
-
-const powerSubpages: Ref<UnwrapRef<undefined | IApiPage__subpage[]>>            = ref(undefined)
+const dateStart: Ref<UnwrapRef<undefined | string>> = ref(undefined)
+const tags: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 
 onMounted(async () => {
     const slug = useRoute()?.params?.slug
 
     if(typeof slug !== 'string') return
 
-    const pageData = await ApiFetchPage(`projects/${slug}`)
+    const pageData = await ApiFetchPage(`bibliotheque/${slug}`)
 
     console.log(pageData)
 
@@ -70,10 +65,7 @@ onMounted(async () => {
     bodyContent.value = pageData.body
 
     dateStart.value = pageData.options.dateStart
-    isProjectWithDuration.value = pageData.options.isProjectWithDuration
-    dateEnd.value = pageData.options.dateEnd
-
-    powerSubpages.value = pageData.options.subpages
+    tags.value = (pageData.options as any).tags
 })
 
 const textButton = ref('Copier le lien de cette page')
@@ -91,14 +83,14 @@ function shareClicked() {
 
 
 <style lang="scss" scoped >
-.v-project-slug__footer {
+.v-report-slug__footer {
   display: flex;
   background-color: var(--app-color-grey);
   position: relative;
   justify-content: center;
 }
 
-.v-project-slug__footer {
+.v-report-slug__footer {
   svg {
     display: block;
     position: relative;
