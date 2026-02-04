@@ -76,8 +76,8 @@ const headings = computed<HeadingItem[]>(() => {
       }
     }
     
-    // Handle body blocks that may contain h2 elements
-    if (item.content?.type === 'body' && item.content?.content?.text) {
+    // Handle reportbody blocks that may contain h2 elements
+    if (item.content?.type === 'reportbody' && item.content?.content?.text) {
       const htmlText = item.content.content.text
       const h2Regex = /<h2[^>]*>(.*?)<\/h2>/gi
       let match

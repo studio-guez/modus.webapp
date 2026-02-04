@@ -10,9 +10,8 @@
         v-for="(item, index) in items" 
         :key="index"
         class="v-report-list__item"
-      >
-        {{ item }}
-      </li>
+        v-html="item"
+      />
     </ul>
   </div>
 </template>

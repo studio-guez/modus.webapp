@@ -84,6 +84,18 @@ const processedText = computed(() => {
   :deep(strong) {
     font-weight: 600;
   }
+
+  // Bibliography reference styling [1], [2], etc.
+  :deep(b) {
+    color: var(--app-color-main);
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: var(--app-color-main--dark);
+    }
+  }
   
   :deep(em) {
     font-style: italic;
