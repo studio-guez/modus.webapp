@@ -10,8 +10,9 @@
         :preview="preview"
         :status="status"
         :status-color="statusColor"
-        :href="isReport ? `/report/${slug}` : `/project/${slug}`"
-        action-label="Découvrir"
+        :href="cardHref"
+        :action-label="isExternalLink ? 'Ouvrir ↗' : 'Découvrir'"
+        :is-external-link="isExternalLink"
         @click="handleClick"
     />
 </template>
@@ -34,6 +35,8 @@ const props = defineProps<{
     date_end?: string,
     isReport?: boolean,
     projectType?: string,
+    isExternalLink?: boolean,
+    externalUrl?: string,
 }>()
 
 const status: ComputedRef<null | 'En cours' | 'Terminé'> = computed(() => {
@@ -46,7 +49,18 @@ const statusColor: ComputedRef<string> = computed(() => {
     return status.value === 'En cours' ? 'var(--app-color-orange)' : 'var(--app-color-main--dark)'
 })
 
+const cardHref = computed(() => {
+    if (props.isExternalLink && props.externalUrl) {
+        return props.externalUrl
+    }
+    return props.isReport ? `/report/${props.slug}` : `/project/${props.slug}`
+})
+
 function handleClick() {
+    if (props.isExternalLink && props.externalUrl) {
+        window.open(props.externalUrl, '_blank')
+        return
+    }
     const basePath = props.isReport ? '/report' : '/project'
     useRouter().push(`${basePath}/${props.slug}`)
 }

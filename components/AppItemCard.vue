@@ -55,7 +55,14 @@
                          v-if="status"
                          :style="{ backgroundColor: statusColor, borderColor: statusColor }"
                     >{{ status }}</div>
-                    <nuxt-link class="app-button app-button--small"
+                    <a v-if="isExternalLink"
+                       class="app-button app-button--small"
+                       :href="href"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                    >{{ actionLabel }}</a>
+                    <nuxt-link v-else
+                               class="app-button app-button--small"
                                :href="href"
                     >{{ actionLabel }}</nuxt-link>
                 </slot>
@@ -86,9 +93,11 @@ const props = withDefaults(defineProps<{
     statusColor?: string
     href?: string
     actionLabel?: string
+    isExternalLink?: boolean
 }>(), {
     cardType: 'default',
     actionLabel: 'Découvrir',
+    isExternalLink: false,
 })
 
 const cardTypeClass = computed(() => `v-app-item-card--${props.cardType}`)

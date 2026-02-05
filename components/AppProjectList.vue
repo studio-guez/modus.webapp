@@ -63,6 +63,8 @@
                         :date_end="item.content.dateend"
                         :is-report="isReport"
                         :project-type="item.content.projecttype"
+                        :is-external-link="item.content.isexternallink === 'true'"
+                        :external-url="item.content.externalurl"
                 />
               </div>
             </template>
@@ -93,6 +95,8 @@
                         :date_end="item.content.dateend"
                         :is-report="isReport"
                         :project-type="item.content.projecttype"
+                        :is-external-link="item.content.isexternallink === 'true'"
+                        :external-url="item.content.externalurl"
                 />
               </div>
             </template>
