@@ -53,7 +53,7 @@ const cardHref = computed(() => {
     if (props.isExternalLink && props.externalUrl) {
         return props.externalUrl
     }
-    return props.isReport ? `/report/${props.slug}` : `/project/${props.slug}`
+    return props.isReport ? `/rapport/${props.slug}` : `/project/${props.slug}`
 })
 
 function handleClick() {
@@ -61,7 +61,7 @@ function handleClick() {
         window.open(props.externalUrl, '_blank')
         return
     }
-    const basePath = props.isReport ? '/report' : '/project'
+    const basePath = props.isReport ? '/rapport' : '/project'
     useRouter().push(`${basePath}/${props.slug}`)
 }
 </script>

@@ -7,7 +7,7 @@
         :title="title"
         :subtitle="subtitle"
         :preview="preview"
-        :href="`/report/${slug}`"
+        :href="`/rapport/${slug}`"
         action-label="consulter"
         @click="handleClick"
     >
@@ -47,7 +47,7 @@ const displayTags = computed(() => {
 })
 
 function handleClick() {
-    useRouter().push(`/report/${props.slug}`)
+    useRouter().push(`/rapport/${props.slug}`)
 }
 </script>
 

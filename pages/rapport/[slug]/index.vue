@@ -110,7 +110,7 @@
 
             <h2 class="v-report-page__section-title" style="margin-top: 2rem">Rapports en lien</h2>
             <div v-if="relatedReports.length > 0" class="v-report-page__related-list">
-              <nuxt-link v-for="report in relatedReports" :key="report.slug" :href="`/report/${report.slug}`"
+              <nuxt-link v-for="report in relatedReports" :key="report.slug" :href="`/rapport/${report.slug}`"
                 class="v-report-page__related-item">
                 {{ report.title }} - {{ formatYear(report.dateStart) }}
               </nuxt-link>
@@ -223,7 +223,7 @@ const backendBaseUrl = import.meta.env.DEV
 // PDF download URL
 const pdfDownloadUrl = computed(() => {
   if (!currentSlug.value) return '#'
-  return `${backendBaseUrl}/bibliotheque/${currentSlug.value}/report.pdf`
+  return `${backendBaseUrl}/rapport/${currentSlug.value}/pdf`
 })
 
 // Convert bodyContent to array (handles both array and object formats from API)
