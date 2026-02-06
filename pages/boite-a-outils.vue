@@ -1,6 +1,7 @@
 <template>
     <app-project-list
         api-endpoint="boite-a-outils"
+        page-type="tool"
         :filter-map="{}"
         filter-description=""
         empty-message="Il n'y a pas encore d'outil pour"

@@ -51,20 +51,11 @@
                    v-for="item of itemsToShow"
                    :key="item.slug"
               >
-                <app-project-item
-                        :title="item.content.title"
-                        :content="item.content.headertitle"
-                        :preview="item.content.preview"
-                        :img_src="item.headerImage[0]?.resize?.reg"
-                        :object_position="item.headerImage[0]?.focus"
-                        :slug="item.slug"
-                        :date_start="item.content.datestart"
-                        :is_project_with_duration="item.content.isprojectwithduration"
-                        :date_end="item.content.dateend"
-                        :is-report="isReport"
-                        :project-type="item.content.projecttype"
-                        :is-external-link="item.content.isexternallink === 'true'"
-                        :external-url="item.content.externalurl"
+                <app-item-card
+                    v-bind="mapItemToCardProps(item, pageType, backendBaseUrl)"
+                    @play-video="handlePlayVideo"
+                    @play-podcast="handlePlayPodcast"
+                    @pdf-download="handlePdfDownload"
                 />
               </div>
             </template>
@@ -83,20 +74,11 @@
           <template v-else>
             <template v-for="item of items" :key="item.slug">
               <div class="v-project__section">
-                <app-project-item
-                        :title="item.content.title"
-                        :content="item.content.headertitle"
-                        :preview="item.content.preview"
-                        :img_src="item.headerImage[0]?.resize?.reg"
-                        :object_position="item.headerImage[0]?.focus"
-                        :slug="item.slug"
-                        :date_start="item.content.datestart"
-                        :is_project_with_duration="item.content.isprojectwithduration"
-                        :date_end="item.content.dateend"
-                        :is-report="isReport"
-                        :project-type="item.content.projecttype"
-                        :is-external-link="item.content.isexternallink === 'true'"
-                        :external-url="item.content.externalurl"
+                <app-item-card
+                    v-bind="mapItemToCardProps(item, pageType, backendBaseUrl)"
+                    @play-video="handlePlayVideo"
+                    @play-podcast="handlePlayPodcast"
+                    @pdf-download="handlePdfDownload"
                 />
               </div>
             </template>
@@ -115,15 +97,27 @@ import AppPage from "~/components/AppPage.vue";
 import {LocationQueryValue} from "vue-router";
 import {IApiSingleProject} from "~/composable/adminApi/apiDefinitions";
 import {ApiFetchProjects} from "~/composable/adminApi/apiFetch";
-import AppProjectMedia from "~/components/AppProjectMedia.vue";
+import AppItemCard from "~/components/AppItemCard.vue";
+import { mapItemToCardProps } from '~/utils/mapItemToCardProps';
+
+export type PageType = 'media' | 'report' | 'tool' | 'project'
 
 const props = defineProps<{
     apiEndpoint: string
     filterMap: Record<string, string>
     filterDescription: string
     emptyMessage: string
-    isReport?: boolean
+    pageType?: PageType
 }>()
+
+const emit = defineEmits<{
+    (e: 'play-video', mediaUrl: string): void
+    (e: 'play-podcast', mediaUrl: string): void
+    (e: 'pdf-download', pdfUrl: string): void
+}>()
+
+const runtimeConfig = useRuntimeConfig()
+const backendBaseUrl = runtimeConfig.public.backendBaseUrl as string
 
 const route = useRoute()
 const router = useRouter()
@@ -199,6 +193,18 @@ const activeFilterLabel: ComputedRef<string | null> = computed(() => {
 watch(() => route.query.q, (newSearch: string | LocationQueryValue[] | undefined) => {
     filter.value = newSearch || null
 })
+
+function handlePlayVideo(mediaUrl: string) {
+    emit('play-video', mediaUrl)
+}
+
+function handlePlayPodcast(mediaUrl: string) {
+    emit('play-podcast', mediaUrl)
+}
+
+function handlePdfDownload(pdfUrl: string) {
+    emit('pdf-download', pdfUrl)
+}
 </script>
 
 

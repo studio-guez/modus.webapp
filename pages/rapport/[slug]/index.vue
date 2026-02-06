@@ -164,7 +164,6 @@ import AppReportHeading from '~/components/AppReportHeading.vue'
 import AppReportText from '~/components/AppReportText.vue'
 import AppReportImage from '~/components/AppReportImage.vue'
 import AppReportList from '~/components/AppReportList.vue'
-import AppReportItem from '~/components/AppReportItem.vue'
 
 interface BibliographyItem {
   id?: string

@@ -1,6 +1,12 @@
 <template>
-    <app-project-list api-endpoint="bibliotheque" :filter-map="tagMap" filter-description="Filtré par tag"
-        empty-message="Il n'y a pas encore de rapport pour" :is-report="true" />
+    <app-project-list 
+        api-endpoint="bibliotheque" 
+        page-type="report"
+        :filter-map="tagMap" 
+        filter-description="Filtré par tag"
+        empty-message="Il n'y a pas encore de rapport pour" 
+        @pdf-download="handlePdfDownload"
+    />
 </template>
 
 <script setup lang="ts">
@@ -29,5 +35,9 @@ const tagMap = {
     "enfance": "Enfance",
     "sante": "Santé",
     "seniors": "Seniors",
+}
+
+function handlePdfDownload(pdfUrl: string) {
+    window.open(pdfUrl, '_blank')
 }
 </script>

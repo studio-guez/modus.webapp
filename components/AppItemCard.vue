@@ -1,71 +1,79 @@
 <template>
     <section class="v-app-item-card"
-             :class="[
-                 cardTypeClass,
-                 { 'v-app-item-card--modus': projectType === 'modus' }
-             ]"
-             @click="$emit('click')"
+             :class="cardTypeClass"
     >
-        <div class="v-app-item-card__header">
-            <img class="v-app-item-card__header__img"
-                 alt="cover"
-                 :src="imgSrc"
-                 :style="{ objectPosition: objectPosition }"
-            />
-            <div class="v-app-item-card__header__date" v-if="dateLabel">
-                {{ dateLabel }}
-            </div>
-            <div class="v-app-item-card__header__overlay" v-if="$slots.overlay">
-                <slot name="overlay" />
-            </div>
-        </div>
-
-        <div class="v-app-item-card__body child-remove-margin">
-            <h4 class="v-app-item-card__title">{{ title }}</h4>
-            <div class="v-app-item-card__subtitle child-remove-margin"
-                 v-if="subtitle"
-                 v-html="subtitle"
-            />
-            <div class="v-app-item-card__preview"
-                 v-if="preview"
-                 v-html="preview"
-            />
-            <slot name="body" />
-        </div>
-
-        <div class="v-app-item-card__bottom">
-            <div class="v-app-item-card__bottom__left">
-                <slot name="bottom-left">
-                    <div class="v-app-item-card__category-box"
-                         v-if="categoryLabel"
-                         @click.stop="$emit('category-click')"
-                    >
-                        <img class="v-app-item-card__category-box__icon"
-                             v-if="categoryIcon"
-                             alt="category icon"
-                             :src="categoryIcon"
-                        />
-                        <span class="v-app-item-card__category-box__label">{{ categoryLabel }}</span>
+        <div class="v-app-item-card__front">
+            <div class="v-app-item-card__header">
+                <img class="v-app-item-card__header__img"
+                    alt="cover"
+                    :src="imgSrc"
+                    :style="{ objectPosition: objectPosition }"
+                />
+                <div class="v-app-item-card__header__date" v-if="dateLabel">
+                    {{ dateLabel }}
+                </div>
+                <div class="v-app-item-card__header__overlay" v-if="overlayIcon">
+                    <!-- Play icon for video -->
+                    <div v-if="overlayIcon === 'play'" class="v-app-item-card__overlay-icon v-app-item-card__overlay-icon--play">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
                     </div>
-                </slot>
+                    <!-- Mic icon for podcast -->
+                    <div v-else-if="overlayIcon === 'mic'" class="v-app-item-card__overlay-icon v-app-item-card__overlay-icon--mic">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+                            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1 1.93c-3.94-.49-7-3.85-7-7.93h2c0 3.31 2.69 6 6 6s6-2.69 6-6h2c0 4.08-3.06 7.44-7 7.93V20h4v2H8v-2h4v-4.07z"/>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="v-app-item-card__bottom__right">
-                <slot name="bottom-right">
+            <div class="v-app-item-card__body">
+                <div class="v-app-item-card__actions">
+                    <button class="app-button app-button--small v-app-item-card__button v-app-item-card__button--plus"
+                            @click.stop="flipCard"
+                    >
+                        <span class="v-app-item-card__button-text">+</span>
+                    </button>
+                    <div class="v-app-item-card__actions-right">
+                        <button v-if="hasPdfButton" class="app-button--nostyle"
+                                @click.stop="handlePdfDownload"
+                        >
+                            <svg-pdf style="width: 2.1875rem; height: 2.4375rem;" />
+                        </button>
+                        <button class="app-button app-button--small v-app-item-card__button"
+                                @click.stop="handleActionClick"
+                        ><span class="v-app-item-card__button-text">{{ actionLabel }}</span></button>
+                    </div>
+                </div>
+                <h4 class="v-app-item-card__title">{{ title }}</h4>
+            </div>
+        </div>
+        <div class="v-app-item-card__back">
+            <div class="v-app-item-card__body">
+                <div class="v-app-item-card__actions">
+                    <button class="app-button app-button--small v-app-item-card__button v-app-item-card__button--plus"
+                            @click.stop="flipCard"
+                    >
+                        <span class="v-app-item-card__button-text">−</span>
+                    </button>
+                    <div class="v-app-item-card__actions-right">
+                        <button v-if="hasPdfButton" class="app-button--nostyle"
+                                @click.stop="handlePdfDownload"
+                        >
+                            <svg-pdf style="width: 2.1875rem; height: 2.4375rem;" />
+                        </button>
+                        <button class="app-button app-button--small v-app-item-card__button"
+                                @click.stop="handleActionClick"
+                        ><span class="v-app-item-card__button-text">{{ actionLabel }}</span></button>
+                    </div>
+                </div>
+                <div class="v-app-item-card__preview">{{ preview }}</div>
+                <div class="v-app-item-card__status-container" v-if="hasStatus">
                     <div class="v-app-item-card__status"
-                         v-if="status"
-                         :style="{ backgroundColor: statusColor, borderColor: statusColor }"
+                            v-if="status"
+                            :style="{ backgroundColor: statusColor, borderColor: statusColor }"
                     >{{ status }}</div>
-                    <a v-if="isExternalLink"
-                       class="app-button app-button--small"
-                       :href="href"
-                       target="_blank"
-                       rel="noopener noreferrer"
-                    >{{ actionLabel }}</a>
-                    <nuxt-link v-else
-                               class="app-button app-button--small"
-                               :href="href"
-                    >{{ actionLabel }}</nuxt-link>
-                </slot>
+                </div>
             </div>
         </div>
     </section>
@@ -73,84 +81,160 @@
 
 
 <script setup lang="ts">
-defineEmits<{
-    (e: 'click'): void
-    (e: 'category-click'): void
+import type { CardType, ClickBehavior, OverlayIcon } from '~/utils/cardConfig'
+
+const emit = defineEmits<{
+    (e: 'play-video', mediaUrl: string): void
+    (e: 'play-podcast', mediaUrl: string): void
+    (e: 'pdf-download', pdfUrl: string): void
 }>()
 
+const router = useRouter()
+
 const props = withDefaults(defineProps<{
-    cardType?: 'default' | 'video' | 'podcast' | 'report' | 'tool'
-    projectType?: string
+    cardType?: CardType
+    clickBehavior?: ClickBehavior
+    overlayIcon?: OverlayIcon
+    hasPdfButton?: boolean
+    hasStatus?: boolean
     imgSrc?: string
     objectPosition?: string
     dateLabel?: string
     title?: string
     subtitle?: string
     preview?: string
-    categoryIcon?: string
-    categoryLabel?: string
     status?: string
     statusColor?: string
     href?: string
     actionLabel?: string
-    isExternalLink?: boolean
+    mediaUrl?: string
+    pdfUrl?: string
 }>(), {
-    cardType: 'default',
+    cardType: 'project-supported',
+    clickBehavior: 'navigate',
+    overlayIcon: null,
+    hasPdfButton: false,
+    hasStatus: false,
     actionLabel: 'Découvrir',
-    isExternalLink: false,
 })
 
-const cardTypeClass = computed(() => `v-app-item-card--${props.cardType}`)
+const isFlipped = ref(false)
+
+const cardTypeClass = computed(() => {
+    const classes = [`v-app-item-card`, `v-app-item-card--${props.cardType}`]
+    if (isFlipped.value) classes.push('v-app-item-card--flipped')
+    return classes.join(' ')
+})
+
+function flipCard() {
+    isFlipped.value = !isFlipped.value
+}
+
+function handleActionClick() {
+    switch (props.clickBehavior) {
+        case 'play-video':
+            if (props.mediaUrl) emit('play-video', props.mediaUrl)
+            break
+        case 'play-podcast':
+            if (props.mediaUrl) emit('play-podcast', props.mediaUrl)
+            break
+        case 'external':
+            if (props.href) window.open(props.href, '_blank')
+            break
+        case 'navigate':
+        default:
+            if (props.href) router.push(props.href)
+    }
+}
+
+function handlePdfDownload() {
+    if (props.pdfUrl) emit('pdf-download', props.pdfUrl)
+}
 </script>
 
 
 <style lang="scss" scoped>
 .v-app-item-card {
-    background: var(--app-color-green-light);
+    // Default theme (can be overridden by modifiers)
+    --card-bg: var(--app-color-green-light);
+    --card-text: var(--app-color-black);
+
+    color: var(--card-text);
     box-sizing: border-box;
     width: 100%;
-    padding-bottom: 2rem;
-    border-radius: 2rem;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
     position: relative;
-    overflow: hidden;
     height: 100%;
-    cursor: pointer;
-
-    @media (max-width: 900px) {
-        border-top-right-radius: 0;
-        border-top-left-radius: 0;
-    }
+    transform-style: preserve-3d;
 }
 
-// Card type modifiers
-.v-app-item-card--modus {
-    background: var(--app-color-main--dark);
-
-    .v-app-item-card__title,
-    .v-app-item-card__subtitle,
-    .v-app-item-card__preview {
-        color: white;
-    }
+.v-app-item-card--flipped .v-app-item-card__front {
+    transform: rotateY( 180deg );
+}
+.v-app-item-card--flipped .v-app-item-card__back {
+    transform: rotateY( 0deg );
 }
 
-.v-app-item-card--video,
+.v-app-item-card__front, .v-app-item-card__back {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.5s;
+    background: var(--card-bg);
+    backface-visibility: hidden;
+    border-radius: 1.66666666667rem;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.v-app-item-card__front {
+    position: relative;
+}
+
+.v-app-item-card__back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotateY( 180deg );
+    z-index: 2;
+}
+
+// Card type modifiers - Project types
+.v-app-item-card--project-modus {
+    --card-bg: var(--app-color-main--dark);
+    --card-text: var(--app-color-white);
+}
+
+.v-app-item-card--project-supported {
+    --card-bg: var(--app-color-main);
+    --card-text: var(--app-color-white);
+}
+
+// Card type modifiers - Media types
+.v-app-item-card--video {
+    --card-bg: var(--app-color-yellow);
+    --card-text: var(--app-color-black);
+}
+
 .v-app-item-card--podcast {
-    background: var(--app-color-yellow);
+    --card-bg: var(--app-color-yellow-light);
+    --card-text: var(--app-color-black);
 }
 
-.v-app-item-card--report,
-.v-app-item-card--tool {
-    background: var(--app-color-grey);
+// Card type modifiers - Report type
+.v-app-item-card--report {
+    --card-bg: var(--app-color-sage);
+    --card-text: var(--app-color-black);
+}
+
+// Card type modifiers - Tool types
+.v-app-item-card--tool-internal,
+.v-app-item-card--tool-external {
+    --card-bg: var(--app-color-teal);
+    --card-text: var(--app-color-black);
 }
 
 // Header
 .v-app-item-card__header {
-    box-sizing: border-box;
-    top: 0;
-    left: 0;
     position: relative;
     width: 100%;
 }
@@ -158,22 +242,21 @@ const cardTypeClass = computed(() => `v-app-item-card--${props.cardType}`)
 .v-app-item-card__header__img {
     display: block;
     width: 100%;
-    border-bottom-left-radius: 2rem;
-    border-bottom-right-radius: 2rem;
     background-color: #D3DABF;
     object-fit: cover;
-    aspect-ratio: 7/5;
+    aspect-ratio: 441/250;
 }
 
 .v-app-item-card__header__date {
     position: absolute;
     top: 1rem;
-    left: 1rem;
-    background: var(--app-color-main);
-    border-radius: 1rem;
-    color: white;
-    padding: .25rem 1rem;
-    font-size: .75rem;
+    right: 1.66666666667rem;
+    background: var(--app-color-yellow);
+    border-radius: 1000px;
+    color: var(--app-color-black);
+    padding: .58333333333rem .83333333333rem;
+    line-height: 1;
+    font-size: .88888888888rem;
 }
 
 .v-app-item-card__header__overlay {
@@ -186,104 +269,85 @@ const cardTypeClass = computed(() => `v-app-item-card--${props.cardType}`)
     justify-content: center;
 }
 
-// Body
-.v-app-item-card__body {
-    box-sizing: border-box;
-    padding: 2rem var(--app-gutter);
-    width: 100%;
-
-    @media (max-width: 700px) {
-        padding-bottom: var(--app-gutter);
-    }
-}
-
-.v-app-item-card__title {
-    margin: 0 0 0.5rem 0;
-    color: var(--app-color-main--dark);
-}
-
-.v-app-item-card__subtitle {
-    color: var(--app-color-main);
-    font-weight: 600;
-}
-
-.v-app-item-card__preview {
-    color: var(--app-color-main--dark);
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-    line-height: 1.4;
-}
-
-// Bottom
-.v-app-item-card__bottom {
-    padding-left: var(--app-gutter);
-    padding-right: var(--app-gutter);
-    box-sizing: border-box;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-top: auto;
-
-    @media (max-width: 700px) {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: var(--app-gutter);
-    }
-}
-
-.v-app-item-card__bottom__left,
-.v-app-item-card__bottom__right {
-    display: flex;
-    gap: .5rem;
-    flex-direction: column;
-    align-items: flex-end;
-
-    @media (max-width: 700px) {
-        flex-direction: row;
-        align-items: flex-start;
-    }
-}
-
-.v-app-item-card__bottom__left {
-    align-items: flex-start;
-}
-
-.v-app-item-card__category-box {
-    display: flex;
-    gap: var(--app-gutter);
-    box-sizing: border-box;
-    align-items: center;
-    border: solid 2px var(--app-color-main);
-    border-radius: var(--app-radius-reg);
-    padding: .5rem 1rem;
-    user-select: none;
-    cursor: pointer;
-}
-
-.v-app-item-card__category-box__icon {
-    display: block;
-    height: 2rem;
-}
-
-.v-app-item-card__category-box__label {
-    margin: 0;
-    font-size: .75rem;
-    color: var(--app-color-main);
-}
-
-.v-app-item-card__status {
-    font-weight: 600;
-    font-size: .75rem;
-    border: solid 2px;
+// Overlay icons
+.v-app-item-card__overlay-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: .5rem;
-    border-radius: 2rem;
-    padding: .015rem .5rem .025rem;
-    min-width: 3rem;
-    text-align: center;
-    color: white;
+}
+
+.v-app-item-card__overlay-icon--play,
+.v-app-item-card__overlay-icon--mic {
+    width: 4.44444444444rem;
+    height: 4.44444444444rem;
+    color: var(--app-color-yellow);
+}
+
+// Body
+.v-app-item-card__body {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 11.6666666667rem;
+}
+
+.v-app-item-card__actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.11111111111rem 1.66666666667rem;
+    column-gap: 0.77777777777rem;
+}
+
+.v-app-item-card__actions-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    column-gap: 0.77777777777rem;
+}
+
+.v-app-item-card__button {
+    font-size: 1.11111111111rem;
+    text-transform: lowercase;
+    border-color: var(--card-text);
+    background-color: transparent;
+    color: var(--card-text);
+    padding: 0 .83333333333rem;
+    display: inline-flex;
+    align-items: center;
+    height: 3.05555555556rem;
+}
+
+.v-app-item-card__button--plus{
+    font-size: 2rem;
+}
+
+.v-app-item-card__button:hover {
+    background-color: var(--card-text);
+    color: var(--card-bg);
+}
+
+.v-app-item-card__title {
+    padding: 0 1.66666666667rem 1.66666666667rem 1.66666666667rem;
+    margin: auto 0 0 0;
+    font-size: 2rem;
+}
+
+.v-app-item-card__preview {
+    padding: 0 1.66666666667rem 1.66666666667rem 1.66666666667rem;
+    margin: auto 0 0 0;
+    font-size: 1.33333333333rem;
+}
+
+.v-app-item-card__status-container {
+    padding: 0 1.66666666667rem 1.66666666667rem 1.66666666667rem;
+    margin: auto 0 0 0;
+    font-size: 1.33333333333rem;
+}
+
+.v-app-item-card__status-container {
+    padding: 0 1.66666666667rem 1.66666666667rem 1.66666666667rem;
 }
 </style>
