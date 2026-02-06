@@ -108,6 +108,11 @@ function buildHref(item: ItemData, cardType: CardType): string | undefined {
         return `/rapport/${item.slug}`
     }
     
+    // Internal tools go to /boite-a-outils/
+    if (cardType === 'tool-internal') {
+        return `/boite-a-outils/${item.slug}`
+    }
+    
     // Everything else goes to /project/
     return `/project/${item.slug}`
 }
