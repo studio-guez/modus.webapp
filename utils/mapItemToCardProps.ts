@@ -37,6 +37,10 @@ interface ItemContent {
     externalurl?: string
     body?: unknown
     pdffile?: string
+    // Media-specific fields (from medias.json.php)
+    mediatype?: 'podcast' | 'video'
+    spotifyurl?: string
+    youtubeurl?: string
 }
 
 interface ItemData {
@@ -54,11 +58,9 @@ interface ItemData {
 export function resolveCardType(item: ItemData, pageType?: 'media' | 'report' | 'tool' | 'project'): CardType {
     const content = item.content
     
-    // Media page: check for video or podcast in body content
-    if (pageType === 'media') {
-        const media = findMediaInProject(content.body as unknown)
-        if (media?.type === 'video') return 'video'
-        if (media?.type === 'spotify') return 'podcast'
+    // Media page: check mediatype field directly (from medias.json.php)
+    if (pageType === 'media' && content.mediatype) {
+        return content.mediatype
     }
     
     // Report page
@@ -113,9 +115,14 @@ function buildHref(item: ItemData, cardType: CardType): string | undefined {
 /**
  * Extracts media URL from project body for video/podcast
  */
-function extractMediaUrl(content: ItemContent): string | undefined {
-    const media = findMediaInProject(content.body as unknown)
-    return media?.content?.url
+function extractMediaUrl(content: ItemContent, cardType: CardType): string | undefined {
+    // For media page items, URLs are stored directly in content
+    if (content.mediatype === 'podcast' && content.spotifyurl) {
+        return content.spotifyurl
+    }
+    if (content.mediatype === 'video' && content.youtubeurl) {
+        return content.youtubeurl
+    }
 }
 
 /**
@@ -146,7 +153,7 @@ export function mapItemToCardProps(
         status,
         statusColor,
         href: buildHref(item, cardType),
-        mediaUrl: (cardType === 'video' || cardType === 'podcast') ? extractMediaUrl(content) : undefined,
+        mediaUrl: (cardType === 'video' || cardType === 'podcast') ? extractMediaUrl(content, cardType) : undefined,
         pdfUrl: (cardType === 'report') ? buildPdfUrl(item.slug) : undefined,
     }
 }
