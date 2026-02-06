@@ -40,7 +40,18 @@
                         >
                             <svg-pdf style="width: 2.1875rem; height: 2.4375rem;" />
                         </button>
-                        <button class="app-button app-button--small v-app-item-card__button"
+                        <NuxtLink v-if="clickBehavior === 'navigate'"
+                           class="app-button app-button--small v-app-item-card__button"
+                           :to="href"
+                           @click.stop
+                        ><span class="v-app-item-card__button-text">{{ actionLabel }}</span></NuxtLink>
+                        <a v-else-if="clickBehavior === 'external'"
+                           class="app-button app-button--small v-app-item-card__button"
+                           :href="href"
+                           target="_blank"
+                           @click.stop
+                        ><span class="v-app-item-card__button-text">{{ actionLabel }}</span></a>
+                        <button v-else class="app-button app-button--small v-app-item-card__button"
                                 @click.stop="handleActionClick"
                         ><span class="v-app-item-card__button-text">{{ actionLabel }}</span></button>
                     </div>
@@ -62,7 +73,18 @@
                         >
                             <svg-pdf style="width: 2.1875rem; height: 2.4375rem;" />
                         </button>
-                        <button class="app-button app-button--small v-app-item-card__button"
+                        <NuxtLink v-if="clickBehavior === 'navigate'"
+                           class="app-button app-button--small v-app-item-card__button"
+                           :to="href"
+                           @click.stop
+                        ><span class="v-app-item-card__button-text">{{ actionLabel }}</span></NuxtLink>
+                        <a v-else-if="clickBehavior === 'external'"
+                           class="app-button app-button--small v-app-item-card__button"
+                           :href="href"
+                           target="_blank"
+                           @click.stop
+                        ><span class="v-app-item-card__button-text">{{ actionLabel }}</span></a>
+                        <button v-else class="app-button app-button--small v-app-item-card__button"
                                 @click.stop="handleActionClick"
                         ><span class="v-app-item-card__button-text">{{ actionLabel }}</span></button>
                     </div>
