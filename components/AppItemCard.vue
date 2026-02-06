@@ -343,11 +343,15 @@ function handlePdfDownload() {
 
 .v-app-item-card__status-container {
     padding: 0 1.66666666667rem 1.66666666667rem 1.66666666667rem;
-    margin: auto 0 0 0;
-    font-size: 1.33333333333rem;
 }
 
-.v-app-item-card__status-container {
-    padding: 0 1.66666666667rem 1.66666666667rem 1.66666666667rem;
+.v-app-item-card__status {
+    font-size: 0.83333333333rem;
+    color: var(--app-color-white);
+    padding: 0 .83333333333rem;
+    display: inline-flex;
+    align-items: center;
+    height: 1.83333333333rem;
+    border-radius: 1000px;
 }
 </style>

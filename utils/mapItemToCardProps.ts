@@ -9,6 +9,7 @@ export interface CardProps {
     clickBehavior: 'navigate' | 'external' | 'play-video' | 'play-podcast'
     overlayIcon: 'play' | 'mic' | 'pdf' | null
     hasPdfButton: boolean
+    hasStatus: boolean
     actionLabel: string
     imgSrc?: string
     objectPosition?: string
@@ -82,19 +83,11 @@ export function resolveCardType(item: ItemData, pageType?: 'media' | 'report' | 
 /**
  * Computes the project status based on dates
  */
-function computeStatus(content: ItemContent): { status: string | undefined; statusColor: string | undefined } {
-    if (content.isprojectwithduration === 'false') {
-        return { status: undefined, statusColor: undefined }
-    }
-    
-    if (!content.dateend) {
-        return { status: 'En cours', statusColor: 'var(--app-color-orange)' }
-    }
-    
-    const isFinished = new Date(content.dateend).getTime() < new Date().getTime()
+function computeStatus(content: ItemContent): { status: string; statusColor: string } {
+    const isOngoing = content.dateend && new Date(content.dateend) > new Date()
     return {
-        status: isFinished ? 'Terminé' : 'En cours',
-        statusColor: isFinished ? 'var(--app-color-main--dark)' : 'var(--app-color-orange)'
+        status: isOngoing ? 'En cours' : 'Terminé',
+        statusColor: isOngoing ? 'var(--app-color-orange)' : 'var(--app-color-black)'
     }
 }
 
@@ -149,6 +142,7 @@ export function mapItemToCardProps(
         clickBehavior: config.clickBehavior,
         overlayIcon: config.overlayIcon,
         hasPdfButton: config.hasPdfButton ?? false,
+        hasStatus: config.hasStatus ?? false,
         actionLabel: config.actionLabel,
         imgSrc: item.headerImage?.[0]?.resize?.reg,
         objectPosition: item.headerImage?.[0]?.focus,
