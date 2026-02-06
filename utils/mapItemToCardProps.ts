@@ -2,6 +2,7 @@ import type { CardType } from '~/utils/cardConfig'
 import { CARD_CONFIG, getCardConfig } from '~/utils/cardConfig'
 import { formatDateRange } from '~/utils/formatDateRange'
 import { findMediaInProject } from '~/utils/findMediaInProject'
+import { buildPdfUrl } from '~/utils/backendUrl'
 import type { IApiSingleProject } from '~/composable/adminApi/apiDefinitions'
 
 export interface CardProps {
@@ -118,19 +119,11 @@ function extractMediaUrl(content: ItemContent): string | undefined {
 }
 
 /**
- * Builds PDF download URL
- */
-function buildPdfUrl(item: ItemData, backendBaseUrl: string): string {
-    return `${backendBaseUrl}/rapport/${item.slug}/pdf`
-}
-
-/**
  * Maps an API item to card props using the config system
  */
 export function mapItemToCardProps(
     item: ItemData,
-    pageType?: 'media' | 'report' | 'tool' | 'project',
-    backendBaseUrl?: string
+    pageType?: 'media' | 'report' | 'tool' | 'project'
 ): CardProps {
     const cardType = resolveCardType(item, pageType)
     const config = getCardConfig(cardType)
@@ -154,6 +147,6 @@ export function mapItemToCardProps(
         statusColor,
         href: buildHref(item, cardType),
         mediaUrl: (cardType === 'video' || cardType === 'podcast') ? extractMediaUrl(content) : undefined,
-        pdfUrl: (cardType === 'report' && backendBaseUrl) ? buildPdfUrl(item, backendBaseUrl) : undefined,
+        pdfUrl: (cardType === 'report') ? buildPdfUrl(item.slug) : undefined,
     }
 }

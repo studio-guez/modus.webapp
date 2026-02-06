@@ -156,6 +156,7 @@ import { ref, computed, onMounted } from 'vue'
 import type { Ref, UnwrapRef } from 'vue'
 import { ApiFetchPage } from '~/composable/adminApi/apiFetch'
 import { copyCurrentUrlToClipboard } from '~/utils/copyCurrentUrlToClipboard'
+import { buildPdfUrl } from '~/utils/backendUrl'
 import AppHeader from '~/components/AppHeader.vue'
 import AppPageFooter from '~/components/AppPageFooter.vue'
 import AppReportSidebar from '~/components/AppReportSidebar.vue'
@@ -214,15 +215,10 @@ const bibliography: Ref<UnwrapRef<BibliographyItem[]>> = ref([])
 const relatedReports: Ref<UnwrapRef<RelatedReport[]>> = ref([])
 const currentSlug: Ref<UnwrapRef<string | undefined>> = ref(undefined)
 
-// Backend base URL for PDF download
-const backendBaseUrl = import.meta.env.DEV
-  ? 'http://localhost:8080'
-  : 'https://modus-admin.sdrvl.ch'
-
 // PDF download URL
 const pdfDownloadUrl = computed(() => {
   if (!currentSlug.value) return '#'
-  return `${backendBaseUrl}/rapport/${currentSlug.value}/pdf`
+  return buildPdfUrl(currentSlug.value)
 })
 
 // Convert bodyContent to array (handles both array and object formats from API)

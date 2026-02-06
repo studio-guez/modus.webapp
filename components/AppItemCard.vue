@@ -35,11 +35,15 @@
                         <span class="v-app-item-card__button-text">+</span>
                     </button>
                     <div class="v-app-item-card__actions-right">
-                        <button v-if="hasPdfButton" class="app-button--nostyle"
-                                @click.stop="handlePdfDownload"
+                        <a v-if="hasPdfButton && pdfUrl" 
+                           class="v-app-item-card__pdf-button"
+                           :href="pdfUrl"
+                           target="_blank"
+                           rel="noopener"
+                           @click.stop
                         >
                             <svg-pdf style="width: 2.1875rem; height: 2.4375rem;" />
-                        </button>
+                        </a>
                         <NuxtLink v-if="clickBehavior === 'navigate'"
                            class="app-button app-button--small v-app-item-card__button"
                            :to="href"
@@ -68,11 +72,15 @@
                         <span class="v-app-item-card__button-text">−</span>
                     </button>
                     <div class="v-app-item-card__actions-right">
-                        <button v-if="hasPdfButton" class="app-button--nostyle"
-                                @click.stop="handlePdfDownload"
+                        <a v-if="hasPdfButton && pdfUrl" 
+                           class="v-app-item-card__pdf-button"
+                           :href="pdfUrl"
+                           target="_blank"
+                           rel="noopener"
+                           @click.stop
                         >
                             <svg-pdf style="width: 2.1875rem; height: 2.4375rem;" />
-                        </button>
+                        </a>
                         <NuxtLink v-if="clickBehavior === 'navigate'"
                            class="app-button app-button--small v-app-item-card__button"
                            :to="href"
@@ -108,7 +116,6 @@ import type { CardType, ClickBehavior, OverlayIcon } from '~/utils/cardConfig'
 const emit = defineEmits<{
     (e: 'play-video', mediaUrl: string): void
     (e: 'play-podcast', mediaUrl: string): void
-    (e: 'pdf-download', pdfUrl: string): void
 }>()
 
 const router = useRouter()
@@ -167,10 +174,6 @@ function handleActionClick() {
         default:
             if (props.href) router.push(props.href)
     }
-}
-
-function handlePdfDownload() {
-    if (props.pdfUrl) emit('pdf-download', props.pdfUrl)
 }
 </script>
 
@@ -349,6 +352,13 @@ function handlePdfDownload() {
 .v-app-item-card__button:hover {
     background-color: var(--card-text);
     color: var(--card-bg);
+}
+
+.v-app-item-card__pdf-button {
+    all: unset;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-flex;
 }
 
 .v-app-item-card__title {
