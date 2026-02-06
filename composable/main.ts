@@ -62,3 +62,10 @@ export const useSpotifyIsPlaying: () => Ref<boolean> =
 
 export const useSpotifyTogglePlay: () => Ref<(() => void) | null> =
     () => useState('spotifyTogglePlay', () => null)
+
+// YouTube player state
+export const useYoutubeUrl: () => Ref<string | null> =
+    () => useState('youtubeUrl', () => null)
+
+export const useYoutubeTitle: () => Ref<string | null> =
+    () => useState('youtubeTitle', () => null)

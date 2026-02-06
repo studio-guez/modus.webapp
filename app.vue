@@ -76,6 +76,7 @@
         </div>
 
         <app-podcast-player/>
+        <app-youtube-player/>
     </section>
 </template>
 

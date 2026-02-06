@@ -111,7 +111,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    (e: 'play-video', mediaUrl: string): void
+    (e: 'play-video', mediaUrl: string, title: string): void
     (e: 'play-podcast', mediaUrl: string, title: string): void
     (e: 'pdf-download', pdfUrl: string): void
 }>()
@@ -194,8 +194,8 @@ watch(() => route.query.q, (newSearch: string | LocationQueryValue[] | undefined
     filter.value = newSearch || null
 })
 
-function handlePlayVideo(mediaUrl: string) {
-    emit('play-video', mediaUrl)
+function handlePlayVideo(mediaUrl: string, title: string) {
+    emit('play-video', mediaUrl, title)
 }
 
 function handlePlayPodcast(mediaUrl: string, title: string) {

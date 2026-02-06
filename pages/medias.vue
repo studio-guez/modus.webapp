@@ -12,20 +12,22 @@
 
 <script setup lang="ts">
 import AppProjectList from "~/components/AppProjectList.vue";
-import { useSpotifyUrl, useSpotifyTitle, usePodcastPlayerIsOpen } from '~/composable/main'
+import { useSpotifyUrl, useSpotifyTitle, usePodcastPlayerIsOpen, useYoutubeUrl, useYoutubeTitle } from '~/composable/main'
 
 const spotifyUrl = useSpotifyUrl()
 const spotifyTitle = useSpotifyTitle()
 const playerIsOpen = usePodcastPlayerIsOpen()
+const youtubeUrl = useYoutubeUrl()
+const youtubeTitle = useYoutubeTitle()
 
 const tagMap = {
     "podcast": "Podcast",
     "video": "Vidéo",
 }
 
-function handlePlayVideo(mediaUrl: string) {
-    // TODO: Implement global video player
-    console.log('Play video:', mediaUrl)
+function handlePlayVideo(mediaUrl: string, title: string) {
+    youtubeUrl.value = mediaUrl
+    youtubeTitle.value = title
 }
 
 function handlePlayPodcast(mediaUrl: string, title: string) {

@@ -115,7 +115,7 @@
 import type { CardType, ClickBehavior, OverlayIcon } from '~/utils/cardConfig'
 
 const emit = defineEmits<{
-    (e: 'play-video', mediaUrl: string): void
+    (e: 'play-video', mediaUrl: string, title: string): void
     (e: 'play-podcast', mediaUrl: string, title: string): void
 }>()
 
@@ -163,7 +163,7 @@ function flipCard() {
 function handleActionClick() {
     switch (props.clickBehavior) {
         case 'play-video':
-            if (props.mediaUrl) emit('play-video', props.mediaUrl)
+            if (props.mediaUrl) emit('play-video', props.mediaUrl, props.title || '')
             break
         case 'play-podcast':
             if (props.mediaUrl) emit('play-podcast', props.mediaUrl, props.title || '')
