@@ -115,7 +115,7 @@ import type { CardType, ClickBehavior, OverlayIcon } from '~/utils/cardConfig'
 
 const emit = defineEmits<{
     (e: 'play-video', mediaUrl: string): void
-    (e: 'play-podcast', mediaUrl: string): void
+    (e: 'play-podcast', mediaUrl: string, title: string): void
 }>()
 
 const router = useRouter()
@@ -165,7 +165,7 @@ function handleActionClick() {
             if (props.mediaUrl) emit('play-video', props.mediaUrl)
             break
         case 'play-podcast':
-            if (props.mediaUrl) emit('play-podcast', props.mediaUrl)
+            if (props.mediaUrl) emit('play-podcast', props.mediaUrl, props.title || '')
             break
         case 'external':
             if (props.href) window.open(props.href, '_blank')

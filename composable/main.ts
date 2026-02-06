@@ -46,3 +46,19 @@ export const siteInfo: () => Ref<IApiSiteInfo | null > =
 
 export const useStateNavBarreMsgMessage: () => Ref<null | string> =
     () => useState('FixedHeaderMessage', () => null)
+
+// Podcast player state
+export const useSpotifyUrl: () => Ref<string | null> =
+    () => useState('spotifyUrl', () => null)
+
+export const useSpotifyTitle: () => Ref<string | null> =
+    () => useState('spotifyTitle', () => null)
+
+export const usePodcastPlayerIsOpen: () => Ref<boolean> =
+    () => useState('podcastPlayerIsOpen', () => false)
+
+export const useSpotifyIsPlaying: () => Ref<boolean> =
+    () => useState('spotifyIsPlaying', () => false)
+
+export const useSpotifyTogglePlay: () => Ref<(() => void) | null> =
+    () => useState('spotifyTogglePlay', () => null)

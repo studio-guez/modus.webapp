@@ -112,7 +112,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: 'play-video', mediaUrl: string): void
-    (e: 'play-podcast', mediaUrl: string): void
+    (e: 'play-podcast', mediaUrl: string, title: string): void
     (e: 'pdf-download', pdfUrl: string): void
 }>()
 
@@ -198,8 +198,8 @@ function handlePlayVideo(mediaUrl: string) {
     emit('play-video', mediaUrl)
 }
 
-function handlePlayPodcast(mediaUrl: string) {
-    emit('play-podcast', mediaUrl)
+function handlePlayPodcast(mediaUrl: string, title: string) {
+    emit('play-podcast', mediaUrl, title)
 }
 
 function handlePdfDownload(pdfUrl: string) {

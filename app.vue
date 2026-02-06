@@ -74,6 +74,8 @@
         <div class="v-app__cookie" v-if="!cookieIsValidate().value && showCookieBanner().value">
             <app-cookie/>
         </div>
+
+        <app-podcast-player/>
     </section>
 </template>
 

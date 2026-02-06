@@ -12,6 +12,11 @@
 
 <script setup lang="ts">
 import AppProjectList from "~/components/AppProjectList.vue";
+import { useSpotifyUrl, useSpotifyTitle, usePodcastPlayerIsOpen } from '~/composable/main'
+
+const spotifyUrl = useSpotifyUrl()
+const spotifyTitle = useSpotifyTitle()
+const playerIsOpen = usePodcastPlayerIsOpen()
 
 const tagMap = {
     "podcast": "Podcast",
@@ -23,8 +28,17 @@ function handlePlayVideo(mediaUrl: string) {
     console.log('Play video:', mediaUrl)
 }
 
-function handlePlayPodcast(mediaUrl: string) {
-    // TODO: Implement global podcast player
-    console.log('Play podcast:', mediaUrl)
+function handlePlayPodcast(mediaUrl: string, title: string) {
+    // If same podcast, do nothing
+    if (spotifyUrl.value === mediaUrl) {
+        return
+    }
+    // Only start collapsed if player wasn't already open
+    const wasAlreadyOpen = !!spotifyUrl.value
+    spotifyUrl.value = mediaUrl
+    spotifyTitle.value = title
+    if (!wasAlreadyOpen) {
+        playerIsOpen.value = false
+    }
 }
 </script>
