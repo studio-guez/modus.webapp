@@ -26,6 +26,10 @@ const tagMap = {
 }
 
 function handlePlayVideo(mediaUrl: string, title: string) {
+    // Stop podcast if playing
+    spotifyUrl.value = null
+    spotifyTitle.value = null
+    
     youtubeUrl.value = mediaUrl
     youtubeTitle.value = title
 }
@@ -35,6 +39,11 @@ function handlePlayPodcast(mediaUrl: string, title: string) {
     if (spotifyUrl.value === mediaUrl) {
         return
     }
+    
+    // Stop video if playing
+    youtubeUrl.value = null
+    youtubeTitle.value = null
+    
     // Only start collapsed if player wasn't already open
     const wasAlreadyOpen = !!spotifyUrl.value
     spotifyUrl.value = mediaUrl
