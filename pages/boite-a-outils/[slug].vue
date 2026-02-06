@@ -47,6 +47,16 @@ onMounted(async () => {
 
     const pageData = await ApiFetchPage(`boite-a-outils/${slug}`)
 
+    // External tools should not have an internal page
+    if (pageData.options.isExternalLink) {
+        if (pageData.options.externalUrl) {
+            window.location.href = pageData.options.externalUrl
+        } else {
+            throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+        }
+        return
+    }
+
     headerCover.value = pageData.options.headerImage?.mediaUrl
     headerFocus.value = pageData.options.headerImage?.focus
     headerText.value = pageData?.title?.value
