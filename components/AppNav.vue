@@ -51,8 +51,7 @@
       </div>
 
       <div style="display: flex; align-items: center; gap: 1rem">
-        <transition name="app-transition-default">
-          <div class="app__icon" v-if=" !showMenu().value ">
+          <div class="app__icon">
             <a href="https://ch.linkedin.com/company/fondation-modus" target="_blank">
                 <SvgLinkedin />
             </a>
@@ -66,7 +65,6 @@
                 <SvgSpotify />
             </a>
           </div>
-        </transition>
 
         <div class="v-app-nav__menu"
              @click="toggleNav"

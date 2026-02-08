@@ -1,118 +1,115 @@
 <template>
-    <section
-        class="v-app"
+  <Transition name="drawer">
+    <div class="v-app__menu"
+          v-if="showMenu().value"
     >
-        <div class="v-app__menu"
-             v-if="showMenu().value"
-        >
-          <!-- Top Menu -->
-          <div class="v-app__menu__section v-app__menu__section--top" v-if="useMenus().value?.topMenu?.length">
-            <template v-for="item of useMenus().value?.topMenu" :key="item.url">
-              <a v-if="item.openInNewTab" class="v-app__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
-                <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
-                <span v-else>{{ item.title }}</span>
+    <!-- Top Menu -->
+    <div class="v-app__menu__section v-app__menu__section--top" v-if="useMenus().value?.topMenu?.length">
+      <template v-for="item of useMenus().value?.topMenu" :key="item.url">
+        <a v-if="item.openInNewTab" class="v-app__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
+          <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+          <span v-else>{{ item.title }}</span>
+        </a>
+        <nuxt-link v-else class="v-app__menu__item" :href="item.url">
+          <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+          <span v-else>{{ item.title }}</span>
+        </nuxt-link>
+      </template>
+    </div>
+
+    <!-- Main Menu (with 2 levels) -->
+    <div class="v-app__menu__section v-app__menu__section--main">
+      <template v-for="item of useMenus().value?.mainMenu" :key="item.url">
+        <div class="v-app__menu__group">
+          <a v-if="item.openInNewTab" class="v-app__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
+            <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+            <span v-else>{{ item.title }}</span>
+          </a>
+          <nuxt-link v-else class="v-app__menu__item" :href="item.url">
+            <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+            <span v-else>{{ item.title }}</span>
+          </nuxt-link>
+          <!-- Children (2nd level) -->
+          <div v-if="item.children?.length" class="v-app__menu__children">
+            <template v-for="child of item.children" :key="child.url">
+              <a v-if="child.openInNewTab" class="v-app__menu__item v-app__menu__item--child" :href="child.url" target="_blank" rel="noopener noreferrer">
+                <img v-if="child.svgUrl" class="v-app__menu__icon" :src="child.svgUrl" :alt="child.title">
+                <span v-else>{{ child.title }}</span>
               </a>
-              <nuxt-link v-else class="v-app__menu__item" :href="item.url">
-                <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
-                <span v-else>{{ item.title }}</span>
+              <nuxt-link v-else class="v-app__menu__item v-app__menu__item--child" :href="child.url">
+                <img v-if="child.svgUrl" class="v-app__menu__icon" :src="child.svgUrl" :alt="child.title">
+                <span v-else>{{ child.title }}</span>
               </nuxt-link>
             </template>
           </div>
-
-          <!-- Main Menu (with 2 levels) -->
-          <div class="v-app__menu__section v-app__menu__section--main">
-            <template v-for="item of useMenus().value?.mainMenu" :key="item.url">
-              <div class="v-app__menu__group">
-                <a v-if="item.openInNewTab" class="v-app__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
-                  <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
-                  <span v-else>{{ item.title }}</span>
-                </a>
-                <nuxt-link v-else class="v-app__menu__item" :href="item.url">
-                  <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
-                  <span v-else>{{ item.title }}</span>
-                </nuxt-link>
-                <!-- Children (2nd level) -->
-                <div v-if="item.children?.length" class="v-app__menu__children">
-                  <template v-for="child of item.children" :key="child.url">
-                    <a v-if="child.openInNewTab" class="v-app__menu__item v-app__menu__item--child" :href="child.url" target="_blank" rel="noopener noreferrer">
-                      <img v-if="child.svgUrl" class="v-app__menu__icon" :src="child.svgUrl" :alt="child.title">
-                      <span v-else>{{ child.title }}</span>
-                    </a>
-                    <nuxt-link v-else class="v-app__menu__item v-app__menu__item--child" :href="child.url">
-                      <img v-if="child.svgUrl" class="v-app__menu__icon" :src="child.svgUrl" :alt="child.title">
-                      <span v-else>{{ child.title }}</span>
-                    </nuxt-link>
-                  </template>
-                </div>
-              </div>
-            </template>
-          </div>
-
-          <!-- Bottom Menu -->
-          <div class="v-app__menu__section v-app__menu__section--bottom" v-if="useMenus().value?.bottomMenu?.length">
-            <template v-for="item of useMenus().value?.bottomMenu" :key="item.url">
-              <a v-if="item.openInNewTab" class="v-app__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
-                <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
-                <span v-else>{{ item.title }}</span>
-              </a>
-              <nuxt-link v-else class="v-app__menu__item" :href="item.url">
-                <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
-                <span v-else>{{ item.title }}</span>
-              </nuxt-link>
-            </template>
-          </div>
-
-          <!-- Footer Menu -->
-          <div class="v-app__menu__section v-app__menu__section--footer">
-            <template v-for="item of useMenus().value?.footerMenu" :key="item.url">
-              <a v-if="item.openInNewTab" class="v-app__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
-                <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
-                <span v-else>{{ item.title }}</span>
-              </a>
-              <nuxt-link v-else class="v-app__menu__item" :href="item.url">
-                <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
-                <span v-else>{{ item.title }}</span>
-              </nuxt-link>
-            </template>
-            <!-- Social icons -->
-            <div class="app__icon">
-              <a href="https://ch.linkedin.com/company/fondation-modus" target="_blank">
-                  <SvgLinkedin />
-              </a>
-              <a href="https://www.youtube.com/@modus-ge" target="_blank">
-                  <SvgYoutube />
-              </a>
-              <a href="https://www.instagram.com/fondation_modus/" target="_blank">
-                  <SvgInstagram />
-              </a>
-              <a href="https://open.spotify.com/show/1nWW7TtBUhy9z7uf1pncIE?si=f3b45773979b4b76" target="_blank">
-                  <SvgSpotify />
-              </a>
-            </div>
-          </div>
         </div>
+      </template>
+    </div>
 
-        <div class="v-app__cache"
-             v-if="showMenu().value"
-             @click="showMenu().value = false"
-        />
+    <!-- Bottom Menu -->
+    <div class="v-app__menu__section v-app__menu__section--bottom" v-if="useMenus().value?.bottomMenu?.length">
+      <template v-for="item of useMenus().value?.bottomMenu" :key="item.url">
+        <a v-if="item.openInNewTab" class="v-app__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
+          <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+          <span v-else>{{ item.title }}</span>
+        </a>
+        <nuxt-link v-else class="v-app__menu__item" :href="item.url">
+          <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+          <span v-else>{{ item.title }}</span>
+        </nuxt-link>
+      </template>
+    </div>
 
+    <!-- Footer Menu -->
+    <div class="v-app__menu__section v-app__menu__section--footer">
+      <template v-for="item of useMenus().value?.footerMenu" :key="item.url">
+        <a v-if="item.openInNewTab" class="v-app__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
+          <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+          <span v-else>{{ item.title }}</span>
+        </a>
+        <nuxt-link v-else class="v-app__menu__item" :href="item.url">
+          <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+          <span v-else>{{ item.title }}</span>
+        </nuxt-link>
+      </template>
+      <!-- Social icons -->
+      <div class="app__icon">
+        <a href="https://ch.linkedin.com/company/fondation-modus" target="_blank">
+            <SvgLinkedin />
+        </a>
+        <a href="https://www.youtube.com/@modus-ge" target="_blank">
+            <SvgYoutube />
+        </a>
+        <a href="https://www.instagram.com/fondation_modus/" target="_blank">
+            <SvgInstagram />
+        </a>
+        <a href="https://open.spotify.com/show/1nWW7TtBUhy9z7uf1pncIE?si=f3b45773979b4b76" target="_blank">
+            <SvgSpotify />
+        </a>
+      </div>
+    </div>
+  </div>
+  </Transition>
 
-        <div class="v-app__nav" >
-            <app-nav/>
-        </div>
+  <Transition name="fade">
+    <div class="v-app__cache"
+          v-if="showMenu().value"
+          @click="showMenu().value = false"
+    />
+  </Transition>
 
-        <div class="v-app__content" >
-            <nuxt-page/>
-        </div>
+  <app-nav/>
 
-        <div class="v-app__cookie" v-if="!cookieIsValidate().value && showCookieBanner().value">
-            <app-cookie/>
-        </div>
+  <div class="v-app__content" >
+      <nuxt-page/>
+  </div>
 
-        <app-podcast-player/>
-        <app-youtube-player/>
-    </section>
+  <div class="v-app__cookie" v-if="!cookieIsValidate().value && showCookieBanner().value">
+      <app-cookie/>
+  </div>
+
+  <app-podcast-player/>
+  <app-youtube-player/>
 </template>
 
 
@@ -198,6 +195,8 @@ onBeforeMount(() => {
   background: var(--app-color-grey);
   box-sizing: border-box;
   padding: var(--app-gutter);
+  transform: translateX(0);
+  transition: transform 0.3s ease-in-out;
 
   @media (max-width: 900px) {
     padding: var(--app-nav__height) 0 0 0;
@@ -269,22 +268,34 @@ onBeforeMount(() => {
   }
 }
 
-
-.v-app__nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-  pointer-events: none;
-}
-
 .v-app__cookie {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     z-index: 100;
+}
+
+// Drawer transition
+.drawer-enter-active,
+.drawer-leave-active {
+  transition: transform 0.3s ease-in-out;
+}
+
+.drawer-enter-from,
+.drawer-leave-to {
+  transform: translateX(100%);
+}
+
+// Fade transition for backdrop
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 </style>
