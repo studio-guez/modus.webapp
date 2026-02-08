@@ -16,6 +16,7 @@ body {
   line-height: 1.25em;
   font-weight: 600;
   overflow-x: hidden;
+  padding-top: var(--app-nav__height);
 
   @media (max-width: 900px) {
     font-size: 1rem;

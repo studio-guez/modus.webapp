@@ -1,9 +1,6 @@
 <template>
     <section
         class="v-app"
-        :class="{
-            'is-intersected': isIntersected,
-        }"
     >
         <div class="v-app__menu"
              v-if="showMenu().value"
@@ -129,7 +126,6 @@ import {
     cookieIsValidate,
     showCookieBanner,
     showMenu,
-    useIsIntersected,
     useMenus,
     useStateNavBarreMsgMessage
 } from "~/composable/main";
@@ -137,8 +133,6 @@ import AppCookie from "~/components/AppCookie.vue";
 import {ApiFetchMenus} from "~/composable/adminApi/apiFetch";
 import {getCookieBannerValue, setCookieBannerValue} from "~/utils/cookieBannerLocalStorage";
 import {matomo, updateMatomoWithNavigation} from "~/utils/matomo";
-
-const isIntersected = useIsIntersected()
 
 if (import.meta.client) {
     matomo()

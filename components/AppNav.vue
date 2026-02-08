@@ -112,37 +112,18 @@ function toggleNav() {
   justify-content: space-between;
   height: var(--app-nav__height);
   box-sizing: border-box;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
   user-select: none;
-
-  transition: padding .5s .0s ease-in-out;
-  padding: calc(var(--app-gutter) / 2) calc(var(--app-gutter) / 1) 0;
-
-  &:before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    content: "";
-    display: block;
-    width: 100%;
-    pointer-events: none;
-    z-index: -1;
-    background: var(--app-color-grey);
-    height: 0;
-  }
+  background-color: var(--app-color-white);
+  padding: 0 1.11111111111rem;
 
   &.menu-is-open {
     &:before {
       background: rgba(255, 255, 255, 0);
       backdrop-filter: blur(0px);
-    }
-  }
-
-  .is-intersected & {
-    padding: calc(var(--app-gutter) / 4) calc(var(--app-gutter) / 1) 0;
-
-    &:before {
-      height: 100%;
     }
   }
 }
@@ -155,9 +136,6 @@ function toggleNav() {
   fill: var(--app-color-main);
   cursor: pointer;
   pointer-events: all;
-
-  .is-intersected & {
-  }
 }
 
 .v-app-nav__menu {

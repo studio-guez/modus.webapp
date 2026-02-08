@@ -33,7 +33,7 @@
 .v-app-header-list {
     background: white;
     width: 100%;
-    padding: 9rem 8rem 6rem 8rem;
+    padding: 6rem 8rem 6rem 8rem;
     position: relative;
     min-height: 23rem;
     display: flex;

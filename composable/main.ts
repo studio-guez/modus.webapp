@@ -8,13 +8,6 @@ export const arrayOfH2TitleIdInCurrentPage: () => Ref<{ anchor: string; name: st
     )
 }
 
-export const useIsIntersected: () => Ref<boolean> = () => {
-    return useState('isIntersected', () => {
-        return false
-    })
-}
-
-
 export const bodyScrollInfo: () => Ref<{ top: number }> = () => {
     return useState(
         'bodyScrollInfoStore',

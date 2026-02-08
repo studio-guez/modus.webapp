@@ -263,7 +263,6 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import {useIsIntersected} from "~/composable/main";
 import {
     IApiBody,
     IApiPage__subpage
@@ -309,23 +308,7 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
 })
 
 
-nextTick(() => {
-    window.setTimeout(() => {
-        const elementsToSetBackgroundNav = document.querySelectorAll('.app-show-background-on-nav')
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                useIsIntersected().value = entry.isIntersecting;
-            })
-        }, {
-            rootMargin: `0px 0px ${window.innerHeight * -1}px 0px`
-        })
-
-        elementsToSetBackgroundNav.forEach((value) => {
-            observer.observe(value)
-        })
-    }, 2_000)
-})
 
 // onMounted(async () => {
 //
