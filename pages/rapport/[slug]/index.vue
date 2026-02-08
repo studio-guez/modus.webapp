@@ -254,7 +254,7 @@ onMounted(async () => {
 
   headerCover.value = pageData.options.headerImage?.mediaUrl
   headerFocus.value = pageData.options.headerImage?.focus
-  headerText.value = pageData?.title?.value
+  headerText.value = pageData.options.headerTitle
 
   bodyContent.value = pageData.body
   dateStart.value = pageData.options.dateStart

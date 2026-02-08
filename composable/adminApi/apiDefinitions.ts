@@ -7,6 +7,9 @@ export interface IApiPage {
         isProjectWithDuration: "true" | "false",
         dateEnd: string,
         subpages: IApiPage__subpage[]
+        isExternalLink?: boolean,
+        externalUrl?: string,
+        preview?: string,
     },
     "body": IApiBody,
     title?: {

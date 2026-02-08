@@ -60,9 +60,9 @@ onMounted(async () => {
 
     headerCover.value = pageData.options.headerImage?.mediaUrl
     headerFocus.value = pageData.options.headerImage?.focus
-    headerText.value = pageData?.title?.value
+    headerText.value = pageData.options.headerTitle
 
-    bodyTitle.value = pageData.options.headerTitle
+    bodyTitle.value = pageData.options.preview
     bodyContent.value = pageData.body
 })
 
