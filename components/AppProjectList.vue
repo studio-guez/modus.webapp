@@ -13,9 +13,9 @@
         </div>
         
         <!-- Tag filters (from backend availableTags) -->
-        <div class="v-project-list__tags" v-if="availableTags.length > 0">
+        <div class="v-project-list__tags" v-if="visibleTags.length > 0">
           <div class="v-project-list__filter"
-               v-for="tag of availableTags"
+               v-for="tag of visibleTags"
                :key="tag.slug"
                :class="{ 'v-project-list__filter--active': isTagSelected(tag.slug) }"
                @click="toggleTagFilter(tag.slug)"
@@ -26,7 +26,7 @@
             </svg>
           </div>
         </div>
-        <div class="v-project-list__filters-row" v-if="filterGroups.length > 0 || availableTags.length > 0">
+        <div class="v-project-list__filters-row" v-if="filterGroups.length > 0 || visibleTags.length > 0">
           <div class="v-project-list__filters">
             <!-- Dynamic filter groups -->
             <template v-for="group in filterGroups" :key="group.id">
@@ -35,7 +35,7 @@
                       `v-project-list__filter--${group.id}`,
                       { 'v-project-list__filter--active': isFilterSelected(group.id, option.key) }
                    ]"
-                   v-for="option in group.options"
+                   v-for="option in getVisibleOptions(group)"
                    :key="option.key"
                    :style="{
                       '--filter-bg': option.bgColor || 'transparent',
@@ -219,32 +219,88 @@ const itemsToShow: ComputedRef<UnwrapRef<IApiSingleProject[]>> = computed(() => 
 })
 
 function filteredItems(items: IApiSingleProject[]): IApiSingleProject[] {
-    return Object.values(items).filter(item => {
+    return simulateFiltering(
+        items,
+        selectedTags.value,
+        contentTypeFilter.value,
+        filterSelections.value
+    )
+}
+
+// Helper to check if items would exist with given filter state
+function simulateFiltering(
+    itemList: IApiSingleProject[],
+    tagSlugs: string[],
+    contentType: string | null,
+    groupSelections: Record<string, string[]>
+): IApiSingleProject[] {
+    return Object.values(itemList).filter(item => {
         // Tag filter (OR logic - item matches if it has ANY of the selected tags)
-        if (selectedTags.value.length > 0) {
+        if (tagSlugs.length > 0) {
             const tags = item.content.tags
             if (!tags || !Array.isArray(tags)) return false
-            const hasAnyTag = tags.some(t => selectedTags.value.includes(t.slug))
+            const hasAnyTag = tags.some(t => tagSlugs.includes(t.slug))
             if (!hasAnyTag) return false
         }
         
         // Content type filter (also matches against tags for backward compatibility)
-        if (contentTypeFilter.value) {
+        if (contentType) {
             const tags = item.content.tags
             if (!tags || !Array.isArray(tags)) return false
-            const hasType = tags.some(t => t.slug === contentTypeFilter.value)
+            const hasType = tags.some(t => t.slug === contentType)
             if (!hasType) return false
         }
         
         // Apply each filter group's filterFn
         for (const group of props.filterGroups) {
-            const selected = filterSelections.value[group.id] || []
+            const selected = groupSelections[group.id] || []
             if (selected.length > 0) {
                 if (!group.filterFn(item, selected)) return false
             }
         }
         
         return true
+    })
+}
+
+// Computed: tags that would have results if selected (given current other filters)
+const visibleTags = computed(() => {
+    if (!items.value) return []
+    return availableTags.value.filter((tag: IApiTag) => {
+        // If already selected, always show it
+        if (isTagSelected(tag.slug)) return true
+        // Check if selecting this tag would have results
+        const newTagSelection = [...selectedTags.value, tag.slug]
+        const results = simulateFiltering(
+            items.value!,
+            newTagSelection,
+            contentTypeFilter.value,
+            filterSelections.value
+        )
+        return results.length > 0
+    })
+})
+
+// Get visible filter options for a group (options that would have results)
+function getVisibleOptions(group: FilterGroup): FilterOption[] {
+    if (!items.value) return []
+    return group.options.filter(option => {
+        // If already selected, always show it
+        if (isFilterSelected(group.id, option.key)) return true
+        // Simulate selecting this option
+        const newSelections = { ...filterSelections.value }
+        if (group.type === 'single') {
+            newSelections[group.id] = [option.key]
+        } else {
+            newSelections[group.id] = [...(filterSelections.value[group.id] || []), option.key]
+        }
+        const results = simulateFiltering(
+            items.value!,
+            selectedTags.value,
+            contentTypeFilter.value,
+            newSelections
+        )
+        return results.length > 0
     })
 }
 
