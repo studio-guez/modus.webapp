@@ -374,7 +374,6 @@ nextTick(() => {
 }
 
 .v-app-page__content {
-  background: var(--app-color-grey);
   position: relative;
   z-index: 10;
   width: 100%;

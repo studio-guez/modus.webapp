@@ -230,9 +230,7 @@ function handlePdfDownload(pdfUrl: string) {
 }
 
 .v-project__content {
-  background: var(--app-color-grey);
   position: relative;
-  z-index: 10;
   width: 100%;
 }
 
