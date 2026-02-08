@@ -1,32 +1,45 @@
 <template>
+    <template v-if="headerCover || headerText">
+      <template v-if="headerType === 'list'">
+        <app-header-list
+                :text="headerText"
+                :bg-image="headerCover"
+                :bg_focus="header_focus"
+        />
+      </template>
+    </template>
     <main
         class="v-app-page"
+        :class="{'v-app-page--list': headerType === 'list'}"
     >
-      <div
-        class="v-app-page__header"
-      >
-        <template v-if="headerCover || headerText">
-          <template v-if="useRoute().path === '/'">
-            <app-header-home
-              :text="headerText"
-              :bg-image="headerCover"
-            />
+      <template v-if="headerType !== 'list'">
+        <div
+          class="v-app-page__header"
+        >
+          <template v-if="headerCover || headerText">
+            <template v-if="useRoute().path === '/'">
+              <app-header-home
+                :text="headerText"
+                :bg-image="headerCover"
+              />
+            </template>
+            
+            <template v-else-if="headerType !== 'list'">
+              <app-header
+                      :headerSize="headerSize"
+                      :text="headerText"
+                      :bg-image="headerCover"
+                      :bg_focus="header_focus"
+              />
+            </template>
           </template>
           <template v-else>
-            <app-header
-                    :headerSize="headerSize"
-                    :text="headerText"
-                    :bg-image="headerCover"
-                    :bg_focus="header_focus"
-            />
-          </template>
-        </template>
-        <template v-else>
-            <div class="v-app-page__header__loading">
+              <div class="v-app-page__header__loading">
 
-            </div>
-        </template>
-      </div>
+              </div>
+          </template>
+        </div>
+      </template>
 
         <div class="v-app-page__path"
              v-if="path"
@@ -56,8 +69,10 @@
         </div>
 
       <div class="v-app-page__content app-show-background-on-nav"
-           v-if="withoutBody !== true"
+           v-if="$slots.default"
       >
+        <slot v-if="$slots.default" />
+        <template v-else>
         <div class="v-app-page__content__grid">
             <template v-if="titleContent">
                 <div class="v-app-page__section v-app-page__section--full">
@@ -237,15 +252,8 @@
             </div>
           </div>
         </template>
+        </template>
       </div>
-
-
-
-
-
-
-
-
     </main>
 </template>
 
@@ -273,7 +281,7 @@ const props = defineProps<{
   header_focus?: string
   bodyContent?: IApiBody
   headerSize?: 'small'
-  withoutBody?: boolean
+  headerType?: 'default' | 'list'
   titleContent?: string
   path?: boolean
   date_start?: string,
@@ -339,6 +347,10 @@ nextTick(() => {
 <style lang="scss" scoped >
 .v-app-page {
   padding-top: var(--app-header-height);
+}
+
+.v-app-page--list {
+  padding-top: 0;
 }
 
 .v-app-page__header {

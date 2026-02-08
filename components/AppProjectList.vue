@@ -5,9 +5,8 @@
       <app-page
         :header-cover="headerCover"
         :header-text="headerText"
-        :without-body="true"
-      />
-
+        :header-type="'list'"
+      >
       <div class="v-project__content app-show-background-on-nav">
         <div class="v-project__content__grid">
           <div class="v-project__section v-project__section--full" >
@@ -85,6 +84,7 @@
           </template>
         </div>
       </div>
+      </app-page>
 
       <app-page-footer/>
     </section>
