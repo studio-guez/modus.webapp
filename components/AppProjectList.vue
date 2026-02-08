@@ -1,5 +1,5 @@
 <template>
-  <section class="v-project-list">
+  <div class="v-project-list">
     <app-page :header-cover="headerCover" :header-text="headerText" :header-type="'list'">
       <div class="v-project-list__content app-show-background-on-nav">
         <div class="v-project-list__description" v-if="preview">
@@ -75,7 +75,7 @@
       </div>
     </app-page>
     <app-page-footer />
-  </section>
+  </div>
 </template>
 
 
@@ -384,12 +384,9 @@ function handlePdfDownload(pdfUrl: string) {
   box-sizing: border-box;
 }
 
-.v-project-list {
-  color: var(--app-color-black);
-}
-
 .v-project-list__content {
   padding-top: 2.55555555556rem;
+  color: var(--app-color-black);
 }
 
 .v-project-list__description {
