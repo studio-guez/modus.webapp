@@ -1,4 +1,4 @@
-import {ApiPowerBIResponse, IApiPage, IApiProjects} from "~/composable/adminApi/apiDefinitions";
+import {ApiPowerBIResponse, IApiMenus, IApiPage, IApiProjects} from "~/composable/adminApi/apiDefinitions";
 
 const baseUrl = 'https://modus-admin.sdrvl.ch/'
 // const baseUrl = 'http://localhost:8000/'
@@ -24,4 +24,8 @@ export async function ApiFetchProjects(apiPath: string): Promise<IApiProjects> {
 
 export async function ApiFetchPagesInfo() {
     return ((await fetch(`${baseUrl}pages-info.json`)).json())
+}
+
+export async function ApiFetchMenus(): Promise<IApiMenus> {
+    return ((await fetch(`${baseUrl}menus.json`)).json())
 }

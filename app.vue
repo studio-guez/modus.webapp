@@ -8,23 +8,76 @@
         <div class="v-app__menu"
              v-if="showMenu().value"
         >
-          <div>
-            <template v-for="item of siteInfo().value?.children"
-            >
-              <nuxt-link class="v-app__menu__item"
-                         v-if="item.showinnav.value === 'true'"
-                         :href="item.slug === 'home' ? '/' : `/${item.slug}`"
-              >{{item.title.value}}</nuxt-link>
+          <!-- Top Menu -->
+          <div class="v-app__menu__section v-app__menu__section--top" v-if="useMenus().value?.topMenu?.length">
+            <template v-for="item of useMenus().value?.topMenu" :key="item.url">
+              <a v-if="item.openInNewTab" class="v-app__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
+                <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+                <span v-else>{{ item.title }}</span>
+              </a>
+              <nuxt-link v-else class="v-app__menu__item" :href="item.url">
+                <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+                <span v-else>{{ item.title }}</span>
+              </nuxt-link>
             </template>
-            <nuxt-link class="v-app__menu__item"
-                       href="/project/observatoire-des-mobilites/portail-de-donnees"
-            >Portail de l’observatoire des mobilités</nuxt-link>
           </div>
 
+          <!-- Main Menu (with 2 levels) -->
+          <div class="v-app__menu__section v-app__menu__section--main">
+            <template v-for="item of useMenus().value?.mainMenu" :key="item.url">
+              <div class="v-app__menu__group">
+                <a v-if="item.openInNewTab" class="v-app__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
+                  <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+                  <span v-else>{{ item.title }}</span>
+                </a>
+                <nuxt-link v-else class="v-app__menu__item" :href="item.url">
+                  <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+                  <span v-else>{{ item.title }}</span>
+                </nuxt-link>
+                <!-- Children (2nd level) -->
+                <div v-if="item.children?.length" class="v-app__menu__children">
+                  <template v-for="child of item.children" :key="child.url">
+                    <a v-if="child.openInNewTab" class="v-app__menu__item v-app__menu__item--child" :href="child.url" target="_blank" rel="noopener noreferrer">
+                      <img v-if="child.svgUrl" class="v-app__menu__icon" :src="child.svgUrl" :alt="child.title">
+                      <span v-else>{{ child.title }}</span>
+                    </a>
+                    <nuxt-link v-else class="v-app__menu__item v-app__menu__item--child" :href="child.url">
+                      <img v-if="child.svgUrl" class="v-app__menu__icon" :src="child.svgUrl" :alt="child.title">
+                      <span v-else>{{ child.title }}</span>
+                    </nuxt-link>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </div>
 
-          <div style="display: flex; flex-direction: column; gap: 1rem">
-            <nuxt-link href="/protection-des-donnees-personnelles"
-            >Protection des données personnelles</nuxt-link>
+          <!-- Bottom Menu -->
+          <div class="v-app__menu__section v-app__menu__section--bottom" v-if="useMenus().value?.bottomMenu?.length">
+            <template v-for="item of useMenus().value?.bottomMenu" :key="item.url">
+              <a v-if="item.openInNewTab" class="v-app__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
+                <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+                <span v-else>{{ item.title }}</span>
+              </a>
+              <nuxt-link v-else class="v-app__menu__item" :href="item.url">
+                <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+                <span v-else>{{ item.title }}</span>
+              </nuxt-link>
+            </template>
+          </div>
+
+          <!-- Footer Menu -->
+          <div class="v-app__menu__section v-app__menu__section--footer">
+            <template v-for="item of useMenus().value?.footerMenu" :key="item.url">
+              <a v-if="item.openInNewTab" class="v-app__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
+                <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+                <span v-else>{{ item.title }}</span>
+              </a>
+              <nuxt-link v-else class="v-app__menu__item" :href="item.url">
+                <img v-if="item.svgUrl" class="v-app__menu__icon" :src="item.svgUrl" :alt="item.title">
+                <span v-else>{{ item.title }}</span>
+              </nuxt-link>
+            </template>
+            <!-- Social icons -->
             <div class="app__icon">
               <a href="https://ch.linkedin.com/company/fondation-modus" target="_blank">
                   <svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
@@ -92,10 +145,12 @@ import {
     showCookieBanner,
     showMenu,
     siteInfo,
-    useIsIntersected, useStateNavBarreMsgMessage
+    useIsIntersected,
+    useMenus,
+    useStateNavBarreMsgMessage
 } from "~/composable/main";
 import AppCookie from "~/components/AppCookie.vue";
-import {ApiFetchPagesInfo} from "~/composable/adminApi/apiFetch";
+import {ApiFetchMenus, ApiFetchPagesInfo} from "~/composable/adminApi/apiFetch";
 import {getCookieBannerValue, setCookieBannerValue} from "~/utils/cookieBannerLocalStorage";
 import {matomo, updateMatomoWithNavigation} from "~/utils/matomo";
 
@@ -113,7 +168,13 @@ onMounted(async () => {
         bodyScrollInfo().value = {top: window.scrollY }
     })
 
-    siteInfo().value = await ApiFetchPagesInfo()
+    // Fetch site info and menus in parallel
+    const [siteInfoData, menusData] = await Promise.all([
+        ApiFetchPagesInfo(),
+        ApiFetchMenus()
+    ])
+    siteInfo().value = siteInfoData
+    useMenus().value = menusData
 
     if(useRouter().currentRoute.value.path === '/declic-mobilite') useRouter().push('/forms/declic-mobilite')
 })
@@ -171,6 +232,40 @@ onBeforeMount(() => {
     width: 100%;
   }
 
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    
+    &--main {
+      flex: 1;
+    }
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__children {
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    height: 2rem;
+    width: auto;
+    
+    :deep(svg) {
+      height: 100%;
+      width: auto;
+      fill: currentColor;
+    }
+  }
 
   .v-app__menu__item {
     display: block;
@@ -188,6 +283,16 @@ onBeforeMount(() => {
 
     @media (max-width: 900px) {
       font-size: 1.5rem;
+    }
+
+    &--child {
+      font-size: 1.5rem;
+      font-weight: 400;
+      padding: 0.5rem var(--app-gutter);
+
+      @media (max-width: 900px) {
+        font-size: 1.25rem;
+      }
     }
   }
 }
