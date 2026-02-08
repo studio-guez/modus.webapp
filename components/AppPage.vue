@@ -69,7 +69,7 @@
         </div>
 
       <div class="v-app-page__content app-show-background-on-nav"
-           v-if="$slots.default"
+           :class="{'v-app-page__content--list': headerType === 'list'}"
       >
         <slot v-if="$slots.default" />
         <template v-else>
@@ -374,6 +374,7 @@ nextTick(() => {
 }
 
 .v-app-page__content {
+  background: var(--app-color-grey);
   position: relative;
   z-index: 10;
   width: 100%;
@@ -381,6 +382,10 @@ nextTick(() => {
   @media (max-width: 900px) {
     box-shadow: 0 -5px 5px 0 var(--app-color-grey);
   }
+}
+
+.v-app-page__content--list {
+  background: transparent;
 }
 
 .v-app-page__path {
