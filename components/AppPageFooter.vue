@@ -1,23 +1,19 @@
 <template>
-    <section
+    <footer
         class="v-app-page-footer"
     >
-        <footer class="v-app-page-footer__footer">
+        <div class="v-app-page-footer__footer">
 
-            <div class="v-app-page-footer__footer__mailto"
+            <section class="v-app-page-footer__footer__mailto"
                  v-if="showMailTo"
             >
-                <a class="v-app-page-footer__footer__mailto__link"
-                   href="mailto:info@modus-ge.ch"
+                <div class="v-app-page-footer__footer__mailto__link__text"
                 >
-                    <div class="v-app-page-footer__footer__mailto__link__text"
-                    >
-                        <div>Vous avez des questions&nbsp;?</div>
-                        <div>Vous pouvez nous écrire à cette adresse&nbsp;</div>
-                    </div>
-                    <button class="app-button app-button--small">info@modus-ge.ch</button>
-                </a>
-            </div>
+                    <div>Vous avez des questions&nbsp;?</div>
+                    <div>Vous pouvez nous écrire à cette adresse&nbsp;</div>
+                    <div><a href="mailto:info@modus-ge.ch" class="app-button app-button--small v-app-page-footer__footer__mailto__link">info@modus-ge.ch</a></div>
+                </div>
+            </section>
 
             <app-newsletter/>
             <img
@@ -25,7 +21,7 @@
                 class="v-app-page-footer__bottom-image"
                 alt="image d'architecture urbaine"
             />
-        </footer>
+        </div>
 
 
         <div
@@ -41,6 +37,7 @@
                 class="v-app-page-footer__bottom__contact"
             >
                 <a href="mailto:info@modus-ge.ch" target="_blank">info@modus-ge.ch</a>
+                <address><a href="https://maps.app.goo.gl/JFB5uPAcHgqTwReH8" target="_blank">Rte de la Galaise 15A, 1228 Plan-les-Ouates</a></address>
                 <div class="app__icon">
                     <a href="https://ch.linkedin.com/company/fondation-modus" target="_blank">
                         <svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
@@ -77,7 +74,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </footer>
 </template>
 
 
@@ -103,12 +100,6 @@ const transformYValue: ComputedRef<number> = computed(() => {
 <style lang="scss" scoped>
 .v-app-page-footer {
     position: relative;
-    padding-top: 10rem;
-    background: var(--app-color-grey);
-
-    @media (max-width: 900px) {
-        padding-top: 2rem;
-    }
 }
 
 .v-app-page-footer__footer {
@@ -117,27 +108,16 @@ const transformYValue: ComputedRef<number> = computed(() => {
     z-index: 10;
 }
 
-.v-app-page-footer__footer__mailto__link {
+.v-app-page-footer__footer__mailto__link__text {
     color: var(--app-color-main--dark);
-    text-decoration: none;
-    box-sizing: border-box;
-    padding: var(--app-gutter);
-    display: flex;
-    align-items: flex-end;
-    gap: var(--app-gutter);
-    margin: auto;
-    max-width: 1300px;
-    justify-content: center;
-    font-size: 1.5rem;
-    line-height: 1.15em;
-
-    @media(max-width: 900px) {
-        flex-direction: column;
-        align-items: center;
-    }
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    padding: 2.55555555556rem var(--base-padding-x);
 }
 
-.v-app-page-footer__footer__mailto__link__text {
+.v-app-page-footer__footer__mailto__link {
     font-weight: 700;
 }
 
@@ -175,8 +155,9 @@ const transformYValue: ComputedRef<number> = computed(() => {
     opacity: 0;
     color: var(--app-color-main);
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    gap: 2rem;
+    gap: 1rem;
     align-items: center;
 
     &.with-opacity-1 {
@@ -188,9 +169,27 @@ const transformYValue: ComputedRef<number> = computed(() => {
         text-decoration: none;
     }
 
+    address {
+        font-style: normal;
+        a {    
+            text-decoration: none;
+        }
+    }
+
     .app__icon {
         a {
             background: var(--app-color-main);
+            transition: background-color 0.3s ease-in-out;
+
+            &:hover {
+                background-color: var(--app-color-main--dark);
+            }
+        }
+    }
+    a{
+        transition: color 0.3s ease-in-out;
+        &:hover {
+            color: var(--app-color-main--dark);
         }
     }
 }
