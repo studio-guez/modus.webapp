@@ -9,6 +9,8 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
+  --base-padding-x: 4.44444444444rem;
+
   // grid
   --app-gutter: 1rem;
 
@@ -30,6 +32,8 @@
   --app-color-orange: hsl(40 80% 50% / 1);
   --app-color-red: hsla(0, 85%, 50%, 0.6);
   --app-color-grey:       hsl(143, 5%, 95%);
+  --app-color-grey-text: #A6A6A6;
+  --app-color-orange-bright: #FF6F00;
 
   // nav
   --app-nav__height: 3.8rem;
