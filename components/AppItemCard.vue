@@ -367,6 +367,7 @@ function handleActionClick() {
     padding: 0 1.66666666667rem 1.66666666667rem 1.66666666667rem;
     margin: auto 0 0 0;
     font-size: 2rem;
+    color: var(--card-text);
 }
 
 .v-app-item-card__preview {
