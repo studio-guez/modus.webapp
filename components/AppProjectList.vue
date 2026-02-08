@@ -1,136 +1,128 @@
 <template>
-    <section
-        class="v-project-list"
-    >
-      <app-page
-        :header-cover="headerCover"
-        :header-text="headerText"
-        :header-type="'list'"
-      >
+  <section class="v-project-list">
+    <app-page :header-cover="headerCover" :header-text="headerText" :header-type="'list'">
       <div class="v-project-list__content app-show-background-on-nav">
         <div class="v-project-list__description" v-if="preview">
-          {{  preview  }}
+          {{ preview }}
         </div>
-        
-        <!-- Tag filters (from backend availableTags) -->
+
+        <!-- Tag filters (from backend availableTags) or tag links -->
         <div class="v-project-list__tags" v-if="visibleTags.length > 0">
-          <div class="v-project-list__filter"
-               v-for="tag of visibleTags"
-               :key="tag.slug"
-               :class="{ 'v-project-list__filter--active': isTagSelected(tag.slug) }"
-               @click="toggleTagFilter(tag.slug)"
-          >
-            {{ tag.name }}
-            <svg v-if="isTagSelected(tag.slug)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
-              <path d="M4 4l8 8M12 4l-8 8"/>
-            </svg>
-          </div>
+          <!-- Tags as navigation links (for tag pages) -->
+          <template v-if="tagsAsLinks">
+            <NuxtLink v-for="tag of visibleTags" :key="tag.slug" :to="`/tag/${tag.slug}`"
+              class="v-project-list__filter v-project-list__filter--link">
+              {{ tag.name }}
+            </NuxtLink>
+          </template>
+          <!-- Tags as toggle filters -->
+          <template v-else>
+            <div class="v-project-list__filter" v-for="tag of visibleTags" :key="tag.slug"
+              :class="{ 'v-project-list__filter--active': isTagSelected(tag.slug) }" @click="toggleTagFilter(tag.slug)">
+              {{ tag.name }}
+              <svg v-if="isTagSelected(tag.slug)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
+                <path d="M4 4l8 8M12 4l-8 8" />
+              </svg>
+            </div>
+          </template>
         </div>
-        <div class="v-project-list__filters-row" v-if="filterGroups.length > 0 || visibleTags.length > 0">
+        <div class="v-project-list__filters-row" v-if="filterGroups.length > 0">
           <div class="v-project-list__filters">
             <!-- Dynamic filter groups -->
             <template v-for="group in filterGroups" :key="group.id">
-              <div class="v-project-list__filter"
-                   :class="[
-                      `v-project-list__filter--${group.id}`,
-                      { 'v-project-list__filter--active': isFilterSelected(group.id, option.key) }
-                   ]"
-                   v-for="option in getVisibleOptions(group)"
-                   :key="option.key"
-                   :style="{
-                      '--filter-bg': option.bgColor || 'transparent',
-                      '--filter-text': option.textColor || 'var(--app-color-grey-text)',
-                      '--filter-border': option.borderColor || 'var(--app-color-grey-text)',
-                   }"
-                   @click="toggleFilter(group, option.key)"
-              >
+              <div class="v-project-list__filter" :class="[
+                `v-project-list__filter--${group.id}`,
+                { 'v-project-list__filter--active': isFilterSelected(group.id, option.key) }
+              ]" v-for="option in getVisibleOptions(group)" :key="option.key" :style="{
+                '--filter-bg': option.bgColor || 'transparent',
+                '--filter-text': option.textColor || 'var(--app-color-grey-text)',
+                '--filter-border': option.borderColor || 'var(--app-color-grey-text)',
+              }" @click="toggleFilter(group, option.key)">
                 {{ option.label }}
-                
-                <svg v-if="isFilterSelected(group.id, option.key)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
-                  <path d="M4 4l8 8M12 4l-8 8"/>
+
+                <svg v-if="isFilterSelected(group.id, option.key)" xmlns="http://www.w3.org/2000/svg" width="16"
+                  height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
+                  <path d="M4 4l8 8M12 4l-8 8" />
                 </svg>
               </div>
             </template>
           </div>
-          <div class="v-project-list__filter v-project-list__filter--clear"
-               v-if="hasActiveFilters"
-               @click="clearTagFilter"
-          >
+          <div class="v-project-list__filter v-project-list__filter--clear" v-if="hasActiveFilters"
+            @click="clearTagFilter">
             Effacer tous les filtres
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
-              <path d="M4 4l8 8M12 4l-8 8"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+              stroke-width="2" viewBox="0 0 16 16">
+              <path d="M4 4l8 8M12 4l-8 8" />
             </svg>
           </div>
         </div>
         <template v-if="itemsToShow.length > 0">
           <div class="v-project-list__content__grid">
-              <TransitionGroup name="list-fade">
-                <app-item-card
-                    v-for="item of itemsToShow"
-                    :key="item.slug"
-                    v-bind="mapItemToCardProps(item, pageType, backendBaseUrl)"
-                    @play-video="handlePlayVideo"
-                    @play-podcast="handlePlayPodcast"
-                    @pdf-download="handlePdfDownload"
-                />
-              </TransitionGroup>
+            <TransitionGroup name="list-fade">
+              <app-item-card v-for="item of itemsToShow" :key="item.slug"
+                v-bind="mapItemToCardProps(item, pageType, backendBaseUrl)" @play-video="handlePlayVideo"
+                @play-podcast="handlePlayPodcast" @pdf-download="handlePdfDownload" />
+            </TransitionGroup>
           </div>
         </template>
         <template v-else>
-            <div class="v-project-list__empty">
-              {{emptyMessage}}
-            </div>
-          </template>
+          <div class="v-project-list__empty">
+            {{ emptyMessage }}
+          </div>
+        </template>
       </div>
-      </app-page>
-      <app-page-footer/>
-    </section>
+    </app-page>
+    <app-page-footer />
+  </section>
 </template>
 
 
 <script setup lang="ts">
-import {ComputedRef, Ref, UnwrapRef} from 'vue'
+import { ComputedRef, Ref, UnwrapRef } from 'vue'
 import AppPage from "~/components/AppPage.vue";
-import {IApiSingleProject, IApiTag} from "~/composable/adminApi/apiDefinitions";
-import {ApiFetchProjects} from "~/composable/adminApi/apiFetch";
+import { IApiSingleProject, IApiTag } from "~/composable/adminApi/apiDefinitions";
+import { ApiFetchProjects } from "~/composable/adminApi/apiFetch";
 import AppItemCard from "~/components/AppItemCard.vue";
 import { mapItemToCardProps } from '~/utils/mapItemToCardProps';
 
 export type PageType = 'media' | 'report' | 'tool' | 'project'
 
 export interface FilterOption {
-    key: string
-    label: string
-    bgColor?: string
-    textColor?: string
-    borderColor?: string
+  key: string
+  label: string
+  bgColor?: string
+  textColor?: string
+  borderColor?: string
 }
 
 export interface FilterGroup {
-    id: string
-    type: 'single' | 'multi'
-    queryParam: string
-    options: FilterOption[]
-    filterFn: (item: IApiSingleProject, selectedKeys: string[]) => boolean
+  id: string
+  type: 'single' | 'multi'
+  queryParam: string
+  options: FilterOption[]
+  filterFn: (item: IApiSingleProject, selectedKeys: string[]) => boolean
 }
 
 const props = withDefaults(defineProps<{
-    apiEndpoint: string
-    filterMap?: Record<string, string>
-    filterDescription?: string
-    emptyMessage: string
-    pageType?: PageType
-    filterGroups?: FilterGroup[]
+  apiEndpoint: string
+  filterMap?: Record<string, string>
+  filterDescription?: string
+  emptyMessage: string
+  pageType?: PageType
+  filterGroups?: FilterGroup[]
+  tagsAsLinks?: boolean
 }>(), {
-    filterMap: () => ({}),
-    filterDescription: '',
-    filterGroups: () => [],
+  filterMap: () => ({}),
+  filterDescription: '',
+  filterGroups: () => [],
+  tagsAsLinks: false,
 })
 
 const emit = defineEmits<{
-    (e: 'play-video', mediaUrl: string, title: string): void
-    (e: 'play-podcast', mediaUrl: string, title: string): void
-    (e: 'pdf-download', pdfUrl: string): void
+  (e: 'play-video', mediaUrl: string, title: string): void
+  (e: 'play-podcast', mediaUrl: string, title: string): void
+  (e: 'pdf-download', pdfUrl: string): void
 }>()
 
 const runtimeConfig = useRuntimeConfig()
@@ -154,261 +146,275 @@ const filterSelections: Ref<Record<string, string[]>> = ref({})
 
 // Initialize filter selections from query params
 function initFilterSelectionsFromQuery() {
-    const selections: Record<string, string[]> = {}
-    for (const group of props.filterGroups) {
-        const queryValue = route.query[group.queryParam]
-        if (group.type === 'single') {
-            selections[group.id] = queryValue ? [queryValue as string] : []
-        } else {
-            selections[group.id] = parseTagsFromQuery(queryValue as string | undefined)
-        }
+  const selections: Record<string, string[]> = {}
+  for (const group of props.filterGroups) {
+    const queryValue = route.query[group.queryParam]
+    if (group.type === 'single') {
+      selections[group.id] = queryValue ? [queryValue as string] : []
+    } else {
+      selections[group.id] = parseTagsFromQuery(queryValue as string | undefined)
     }
-    filterSelections.value = selections
+  }
+  filterSelections.value = selections
 }
 
 // Check if filter option is selected
 function isFilterSelected(groupId: string, key: string): boolean {
-    return filterSelections.value[groupId]?.includes(key) ?? false
+  return filterSelections.value[groupId]?.includes(key) ?? false
 }
 
 // Toggle filter selection
 function toggleFilter(group: FilterGroup, key: string) {
-    const current = filterSelections.value[group.id] || []
-    let newSelection: string[]
-    
-    if (group.type === 'single') {
-        // Single select: toggle on/off
-        newSelection = current.includes(key) ? [] : [key]
+  const current = filterSelections.value[group.id] || []
+  let newSelection: string[]
+
+  if (group.type === 'single') {
+    // Single select: toggle on/off
+    newSelection = current.includes(key) ? [] : [key]
+  } else {
+    // Multi select: add/remove from array
+    const index = current.indexOf(key)
+    if (index === -1) {
+      newSelection = [...current, key]
     } else {
-        // Multi select: add/remove from array
-        const index = current.indexOf(key)
-        if (index === -1) {
-            newSelection = [...current, key]
-        } else {
-            newSelection = current.filter((k: string) => k !== key)
-        }
+      newSelection = current.filter((k: string) => k !== key)
     }
-    
-    filterSelections.value = {
-        ...filterSelections.value,
-        [group.id]: newSelection
-    }
-    updateQueryParams()
+  }
+
+  filterSelections.value = {
+    ...filterSelections.value,
+    [group.id]: newSelection
+  }
+  updateQueryParams()
 }
 
 function parseTagsFromQuery(queryValue: string | (string | null)[] | undefined): string[] {
-    if (!queryValue) return []
-    if (Array.isArray(queryValue)) {
-        return queryValue.filter((v): v is string => typeof v === 'string')
-    }
-    return queryValue.split(',').filter(Boolean)
+  if (!queryValue) return []
+  if (Array.isArray(queryValue)) {
+    return queryValue.filter((v): v is string => typeof v === 'string')
+  }
+  return queryValue.split(',').filter(Boolean)
 }
 
 // Check if a tag is selected
 function isTagSelected(slug: string): boolean {
-    return selectedTags.value.includes(slug)
+  return selectedTags.value.includes(slug)
 }
 
 // Items to show (filtered or all)
 const itemsToShow: ComputedRef<UnwrapRef<IApiSingleProject[]>> = computed(() => {
-    if (!items.value) return []
-    const hasTagFilters = selectedTags.value.length > 0 || contentTypeFilter.value
-    const hasGroupFilters = props.filterGroups.some((g: FilterGroup) => (filterSelections.value[g.id]?.length ?? 0) > 0)
-    if (!hasTagFilters && !hasGroupFilters) return items.value
-    return filteredItems(items.value)
+  if (!items.value) return []
+  const hasTagFilters = selectedTags.value.length > 0 || contentTypeFilter.value
+  const hasGroupFilters = props.filterGroups.some((g: FilterGroup) => (filterSelections.value[g.id]?.length ?? 0) > 0)
+  if (!hasTagFilters && !hasGroupFilters) return items.value
+  return filteredItems(items.value)
 })
 
 function filteredItems(items: IApiSingleProject[]): IApiSingleProject[] {
-    return simulateFiltering(
-        items,
-        selectedTags.value,
-        contentTypeFilter.value,
-        filterSelections.value
-    )
+  return simulateFiltering(
+    items,
+    selectedTags.value,
+    contentTypeFilter.value,
+    filterSelections.value
+  )
 }
 
 // Helper to check if items would exist with given filter state
 function simulateFiltering(
-    itemList: IApiSingleProject[],
-    tagSlugs: string[],
-    contentType: string | null,
-    groupSelections: Record<string, string[]>
+  itemList: IApiSingleProject[],
+  tagSlugs: string[],
+  contentType: string | null,
+  groupSelections: Record<string, string[]>
 ): IApiSingleProject[] {
-    return Object.values(itemList).filter(item => {
-        // Tag filter (OR logic - item matches if it has ANY of the selected tags)
-        if (tagSlugs.length > 0) {
-            const tags = item.content.tags
-            if (!tags || !Array.isArray(tags)) return false
-            const hasAnyTag = tags.some(t => tagSlugs.includes(t.slug))
-            if (!hasAnyTag) return false
-        }
-        
-        // Content type filter (also matches against tags for backward compatibility)
-        if (contentType) {
-            const tags = item.content.tags
-            if (!tags || !Array.isArray(tags)) return false
-            const hasType = tags.some(t => t.slug === contentType)
-            if (!hasType) return false
-        }
-        
-        // Apply each filter group's filterFn
-        for (const group of props.filterGroups) {
-            const selected = groupSelections[group.id] || []
-            if (selected.length > 0) {
-                if (!group.filterFn(item, selected)) return false
-            }
-        }
-        
-        return true
-    })
+  return Object.values(itemList).filter(item => {
+    // Tag filter (OR logic - item matches if it has ANY of the selected tags)
+    if (tagSlugs.length > 0) {
+      const tags = item.content.tags
+      if (!tags || !Array.isArray(tags)) return false
+      const hasAnyTag = tags.some(t => tagSlugs.includes(t.slug))
+      if (!hasAnyTag) return false
+    }
+
+    // Content type filter (also matches against tags for backward compatibility)
+    if (contentType) {
+      const tags = item.content.tags
+      if (!tags || !Array.isArray(tags)) return false
+      const hasType = tags.some(t => t.slug === contentType)
+      if (!hasType) return false
+    }
+
+    // Apply each filter group's filterFn
+    for (const group of props.filterGroups) {
+      const selected = groupSelections[group.id] || []
+      if (selected.length > 0) {
+        if (!group.filterFn(item, selected)) return false
+      }
+    }
+
+    return true
+  })
 }
 
 // Computed: tags that would have results if selected (given current other filters)
+// When tagsAsLinks is true, show all available tags as navigation links
 const visibleTags = computed(() => {
-    if (!items.value) return []
-    return availableTags.value.filter((tag: IApiTag) => {
-        // If already selected, always show it
-        if (isTagSelected(tag.slug)) return true
-        // Check if selecting this tag would have results
-        const newTagSelection = [...selectedTags.value, tag.slug]
-        const results = simulateFiltering(
-            items.value!,
-            newTagSelection,
-            contentTypeFilter.value,
-            filterSelections.value
-        )
-        return results.length > 0
-    })
+  if (!items.value) return []
+
+  // In link mode, show all available tags (they're links to other tag pages)
+  if (props.tagsAsLinks) {
+    return availableTags.value
+  }
+
+  return availableTags.value.filter((tag: IApiTag) => {
+    // If already selected, always show it
+    if (isTagSelected(tag.slug)) return true
+    // Check if selecting this tag would have results
+    const newTagSelection = [...selectedTags.value, tag.slug]
+    const results = simulateFiltering(
+      items.value!,
+      newTagSelection,
+      contentTypeFilter.value,
+      filterSelections.value
+    )
+    return results.length > 0
+  })
 })
 
 // Get visible filter options for a group (options that would have results)
 function getVisibleOptions(group: FilterGroup): FilterOption[] {
-    if (!items.value) return []
-    return group.options.filter(option => {
-        // If already selected, always show it
-        if (isFilterSelected(group.id, option.key)) return true
-        // Simulate selecting this option
-        const newSelections = { ...filterSelections.value }
-        if (group.type === 'single') {
-            newSelections[group.id] = [option.key]
-        } else {
-            newSelections[group.id] = [...(filterSelections.value[group.id] || []), option.key]
-        }
-        const results = simulateFiltering(
-            items.value!,
-            selectedTags.value,
-            contentTypeFilter.value,
-            newSelections
-        )
-        return results.length > 0
-    })
+  if (!items.value) return []
+  return group.options.filter(option => {
+    // If already selected, always show it
+    if (isFilterSelected(group.id, option.key)) return true
+    // Simulate selecting this option
+    const newSelections = { ...filterSelections.value }
+    if (group.type === 'single') {
+      newSelections[group.id] = [option.key]
+    } else {
+      newSelections[group.id] = [...(filterSelections.value[group.id] || []), option.key]
+    }
+    const results = simulateFiltering(
+      items.value!,
+      selectedTags.value,
+      contentTypeFilter.value,
+      newSelections
+    )
+    return results.length > 0
+  })
 }
 
 onMounted(async () => {
-    const pageData = await ApiFetchProjects(props.apiEndpoint)
+  const pageData = await ApiFetchProjects(props.apiEndpoint)
 
-    headerCover.value = pageData.options.headerImage?.resize.tiny
-    headerText.value = pageData.options.headerTitle
-    preview.value = pageData.options.preview
-    items.value = Object.values(pageData.children)
-    
-    // Get available tags from backend
-    if (pageData.options.availableTags) {
-        availableTags.value = pageData.options.availableTags
-    }
+  headerCover.value = pageData.options.headerImage?.resize.tiny
+  headerText.value = pageData.options.headerTitle
+  preview.value = pageData.options.preview
+  items.value = Object.values(pageData.children)
 
-    lazyLoadHeadImage(pageData.options.headerImage?.url || '')
+  // Get available tags from backend
+  if (pageData.options.availableTags) {
+    availableTags.value = pageData.options.availableTags
+  }
+
+  lazyLoadHeadImage(pageData.options.headerImage?.url || '')
 })
 
 function lazyLoadHeadImage(largeImageUrl: string) {
-    const imageToLoad = new Image()
-    imageToLoad.src = largeImageUrl
-    imageToLoad.addEventListener('load', () => headerCover.value = largeImageUrl)
+  const imageToLoad = new Image()
+  imageToLoad.src = largeImageUrl
+  imageToLoad.addEventListener('load', () => headerCover.value = largeImageUrl)
 }
 
 // Filter actions
 function toggleTagFilter(slug: string) {
-    const index = selectedTags.value.indexOf(slug)
-    if (index === -1) {
-        selectedTags.value = [...selectedTags.value, slug]
-    } else {
-        selectedTags.value = selectedTags.value.filter((t: string) => t !== slug)
-    }
-    updateQueryParams()
+  const index = selectedTags.value.indexOf(slug)
+  if (index === -1) {
+    selectedTags.value = [...selectedTags.value, slug]
+  } else {
+    selectedTags.value = selectedTags.value.filter((t: string) => t !== slug)
+  }
+  updateQueryParams()
 }
 
 function clearTagFilter() {
-    selectedTags.value = []
-    // Clear all filter group selections
-    const cleared: Record<string, string[]> = {}
-    for (const group of props.filterGroups) {
-        cleared[group.id] = []
-    }
-    filterSelections.value = cleared
-    updateQueryParams()
+  selectedTags.value = []
+  // Clear all filter group selections
+  const cleared: Record<string, string[]> = {}
+  for (const group of props.filterGroups) {
+    cleared[group.id] = []
+  }
+  filterSelections.value = cleared
+  updateQueryParams()
 }
 
 function updateQueryParams() {
-    const query: Record<string, string> = {}
-    if (selectedTags.value.length > 0) query.tag = selectedTags.value.join(',')
-    if (contentTypeFilter.value) query.type = contentTypeFilter.value
-    
-    // Add filter group query params
-    for (const group of props.filterGroups) {
-        const selected = filterSelections.value[group.id] || []
-        if (selected.length > 0) {
-            query[group.queryParam] = selected.join(',')
-        }
+  const query: Record<string, string> = {}
+  if (selectedTags.value.length > 0) query.tag = selectedTags.value.join(',')
+  if (contentTypeFilter.value) query.type = contentTypeFilter.value
+
+  // Add filter group query params
+  for (const group of props.filterGroups) {
+    const selected = filterSelections.value[group.id] || []
+    if (selected.length > 0) {
+      query[group.queryParam] = selected.join(',')
     }
-    router.push({ query })
+  }
+  router.push({ query })
 }
 
 const hasActiveFilters = computed(() => {
-    if (selectedTags.value.length > 0) return true
-    return props.filterGroups.some((g: FilterGroup) => (filterSelections.value[g.id]?.length ?? 0) > 0)
+  if (selectedTags.value.length > 0) return true
+  return props.filterGroups.some((g: FilterGroup) => (filterSelections.value[g.id]?.length ?? 0) > 0)
 })
 
 // Watch for query param changes
 watch(() => route.query, (newQuery: Record<string, string | (string | null)[] | null | undefined>) => {
-    selectedTags.value = parseTagsFromQuery(newQuery.tag as string | undefined)
-    contentTypeFilter.value = (newQuery.type as string) || null
-    initFilterSelectionsFromQuery()
+  selectedTags.value = parseTagsFromQuery(newQuery.tag as string | undefined)
+  contentTypeFilter.value = (newQuery.type as string) || null
+  initFilterSelectionsFromQuery()
 }, { immediate: true })
 
 // Initialize filter selections on mount
 onMounted(() => {
-    initFilterSelectionsFromQuery()
+  initFilterSelectionsFromQuery()
 })
 
 function handlePlayVideo(mediaUrl: string, title: string) {
-    emit('play-video', mediaUrl, title)
+  emit('play-video', mediaUrl, title)
 }
 
 function handlePlayPodcast(mediaUrl: string, title: string) {
-    emit('play-podcast', mediaUrl, title)
+  emit('play-podcast', mediaUrl, title)
 }
 
 function handlePdfDownload(pdfUrl: string) {
-    emit('pdf-download', pdfUrl)
+  emit('pdf-download', pdfUrl)
 }
 </script>
 
 
-<style lang="scss" scoped >
-*{
+<style lang="scss" scoped>
+* {
   box-sizing: border-box;
 }
+
 .v-project-list {
   color: var(--app-color-black);
 }
+
+.v-project-list__content {
+  padding-top: 2.55555555556rem;
+}
+
 .v-project-list__description {
-  padding: 2.55555555556rem var(--base-padding-x);
+  padding: 0 var(--base-padding-x) 2.55555555556rem var(--base-padding-x);
   max-width: 85ch;
   text-align: center;
   text-wrap: balance;
   font-size: 1.33333333333rem;
   margin: 0 auto 0 auto;
 }
+
 .v-project-list__tags {
   padding: 1.33333333333rem var(--base-padding-x);
   display: flex;
@@ -416,6 +422,7 @@ function handlePdfDownload(pdfUrl: string) {
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+
 .v-project-list__filters-row {
   padding: 1.33333333333rem var(--base-padding-x);
   display: flex;
@@ -453,7 +460,7 @@ function handlePdfDownload(pdfUrl: string) {
     color: var(--app-color-black);
     border-color: var(--app-color-orange-bright);
   }
-    
+
   svg {
     width: 1em;
     height: 1em;
@@ -463,7 +470,7 @@ function handlePdfDownload(pdfUrl: string) {
     background-color: var(--app-color-orange-bright);
     color: var(--app-color-black);
     border-color: var(--app-color-orange-bright);
-    
+
     &:hover {
       filter: brightness(0.9);
     }
@@ -474,9 +481,19 @@ function handlePdfDownload(pdfUrl: string) {
     background-color: var(--app-color-black);
     color: var(--app-color-white);
     border-color: var(--app-color-black);
-    
+
     &:hover {
       filter: brightness(0.9);
+    }
+  }
+
+  &.v-project-list__filter--link {
+    text-decoration: none;
+
+    &:hover {
+      background-color: var(--app-color-orange-bright);
+      color: var(--app-color-black);
+      border-color: var(--app-color-orange-bright);
     }
   }
 }
@@ -489,22 +506,27 @@ function handlePdfDownload(pdfUrl: string) {
 .v-project-list__content__grid {
   --grid-gap: 1.11111111111rem;
   --item-per-row: 1;
-  
-  padding: 0 var(--base-padding-x) 4.55555555556rem var(--base-padding-x);  
+
+  padding: 0 var(--base-padding-x) 4.55555555556rem var(--base-padding-x);
   display: grid;
   grid-template-columns: repeat(var(--item-per-row), 1fr);
   width: 100%;
   gap: var(--grid-gap);
+
   @media (min-width: 741px) {
-    --item-per-row: 2; /* 2 columns */
+    --item-per-row: 2;
+    /* 2 columns */
   }
+
   @media (min-width: 1381px) {
-    --item-per-row: 3; /* 3 columns */
+    --item-per-row: 3;
+    /* 3 columns */
   }
-  
+
 }
+
 .v-project-list__empty {
-  padding: 1rem var(--base-padding-x);  
+  padding: 1rem var(--base-padding-x);
   text-align: center;
 }
 

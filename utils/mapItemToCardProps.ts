@@ -39,6 +39,8 @@ interface ItemContent {
     mediatype?: 'podcast' | 'video'
     spotifyurl?: string
     youtubeurl?: string
+    // Tag page aggregation field (from tag.json.php)
+    pageType?: 'media' | 'report' | 'project'
 }
 
 interface ItemData {
@@ -56,18 +58,21 @@ interface ItemData {
 export function resolveCardType(item: ItemData, pageType?: 'media' | 'report' | 'tool' | 'project'): CardType {
     const content = item.content
     
+    // Use content.pageType if prop pageType not provided (for tag pages with mixed content)
+    const effectivePageType = pageType || content.pageType
+    
     // Media page: check mediatype field directly (from medias.json.php)
-    if (pageType === 'media' && content.mediatype) {
+    if (effectivePageType === 'media' && content.mediatype) {
         return content.mediatype
     }
     
     // Report page
-    if (pageType === 'report') {
+    if (effectivePageType === 'report') {
         return 'report'
     }
     
     // Tool page: check for external link
-    if (pageType === 'tool') {
+    if (effectivePageType === 'tool') {
         const isExternal = content.isexternallink === 'true' || 
                           (content.externalurl && content.externalurl.startsWith('http'))
         return isExternal ? 'tool-external' : 'tool-internal'

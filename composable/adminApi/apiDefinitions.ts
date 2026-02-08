@@ -345,6 +345,8 @@ export interface IApiSingleProject {
         isprojectwithduration: "true" | "false",
         dateend: string,
         tags?: IApiTag[],
+        // Tag page aggregation field (from tag.json.php)
+        pageType?: 'media' | 'report' | 'project',
     }
 }
 
