@@ -316,7 +316,8 @@ export interface IApiProjects {
     "options": {
         "showInNav": boolean,
         "headerTitle": string,
-        "headerImage": IApiImage | null
+        "headerImage": IApiImage | null,
+        "preview": string,
     },
     "children": {
         [key: string]: IApiSingleProject
