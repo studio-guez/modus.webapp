@@ -2,16 +2,16 @@
     <app-project-list
         api-endpoint="medias"
         page-type="media"
-        :filter-map="tagMap"
-        filter-description="Filtré par type"
-        empty-message="Il n'y a pas encore de média pour"
+        :filter-groups="filterGroups"
+        empty-message="Aucun média ne correspond à votre recherche."
         @play-video="handlePlayVideo"
         @play-podcast="handlePlayPodcast"
     />
 </template>
 
 <script setup lang="ts">
-import AppProjectList from "~/components/AppProjectList.vue";
+import AppProjectList, { FilterGroup, FilterOption } from "~/components/AppProjectList.vue";
+import { IApiSingleProject } from "~/composable/adminApi/apiDefinitions";
 import { useSpotifyUrl, useSpotifyTitle, usePodcastPlayerIsOpen, useYoutubeUrl, useYoutubeTitle } from '~/composable/main'
 
 const spotifyUrl = useSpotifyUrl()
@@ -20,10 +20,24 @@ const playerIsOpen = usePodcastPlayerIsOpen()
 const youtubeUrl = useYoutubeUrl()
 const youtubeTitle = useYoutubeTitle()
 
-const tagMap = {
-    "podcast": "Podcast",
-    "video": "Vidéo",
-}
+const mediaTypeOptions: FilterOption[] = [
+    { key: 'video', label: 'Vidéo', bgColor: 'var(--app-color-yellow)', textColor: 'var(--app-color-black)', borderColor: 'var(--app-color-yellow)' },
+    { key: 'podcast', label: 'Podcast', bgColor: 'var(--app-color-yellow-light)', textColor: 'var(--app-color-black)', borderColor: 'var(--app-color-yellow-light)' },
+]
+
+const filterGroups: FilterGroup[] = [
+    {
+        id: 'mediaType',
+        type: 'single',
+        queryParam: 'typeFilter',
+        options: mediaTypeOptions,
+        filterFn: (item: IApiSingleProject, selectedKeys: string[]) => {
+            const content = item.content as Record<string, unknown>
+            const mediaType = content.mediatype as string | undefined
+            return mediaType ? selectedKeys.includes(mediaType) : false
+        }
+    }
+]
 
 function handlePlayVideo(mediaUrl: string, title: string) {
     // Stop podcast if playing

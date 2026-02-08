@@ -11,87 +11,78 @@
         <div class="v-project-list__description" v-if="preview">
           {{  preview  }}
         </div>
-        <div class="v-project-list__tags"
-        >
+        
+        <!-- Tag filters (from backend availableTags) -->
+        <div class="v-project-list__tags" v-if="availableTags.length > 0">
+          <div class="v-project-list__filter"
+               v-for="tag of availableTags"
+               :key="tag.slug"
+               :class="{ 'v-project-list__filter--active': isTagSelected(tag.slug) }"
+               @click="toggleTagFilter(tag.slug)"
+          >
+            {{ tag.name }}
+            <svg v-if="isTagSelected(tag.slug)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
+              <path d="M4 4l8 8M12 4l-8 8"/>
+            </svg>
+          </div>
         </div>
-        <div class="v-project-list__content__grid">
-          <div class="v-project-list__section v-project-list__section--full" >
-            <div style="display: flex; align-items: center; justify-content: center">
-
+        <div class="v-project-list__filters-row" v-if="filterGroups.length > 0 || availableTags.length > 0">
+          <div class="v-project-list__filters">
+            <!-- Dynamic filter groups -->
+            <template v-for="group in filterGroups" :key="group.id">
               <div class="v-project-list__filter"
-                   @click="router.push({ query: {} })"
-                   v-if="activeFilterLabel"
+                   :class="[
+                      `v-project-list__filter--${group.id}`,
+                      { 'v-project-list__filter--active': isFilterSelected(group.id, option.key) }
+                   ]"
+                   v-for="option in group.options"
+                   :key="option.key"
+                   :style="{
+                      '--filter-bg': option.bgColor || 'transparent',
+                      '--filter-text': option.textColor || 'var(--app-color-grey-text)',
+                      '--filter-border': option.borderColor || 'var(--app-color-grey-text)',
+                   }"
+                   @click="toggleFilter(group, option.key)"
               >
-                <div class="v-project-list__filter__text">
-                  {{activeFilterLabel}}
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
-                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                {{ option.label }}
+                
+                <svg v-if="isFilterSelected(group.id, option.key)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
+                  <path d="M4 4l8 8M12 4l-8 8"/>
                 </svg>
               </div>
-              <div class="v-project-list__filter--list"
-                   style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center"
-                   v-else
-              >
-                <template v-for="(value, key) of filterMap">
-                  <div class="app-button app-button--small"
-                          @click="router.push({ query: { q: key } })"
-                  >{{value}}
-                  </div>
-                </template>
-              </div>
-
-            </div>
-            <div class="app-font-small"
-                 v-if="filter && activeFilterLabel"
-                    style="display: flex; align-items: center; justify-content: center; margin-top: 1rem;">
-              {{filterDescription}}&nbsp;<em>{{activeFilterLabel}}</em>
-            </div>
-
+            </template>
           </div>
-
-          <template v-if="itemsToShow">
-            <template v-if="itemsToShow.length > 0">
-              <div class="v-project-list__section"
-                   v-for="item of itemsToShow"
-                   :key="item.slug"
-              >
-                <app-item-card
-                    v-bind="mapItemToCardProps(item, pageType, backendBaseUrl)"
-                    @play-video="handlePlayVideo"
-                    @play-podcast="handlePlayPodcast"
-                    @pdf-download="handlePdfDownload"
-                />
-              </div>
-            </template>
-            <template v-else>
-              <div class="v-project-list__section v-project-list__section--full">
-                <div style="min-height: 50vh; display: flex; align-items: center; justify-content: center; width: 100%">
-                  <h4 style="text-align: center">{{emptyMessage}}
-                    <span class="app-button app-button--small"
-                          @click="router.push({ query: {q: ''} })"
-                    >{{activeFilterLabel}}</span>
-                  </h4>
-                </div>
-              </div>
-            </template>
-          </template>
-          <template v-else>
-            <template v-for="item of items" :key="item.slug">
-              <div class="v-project-list__section">
-                <app-item-card
-                    v-bind="mapItemToCardProps(item, pageType, backendBaseUrl)"
-                    @play-video="handlePlayVideo"
-                    @play-podcast="handlePlayPodcast"
-                    @pdf-download="handlePdfDownload"
-                />
-              </div>
-            </template>
-          </template>
+          <div class="v-project-list__filter v-project-list__filter--clear"
+               v-if="hasActiveFilters"
+               @click="clearTagFilter"
+          >
+            Effacer tous les filtres
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
+              <path d="M4 4l8 8M12 4l-8 8"/>
+            </svg>
+          </div>
         </div>
+        <template v-if="itemsToShow.length > 0">
+          <div class="v-project-list__content__grid">
+              <TransitionGroup name="list-fade">
+                <app-item-card
+                    v-for="item of itemsToShow"
+                    :key="item.slug"
+                    v-bind="mapItemToCardProps(item, pageType, backendBaseUrl)"
+                    @play-video="handlePlayVideo"
+                    @play-podcast="handlePlayPodcast"
+                    @pdf-download="handlePdfDownload"
+                />
+              </TransitionGroup>
+          </div>
+        </template>
+        <template v-else>
+            <div class="v-project-list__empty">
+              {{emptyMessage}}
+            </div>
+          </template>
       </div>
       </app-page>
-
       <app-page-footer/>
     </section>
 </template>
@@ -100,21 +91,41 @@
 <script setup lang="ts">
 import {ComputedRef, Ref, UnwrapRef} from 'vue'
 import AppPage from "~/components/AppPage.vue";
-import {LocationQueryValue} from "vue-router";
-import {IApiSingleProject} from "~/composable/adminApi/apiDefinitions";
+import {IApiSingleProject, IApiTag} from "~/composable/adminApi/apiDefinitions";
 import {ApiFetchProjects} from "~/composable/adminApi/apiFetch";
 import AppItemCard from "~/components/AppItemCard.vue";
 import { mapItemToCardProps } from '~/utils/mapItemToCardProps';
 
 export type PageType = 'media' | 'report' | 'tool' | 'project'
 
-const props = defineProps<{
+export interface FilterOption {
+    key: string
+    label: string
+    bgColor?: string
+    textColor?: string
+    borderColor?: string
+}
+
+export interface FilterGroup {
+    id: string
+    type: 'single' | 'multi'
+    queryParam: string
+    options: FilterOption[]
+    filterFn: (item: IApiSingleProject, selectedKeys: string[]) => boolean
+}
+
+const props = withDefaults(defineProps<{
     apiEndpoint: string
-    filterMap: Record<string, string>
-    filterDescription: string
+    filterMap?: Record<string, string>
+    filterDescription?: string
     emptyMessage: string
     pageType?: PageType
-}>()
+    filterGroups?: FilterGroup[]
+}>(), {
+    filterMap: () => ({}),
+    filterDescription: '',
+    filterGroups: () => [],
+})
 
 const emit = defineEmits<{
     (e: 'play-video', mediaUrl: string, title: string): void
@@ -131,44 +142,109 @@ const router = useRouter()
 const headerCover: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 const headerText: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 const preview: Ref<UnwrapRef<undefined | string>> = ref(undefined)
-
 const items: Ref<UnwrapRef<undefined | IApiSingleProject[]>> = ref(undefined)
+const availableTags: Ref<UnwrapRef<IApiTag[]>> = ref([])
 
-const itemsToShow: ComputedRef<UnwrapRef<null | IApiSingleProject[]>> = computed(() => {
-    if (!filter.value) return null
-    if (!items.value) return null
+// Query params: tag for tag filter (comma-separated for multiple), type for content type filter
+const selectedTags: Ref<UnwrapRef<string[]>> = ref(parseTagsFromQuery(route.query.tag))
+const contentTypeFilter: Ref<UnwrapRef<string | null>> = ref(route.query.type as string || null)
 
+// Dynamic filter state: maps filterGroup.id -> selected keys
+const filterSelections: Ref<Record<string, string[]>> = ref({})
+
+// Initialize filter selections from query params
+function initFilterSelectionsFromQuery() {
+    const selections: Record<string, string[]> = {}
+    for (const group of props.filterGroups) {
+        const queryValue = route.query[group.queryParam]
+        if (group.type === 'single') {
+            selections[group.id] = queryValue ? [queryValue as string] : []
+        } else {
+            selections[group.id] = parseTagsFromQuery(queryValue as string | undefined)
+        }
+    }
+    filterSelections.value = selections
+}
+
+// Check if filter option is selected
+function isFilterSelected(groupId: string, key: string): boolean {
+    return filterSelections.value[groupId]?.includes(key) ?? false
+}
+
+// Toggle filter selection
+function toggleFilter(group: FilterGroup, key: string) {
+    const current = filterSelections.value[group.id] || []
+    let newSelection: string[]
+    
+    if (group.type === 'single') {
+        // Single select: toggle on/off
+        newSelection = current.includes(key) ? [] : [key]
+    } else {
+        // Multi select: add/remove from array
+        const index = current.indexOf(key)
+        if (index === -1) {
+            newSelection = [...current, key]
+        } else {
+            newSelection = current.filter((k: string) => k !== key)
+        }
+    }
+    
+    filterSelections.value = {
+        ...filterSelections.value,
+        [group.id]: newSelection
+    }
+    updateQueryParams()
+}
+
+function parseTagsFromQuery(queryValue: string | (string | null)[] | undefined): string[] {
+    if (!queryValue) return []
+    if (Array.isArray(queryValue)) {
+        return queryValue.filter((v): v is string => typeof v === 'string')
+    }
+    return queryValue.split(',').filter(Boolean)
+}
+
+// Check if a tag is selected
+function isTagSelected(slug: string): boolean {
+    return selectedTags.value.includes(slug)
+}
+
+// Items to show (filtered or all)
+const itemsToShow: ComputedRef<UnwrapRef<IApiSingleProject[]>> = computed(() => {
+    if (!items.value) return []
+    const hasTagFilters = selectedTags.value.length > 0 || contentTypeFilter.value
+    const hasGroupFilters = props.filterGroups.some((g: FilterGroup) => (filterSelections.value[g.id]?.length ?? 0) > 0)
+    if (!hasTagFilters && !hasGroupFilters) return items.value
     return filteredItems(items.value)
 })
 
 function filteredItems(items: IApiSingleProject[]): IApiSingleProject[] {
     return Object.values(items).filter(item => {
-        const tagsRaw = item.content.tags as string[] | string | undefined
-        if (!tagsRaw) return false
-        
-        const tags: string[] = Array.isArray(tagsRaw) 
-            ? tagsRaw 
-            : (typeof tagsRaw === 'string' ? tagsRaw.split(',').map((t: string) => t.trim()) : [])
-        
-        return tags.includes(filter.value as string)
-    })
-}
-
-function sortedByDate(items: {[key: string]: IApiSingleProject}): IApiSingleProject[] {
-    const itemArray = Object.values(items)
-
-    return itemArray.sort((a, b) => {
-        const dateStartA = new Date(a.content.datestart).getTime()
-        const dateStartB = new Date(b.content.datestart).getTime()
-
-        if (dateStartA !== dateStartB) {
-            return dateStartB - dateStartA
+        // Tag filter (OR logic - item matches if it has ANY of the selected tags)
+        if (selectedTags.value.length > 0) {
+            const tags = item.content.tags
+            if (!tags || !Array.isArray(tags)) return false
+            const hasAnyTag = tags.some(t => selectedTags.value.includes(t.slug))
+            if (!hasAnyTag) return false
         }
-
-        const dateEndA = a.content.dateend ? new Date(a.content.dateend).getTime() : 0
-        const dateEndB = b.content.dateend ? new Date(b.content.dateend).getTime() : 0
-
-        return dateEndB - dateEndA
+        
+        // Content type filter (also matches against tags for backward compatibility)
+        if (contentTypeFilter.value) {
+            const tags = item.content.tags
+            if (!tags || !Array.isArray(tags)) return false
+            const hasType = tags.some(t => t.slug === contentTypeFilter.value)
+            if (!hasType) return false
+        }
+        
+        // Apply each filter group's filterFn
+        for (const group of props.filterGroups) {
+            const selected = filterSelections.value[group.id] || []
+            if (selected.length > 0) {
+                if (!group.filterFn(item, selected)) return false
+            }
+        }
+        
+        return true
     })
 }
 
@@ -178,7 +254,12 @@ onMounted(async () => {
     headerCover.value = pageData.options.headerImage?.resize.tiny
     headerText.value = pageData.options.headerTitle
     preview.value = pageData.options.preview
-    items.value = sortedByDate(pageData.children)
+    items.value = Object.values(pageData.children)
+    
+    // Get available tags from backend
+    if (pageData.options.availableTags) {
+        availableTags.value = pageData.options.availableTags
+    }
 
     lazyLoadHeadImage(pageData.options.headerImage?.url || '')
 })
@@ -189,17 +270,58 @@ function lazyLoadHeadImage(largeImageUrl: string) {
     imageToLoad.addEventListener('load', () => headerCover.value = largeImageUrl)
 }
 
-const filter: Ref<UnwrapRef<string | LocationQueryValue[] | null>> = ref(route.query.q || null)
+// Filter actions
+function toggleTagFilter(slug: string) {
+    const index = selectedTags.value.indexOf(slug)
+    if (index === -1) {
+        selectedTags.value = [...selectedTags.value, slug]
+    } else {
+        selectedTags.value = selectedTags.value.filter((t: string) => t !== slug)
+    }
+    updateQueryParams()
+}
 
-const activeFilterLabel: ComputedRef<string | null> = computed(() => {
-    if (filter.value === null) return null
-    if (typeof filter.value !== 'string') return null
-    if (filter.value in props.filterMap) return props.filterMap[filter.value]
-    return null
+function clearTagFilter() {
+    selectedTags.value = []
+    // Clear all filter group selections
+    const cleared: Record<string, string[]> = {}
+    for (const group of props.filterGroups) {
+        cleared[group.id] = []
+    }
+    filterSelections.value = cleared
+    updateQueryParams()
+}
+
+function updateQueryParams() {
+    const query: Record<string, string> = {}
+    if (selectedTags.value.length > 0) query.tag = selectedTags.value.join(',')
+    if (contentTypeFilter.value) query.type = contentTypeFilter.value
+    
+    // Add filter group query params
+    for (const group of props.filterGroups) {
+        const selected = filterSelections.value[group.id] || []
+        if (selected.length > 0) {
+            query[group.queryParam] = selected.join(',')
+        }
+    }
+    router.push({ query })
+}
+
+const hasActiveFilters = computed(() => {
+    if (selectedTags.value.length > 0) return true
+    return props.filterGroups.some((g: FilterGroup) => (filterSelections.value[g.id]?.length ?? 0) > 0)
 })
 
-watch(() => route.query.q, (newSearch: string | LocationQueryValue[] | undefined) => {
-    filter.value = newSearch || null
+// Watch for query param changes
+watch(() => route.query, (newQuery: Record<string, string | (string | null)[] | null | undefined>) => {
+    selectedTags.value = parseTagsFromQuery(newQuery.tag as string | undefined)
+    contentTypeFilter.value = (newQuery.type as string) || null
+    initFilterSelectionsFromQuery()
+}, { immediate: true })
+
+// Initialize filter selections on mount
+onMounted(() => {
+    initFilterSelectionsFromQuery()
 })
 
 function handlePlayVideo(mediaUrl: string, title: string) {
@@ -217,40 +339,89 @@ function handlePdfDownload(pdfUrl: string) {
 
 
 <style lang="scss" scoped >
+*{
+  box-sizing: border-box;
+}
+.v-project-list {
+  color: var(--app-color-black);
+}
 .v-project-list__description {
-  padding: 2.55555555556rem 4.44444444444rem;
+  padding: 2.55555555556rem var(--base-padding-x);
   max-width: 85ch;
   text-align: center;
   text-wrap: balance;
   font-size: 1.33333333333rem;
-  color: var(--app-color-black);
   margin: 0 auto 0 auto;
 }
 .v-project-list__tags {
-  padding: 2.55555555556rem 4.44444444444rem;
+  padding: 1.33333333333rem var(--base-padding-x);
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  column-gap: 0.277777777778rem;
-  row-gap: 0.277777777778rem;
+  gap: 0.5rem;
 }
-.v-project-list__filter {
+.v-project-list__filters-row {
+  padding: 1.33333333333rem var(--base-padding-x);
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 4.94444444444rem;
+}
+
+.v-project-list__filters {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  border-radius: 5rem;
-  flex-wrap: nowrap;
-  border: solid 2px var(--app-color-main);
-  box-sizing: border-box;
-  padding: 1rem;
-  user-select: none;
-  cursor: pointer;
+  gap: 0.5rem;
+}
 
-  .v-project-list__filter__img {
-    display: block;
-    height: 2rem;
-    width: auto;
+.v-project-list__filter {
+  --filter-bg: transparent;
+  --filter-text: var(--app-color-grey-text);
+  --filter-border: var(--app-color-grey-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: .58333333333rem .83333333333rem;
+  line-height: 1;
+  font-size: .88888888888rem;
+  border-radius: 2rem;
+  color: var(--filter-text);
+  border: 2px solid var(--filter-border);
+  background-color: var(--filter-bg);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
+
+  &:hover {
+    background-color: var(--app-color-orange-bright);
+    color: var(--app-color-black);
+    border-color: var(--app-color-orange-bright);
+  }
+    
+  svg {
+    width: 1em;
+    height: 1em;
+  }
+
+  &.v-project-list__filter--active {
+    background-color: var(--app-color-orange-bright);
+    color: var(--app-color-black);
+    border-color: var(--app-color-orange-bright);
+    
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+
+  &.v-project-list__filter--clear {
+    background-color: transparent;
+    background-color: var(--app-color-black);
+    color: var(--app-color-white);
+    border-color: var(--app-color-black);
+    
+    &:hover {
+      filter: brightness(0.9);
+    }
   }
 }
 
@@ -260,91 +431,38 @@ function handlePdfDownload(pdfUrl: string) {
 }
 
 .v-project-list__content__grid {
+  --grid-gap: 1.11111111111rem;
+  --item-per-row: 1;
+  
+  padding: 0 var(--base-padding-x) 4.55555555556rem var(--base-padding-x);  
   display: grid;
-  grid-template-columns: repeat(auto-fit, 1fr);
-  justify-content: center;
-  flex-wrap: wrap;
+  grid-template-columns: repeat(var(--item-per-row), 1fr);
   width: 100%;
-  box-sizing: border-box;
-  gap: 1rem;
-  padding: 2rem var(--app-gutter);
-
-  @media (min-width: 600px) {
-    grid-template-columns: repeat(auto-fit, minmax(26rem, 1fr));
+  gap: var(--grid-gap);
+  @media (min-width: 741px) {
+    --item-per-row: 2; /* 2 columns */
   }
+  @media (min-width: 1381px) {
+    --item-per-row: 3; /* 3 columns */
+  }
+  
+}
+.v-project-list__empty {
+  padding: 1rem var(--base-padding-x);  
+  text-align: center;
 }
 
-.v-project-list__section {
-  box-sizing: border-box;
-  position: relative;
-  width: 100%;
+/* Simple fade transition for list items */
+.list-fade-enter-active {
+  transition: opacity 0.75s ease-in-out;
+}
 
-  &.v-project-list__section--full {
-    max-width: none;
-    grid-column: 1 / -1;
-  }
+.list-fade-leave-active {
+  transition: opacity 0.5s ease-in-out;
+}
 
-  &.v-project-list__section--no-padding {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  &.v-project-list__section--no-margin {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  &.v-project-list__section--intro {
-    box-sizing: content-box;
-    position: relative;
-
-    p:nth-child(1n + 1) {
-      color: var(--app-color-main);
-    }
-
-    p:nth-child(2n + 1) {
-      color: var(--app-color-main--dark);
-    }
-  }
-
-  .v-project-list__section__graphic-items {
-    position: absolute;
-
-    @media (max-width: 900px) {
-      display: none;
-    }
-  }
-
-  .v-project-list__section__graphic-items--m {
-    top: 0;
-    left: 0;
-    transform: translate(-100%, 0%);
-    height: 16vw;
-    max-height: 298px;
-  }
-
-  .v-project-list__section__graphic-items--o {
-    bottom: 0;
-    left: 0;
-    transform: translate(-100%, 0%);
-    height: 8vw;
-    max-height: 148px;
-  }
-
-  .v-project-list__section__graphic-items--du {
-    top: 0;
-    right: 0;
-    transform: translate(90%, -10%);
-    height: 20vw;
-    max-height: 372px;
-  }
-
-  .v-project-list__section__graphic-items--s {
-    bottom: 0;
-    right: 0;
-    transform: translate(100%, 0%);
-    height: 12vw;
-    max-height: 224px;
-  }
+.list-fade-enter-from,
+.list-fade-leave-to {
+  opacity: 0;
 }
 </style>

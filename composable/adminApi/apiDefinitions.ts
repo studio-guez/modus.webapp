@@ -312,12 +312,18 @@ export interface IApiImage {
     }
 }
 
+export interface IApiTag {
+    slug: string,
+    name: string,
+}
+
 export interface IApiProjects {
     "options": {
         "showInNav": boolean,
         "headerTitle": string,
         "headerImage": IApiImage | null,
         "preview": string,
+        "availableTags"?: IApiTag[],
     },
     "children": {
         [key: string]: IApiSingleProject
@@ -338,7 +344,7 @@ export interface IApiSingleProject {
         datestart: string,
         isprojectwithduration: "true" | "false",
         dateend: string,
-        tags?: string[],
+        tags?: IApiTag[],
     }
 }
 
