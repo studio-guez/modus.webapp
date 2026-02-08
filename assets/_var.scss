@@ -9,7 +9,15 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --base-padding-x: 4.44444444444rem;
+  --base-padding-x: 0.5rem;
+
+  @media (min-width: 768px) {
+    --base-padding-x: 2.222222222rem;
+  }
+
+  @media (min-width: 1024px) {
+    --base-padding-x: 4.44444444444rem;
+  }
 
   // grid
   --app-gutter: 1rem;
