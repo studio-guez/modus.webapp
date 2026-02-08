@@ -62,7 +62,7 @@
                         ><span class="v-app-item-card__button-text">{{ actionLabel }}</span></button>
                     </div>
                 </div>
-                <h4 class="v-app-item-card__title">{{ title }}</h4>
+                <component :is="titleTag" class="v-app-item-card__title">{{ title }}</component>
             </div>
         </div>
         <div class="v-app-item-card__back" v-if="preview || hasStatus">
@@ -132,6 +132,7 @@ const props = withDefaults(defineProps<{
     objectPosition?: string
     dateLabel?: string
     title?: string
+    titleTag?: string
     preview?: string
     status?: string
     statusColor?: string
@@ -146,6 +147,7 @@ const props = withDefaults(defineProps<{
     hasPdfButton: false,
     hasStatus: false,
     actionLabel: 'Découvrir',
+    titleTag: 'h2',
 })
 
 const isFlipped = ref(false)
@@ -367,6 +369,7 @@ function handleActionClick() {
     margin: auto 0 0 0;
     font-size: 2rem;
     color: var(--card-text);
+    text-align: left;
 }
 
 .v-app-item-card__preview {
