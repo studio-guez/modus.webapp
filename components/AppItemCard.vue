@@ -1,5 +1,5 @@
 <template>
-    <section class="v-app-item-card"
+    <article class="v-app-item-card"
              :class="cardTypeClass"
     >
         <div class="v-app-item-card__front">
@@ -108,7 +108,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </article>
 </template>
 
 
@@ -189,7 +189,6 @@ function handleActionClick() {
     box-sizing: border-box;
     width: 100%;
     position: relative;
-    height: 100%;
     transform-style: preserve-3d;
 }
 
