@@ -16,7 +16,6 @@ export interface CardProps {
     objectPosition?: string
     dateLabel?: string
     title?: string
-    subtitle?: string
     preview?: string
     status?: string
     statusColor?: string
@@ -26,7 +25,6 @@ export interface CardProps {
 }
 
 interface ItemContent {
-    title?: string
     headertitle?: string
     preview?: string
     datestart?: string
@@ -152,8 +150,7 @@ export function mapItemToCardProps(
         imgSrc: item.headerImage?.[0]?.resize?.reg,
         objectPosition: item.headerImage?.[0]?.focus,
         dateLabel: config.hasDateLabel && content.datestart && content.dateend && (content.datestart !== content.dateend) ? formatDateRange(content.datestart, content.dateend) : undefined,
-        title: content.title,
-        subtitle: content.headertitle,
+        title: content.headertitle,
         preview: content.preview,
         status,
         statusColor,

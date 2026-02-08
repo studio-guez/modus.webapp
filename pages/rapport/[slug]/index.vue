@@ -180,6 +180,7 @@ interface Tag {
 interface RelatedReport {
   slug: string
   title: string
+  headerTitle?: string
   headerImage?: {
     mediaUrl?: string
     focus?: string

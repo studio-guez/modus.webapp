@@ -31,7 +31,8 @@
             <div class="v-app-item-card__body">
                 <div class="v-app-item-card__actions">
                     <button class="app-button app-button--small v-app-item-card__button v-app-item-card__button--plus"
-                            @click.stop="flipCard"
+                            @click.stop="flipCard" 
+                            v-if="preview || hasStatus"
                     >
                         <span class="v-app-item-card__button-text">+</span>
                     </button>
@@ -64,7 +65,7 @@
                 <h4 class="v-app-item-card__title">{{ title }}</h4>
             </div>
         </div>
-        <div class="v-app-item-card__back">
+        <div class="v-app-item-card__back" v-if="preview || hasStatus">
             <div class="v-app-item-card__body">
                 <div class="v-app-item-card__actions">
                     <button class="app-button app-button--small v-app-item-card__button v-app-item-card__button--plus"
@@ -131,7 +132,6 @@ const props = withDefaults(defineProps<{
     objectPosition?: string
     dateLabel?: string
     title?: string
-    subtitle?: string
     preview?: string
     status?: string
     statusColor?: string
@@ -332,6 +332,7 @@ function handleActionClick() {
     justify-content: flex-end;
     align-items: center;
     column-gap: 0.77777777777rem;
+    margin-left:auto
 }
 
 .v-app-item-card__button {

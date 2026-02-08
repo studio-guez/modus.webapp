@@ -10,6 +10,7 @@
             :path="true"
             :header-size="'small'"
             :header-text="headerText"
+            :power_subpages="powerSubpages"
         />
         <div class="v-tool-slug__footer">
           <div style="display: flex; justify-content: center; flex-direction: column; align-items: center; gap: .5rem; cursor: pointer"
