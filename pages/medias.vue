@@ -21,15 +21,15 @@ const youtubeUrl = useYoutubeUrl()
 const youtubeTitle = useYoutubeTitle()
 
 const mediaTypeOptions: FilterOption[] = [
-    { key: 'video', label: 'Vidéo', bgColor: 'var(--app-color-yellow)', textColor: 'var(--app-color-black)', borderColor: 'var(--app-color-yellow)' },
-    { key: 'podcast', label: 'Podcast', bgColor: 'var(--app-color-yellow-light)', textColor: 'var(--app-color-black)', borderColor: 'var(--app-color-yellow-light)' },
+    { key: 'videos', label: 'Vidéos', bgColor: 'var(--app-color-yellow)', textColor: 'var(--app-color-black)', borderColor: 'var(--app-color-yellow)' },
+    { key: 'podcasts', label: 'Podcasts', bgColor: 'var(--app-color-yellow-light)', textColor: 'var(--app-color-black)', borderColor: 'var(--app-color-yellow-light)' },
 ]
 
 const filterGroups: FilterGroup[] = [
     {
-        id: 'mediaType',
+        id: 'type',
         type: 'single',
-        queryParam: 'typeFilter',
+        queryParam: 'type',
         options: mediaTypeOptions,
         filterFn: (item: IApiSingleProject, selectedKeys: string[]) => {
             const content = item.content as Record<string, unknown>

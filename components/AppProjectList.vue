@@ -138,9 +138,8 @@ const preview: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 const items: Ref<UnwrapRef<undefined | IApiSingleProject[]>> = ref(undefined)
 const availableTags: Ref<UnwrapRef<IApiTag[]>> = ref([])
 
-// Query params: tag for tag filter (comma-separated for multiple), type for content type filter
-const selectedTags: Ref<UnwrapRef<string[]>> = ref(parseTagsFromQuery(route.query.tag))
-const contentTypeFilter: Ref<UnwrapRef<string | null>> = ref(route.query.type as string || null)
+// Query params: tags for tag filter (comma-separated for multiple)
+const selectedTags: Ref<UnwrapRef<string[]>> = ref(parseTagsFromQuery(route.query.tags))
 
 // Dynamic filter state: maps filterGroup.id -> selected keys
 const filterSelections: Ref<Record<string, string[]>> = ref({})
@@ -205,7 +204,7 @@ function isTagSelected(slug: string): boolean {
 // Items to show (filtered or all)
 const itemsToShow: ComputedRef<UnwrapRef<IApiSingleProject[]>> = computed(() => {
   if (!items.value) return []
-  const hasTagFilters = selectedTags.value.length > 0 || contentTypeFilter.value
+  const hasTagFilters = selectedTags.value.length > 0
   const hasGroupFilters = props.filterGroups.some((g: FilterGroup) => (filterSelections.value[g.id]?.length ?? 0) > 0)
   if (!hasTagFilters && !hasGroupFilters) return items.value
   return filteredItems(items.value)
@@ -215,7 +214,6 @@ function filteredItems(items: IApiSingleProject[]): IApiSingleProject[] {
   return simulateFiltering(
     items,
     selectedTags.value,
-    contentTypeFilter.value,
     filterSelections.value
   )
 }
@@ -224,7 +222,6 @@ function filteredItems(items: IApiSingleProject[]): IApiSingleProject[] {
 function simulateFiltering(
   itemList: IApiSingleProject[],
   tagSlugs: string[],
-  contentType: string | null,
   groupSelections: Record<string, string[]>
 ): IApiSingleProject[] {
   return Object.values(itemList).filter(item => {
@@ -234,14 +231,6 @@ function simulateFiltering(
       if (!tags || !Array.isArray(tags)) return false
       const hasAnyTag = tags.some(t => tagSlugs.includes(t.slug))
       if (!hasAnyTag) return false
-    }
-
-    // Content type filter (also matches against tags for backward compatibility)
-    if (contentType) {
-      const tags = item.content.tags
-      if (!tags || !Array.isArray(tags)) return false
-      const hasType = tags.some(t => t.slug === contentType)
-      if (!hasType) return false
     }
 
     // Apply each filter group's filterFn
@@ -274,7 +263,6 @@ const visibleTags = computed(() => {
     const results = simulateFiltering(
       items.value!,
       newTagSelection,
-      contentTypeFilter.value,
       filterSelections.value
     )
     return results.length > 0
@@ -297,7 +285,6 @@ function getVisibleOptions(group: FilterGroup): FilterOption[] {
     const results = simulateFiltering(
       items.value!,
       selectedTags.value,
-      contentTypeFilter.value,
       newSelections
     )
     return results.length > 0
@@ -350,8 +337,7 @@ function clearTagFilter() {
 
 function updateQueryParams() {
   const query: Record<string, string> = {}
-  if (selectedTags.value.length > 0) query.tag = selectedTags.value.join(',')
-  if (contentTypeFilter.value) query.type = contentTypeFilter.value
+  if (selectedTags.value.length > 0) query.tags = selectedTags.value.join(',')
 
   // Add filter group query params
   for (const group of props.filterGroups) {
@@ -370,8 +356,7 @@ const hasActiveFilters = computed(() => {
 
 // Watch for query param changes
 watch(() => route.query, (newQuery: Record<string, string | (string | null)[] | null | undefined>) => {
-  selectedTags.value = parseTagsFromQuery(newQuery.tag as string | undefined)
-  contentTypeFilter.value = (newQuery.type as string) || null
+  selectedTags.value = parseTagsFromQuery(newQuery.tags as string | undefined)
   initFilterSelectionsFromQuery()
 }, { immediate: true })
 

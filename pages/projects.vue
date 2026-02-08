@@ -12,8 +12,8 @@ import AppProjectList, { FilterGroup, FilterOption } from "~/components/AppProje
 import { IApiSingleProject } from "~/composable/adminApi/apiDefinitions";
 
 const typeFilterOptions: FilterOption[] = [
-    { key: 'project-modus', label: 'Modus', bgColor: 'var(--app-color-main--dark)', textColor: 'var(--app-color-white)', borderColor: 'var(--app-color-main--dark)' },
-    { key: 'project-supported', label: 'Soutenu', bgColor: 'var(--app-color-main)', textColor: 'var(--app-color-white)', borderColor: 'var(--app-color-main)' },
+    { key: 'modus', label: 'Projets modus', bgColor: 'var(--app-color-main--dark)', textColor: 'var(--app-color-white)', borderColor: 'var(--app-color-main--dark)' },
+    { key: 'soutenus', label: 'Soutenus', bgColor: 'var(--app-color-main)', textColor: 'var(--app-color-white)', borderColor: 'var(--app-color-main)' },
 ]
 
 const statusFilterOptions: FilterOption[] = [
@@ -25,19 +25,18 @@ const filterGroups: FilterGroup[] = [
     {
         id: 'type',
         type: 'single',
-        queryParam: 'typeFilter',
+        queryParam: 'type',
         options: typeFilterOptions,
         filterFn: (item: IApiSingleProject, selectedKeys: string[]) => {
             const content = item.content as Record<string, unknown>
             const projectType = content.projecttype as string | undefined
-            const itemType = projectType === 'modus' ? 'project-modus' : 'project-supported'
-            return selectedKeys.includes(itemType)
+            return projectType ? selectedKeys.includes(projectType) : false
         }
     },
     {
-        id: 'status',
+        id: 'statut',
         type: 'single',
-        queryParam: 'status',
+        queryParam: 'statut',
         options: statusFilterOptions,
         filterFn: (item: IApiSingleProject, selectedKeys: string[]) => {
             const content = item.content as Record<string, unknown>
