@@ -1,29 +1,35 @@
 <template>
     <section
-        class="v-projects"
+        class="v-project-list"
     >
       <app-page
         :header-cover="headerCover"
         :header-text="headerText"
         :header-type="'list'"
       >
-      <div class="v-project__content app-show-background-on-nav">
-        <div class="v-project__content__grid">
-          <div class="v-project__section v-project__section--full" >
+      <div class="v-project-list__content app-show-background-on-nav">
+        <div class="v-project-list__description" v-if="preview">
+          {{  preview  }}
+        </div>
+        <div class="v-project-list__tags"
+        >
+        </div>
+        <div class="v-project-list__content__grid">
+          <div class="v-project-list__section v-project-list__section--full" >
             <div style="display: flex; align-items: center; justify-content: center">
 
-              <div class="v-project__filter"
+              <div class="v-project-list__filter"
                    @click="router.push({ query: {} })"
                    v-if="activeFilterLabel"
               >
-                <div class="v-project__filter__text">
+                <div class="v-project-list__filter__text">
                   {{activeFilterLabel}}
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
                   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
                 </svg>
               </div>
-              <div class="v-project__filter--list"
+              <div class="v-project-list__filter--list"
                    style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center"
                    v-else
               >
@@ -46,7 +52,7 @@
 
           <template v-if="itemsToShow">
             <template v-if="itemsToShow.length > 0">
-              <div class="v-project__section"
+              <div class="v-project-list__section"
                    v-for="item of itemsToShow"
                    :key="item.slug"
               >
@@ -59,7 +65,7 @@
               </div>
             </template>
             <template v-else>
-              <div class="v-project__section v-project__section--full">
+              <div class="v-project-list__section v-project-list__section--full">
                 <div style="min-height: 50vh; display: flex; align-items: center; justify-content: center; width: 100%">
                   <h4 style="text-align: center">{{emptyMessage}}
                     <span class="app-button app-button--small"
@@ -72,7 +78,7 @@
           </template>
           <template v-else>
             <template v-for="item of items" :key="item.slug">
-              <div class="v-project__section">
+              <div class="v-project-list__section">
                 <app-item-card
                     v-bind="mapItemToCardProps(item, pageType, backendBaseUrl)"
                     @play-video="handlePlayVideo"
@@ -124,6 +130,7 @@ const router = useRouter()
 
 const headerCover: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 const headerText: Ref<UnwrapRef<undefined | string>> = ref(undefined)
+const preview: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 
 const items: Ref<UnwrapRef<undefined | IApiSingleProject[]>> = ref(undefined)
 
@@ -170,6 +177,7 @@ onMounted(async () => {
 
     headerCover.value = pageData.options.headerImage?.resize.tiny
     headerText.value = pageData.options.headerTitle
+    preview.value = pageData.options.preview
     items.value = sortedByDate(pageData.children)
 
     lazyLoadHeadImage(pageData.options.headerImage?.url || '')
@@ -209,7 +217,24 @@ function handlePdfDownload(pdfUrl: string) {
 
 
 <style lang="scss" scoped >
-.v-project__filter {
+.v-project-list__description {
+  padding: 2.55555555556rem 4.44444444444rem;
+  max-width: 85ch;
+  text-align: center;
+  text-wrap: balance;
+  font-size: 1.33333333333rem;
+  color: var(--app-color-black);
+  margin: 0 auto 0 auto;
+}
+.v-project-list__tags {
+  padding: 2.55555555556rem 4.44444444444rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  column-gap: 0.277777777778rem;
+  row-gap: 0.277777777778rem;
+}
+.v-project-list__filter {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,19 +247,19 @@ function handlePdfDownload(pdfUrl: string) {
   user-select: none;
   cursor: pointer;
 
-  .v-project__filter__img {
+  .v-project-list__filter__img {
     display: block;
     height: 2rem;
     width: auto;
   }
 }
 
-.v-project__content {
+.v-project-list__content {
   position: relative;
   width: 100%;
 }
 
-.v-project__content__grid {
+.v-project-list__content__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, 1fr);
   justify-content: center;
@@ -249,27 +274,27 @@ function handlePdfDownload(pdfUrl: string) {
   }
 }
 
-.v-project__section {
+.v-project-list__section {
   box-sizing: border-box;
   position: relative;
   width: 100%;
 
-  &.v-project__section--full {
+  &.v-project-list__section--full {
     max-width: none;
     grid-column: 1 / -1;
   }
 
-  &.v-project__section--no-padding {
+  &.v-project-list__section--no-padding {
     padding-top: 0;
     padding-bottom: 0;
   }
 
-  &.v-project__section--no-margin {
+  &.v-project-list__section--no-margin {
     padding-left: 0;
     padding-right: 0;
   }
 
-  &.v-project__section--intro {
+  &.v-project-list__section--intro {
     box-sizing: content-box;
     position: relative;
 
@@ -282,7 +307,7 @@ function handlePdfDownload(pdfUrl: string) {
     }
   }
 
-  .v-project__section__graphic-items {
+  .v-project-list__section__graphic-items {
     position: absolute;
 
     @media (max-width: 900px) {
@@ -290,7 +315,7 @@ function handlePdfDownload(pdfUrl: string) {
     }
   }
 
-  .v-project__section__graphic-items--m {
+  .v-project-list__section__graphic-items--m {
     top: 0;
     left: 0;
     transform: translate(-100%, 0%);
@@ -298,7 +323,7 @@ function handlePdfDownload(pdfUrl: string) {
     max-height: 298px;
   }
 
-  .v-project__section__graphic-items--o {
+  .v-project-list__section__graphic-items--o {
     bottom: 0;
     left: 0;
     transform: translate(-100%, 0%);
@@ -306,7 +331,7 @@ function handlePdfDownload(pdfUrl: string) {
     max-height: 148px;
   }
 
-  .v-project__section__graphic-items--du {
+  .v-project-list__section__graphic-items--du {
     top: 0;
     right: 0;
     transform: translate(90%, -10%);
@@ -314,7 +339,7 @@ function handlePdfDownload(pdfUrl: string) {
     max-height: 372px;
   }
 
-  .v-project__section__graphic-items--s {
+  .v-project-list__section__graphic-items--s {
     bottom: 0;
     right: 0;
     transform: translate(100%, 0%);
