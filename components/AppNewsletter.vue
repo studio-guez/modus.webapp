@@ -1,8 +1,8 @@
 <template>
     <section class="v-app-newsletter child-remove-margin" >
-        <h2
+        <p
             class="v-app-newsletter__title"
-        >Laissez vos coordonnées pour recevoir nos informations</h2
+        >Laissez vos coordonnées pour recevoir nos informations</p
         >
         <form method="post"
               action="https://newsletter.infomaniak.com/external/submit"
@@ -73,6 +73,8 @@
     padding: 0;
     font-weight: 600;
     margin-bottom: 1.77777777778rem;
+    line-height: 1;
+    max-width: none;
 }
 
 form {
