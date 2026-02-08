@@ -11,9 +11,6 @@ export async function ApiFetchPage_powerBiSubPage(apiPath: string): Promise<IApi
     return ((await fetch(`${baseUrl}${apiPath}.json`)).json())
 }
 
-
-
-
 export async function ApiFetchPagePowerBIPage(apiPath: string): Promise<ApiPowerBIResponse> {
     return ((await fetch(`${baseUrl}${apiPath}.json`)).json())
 }

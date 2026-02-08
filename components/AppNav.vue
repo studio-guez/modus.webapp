@@ -105,7 +105,7 @@
 
 <script lang="ts" setup>
 
-import {arrayOfH2TitleIdInCurrentPage, showMenu, siteInfo, useStateNavBarreMsgMessage} from "~/composable/main";
+import {arrayOfH2TitleIdInCurrentPage, showMenu, useStateNavBarreMsgMessage} from "~/composable/main";
 
 const h2TitleIdInCurrentPage = arrayOfH2TitleIdInCurrentPage()
 

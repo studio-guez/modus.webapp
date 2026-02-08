@@ -144,13 +144,12 @@ import {
     cookieIsValidate,
     showCookieBanner,
     showMenu,
-    siteInfo,
     useIsIntersected,
     useMenus,
     useStateNavBarreMsgMessage
 } from "~/composable/main";
 import AppCookie from "~/components/AppCookie.vue";
-import {ApiFetchMenus, ApiFetchPagesInfo} from "~/composable/adminApi/apiFetch";
+import {ApiFetchMenus} from "~/composable/adminApi/apiFetch";
 import {getCookieBannerValue, setCookieBannerValue} from "~/utils/cookieBannerLocalStorage";
 import {matomo, updateMatomoWithNavigation} from "~/utils/matomo";
 
@@ -168,13 +167,7 @@ onMounted(async () => {
         bodyScrollInfo().value = {top: window.scrollY }
     })
 
-    // Fetch site info and menus in parallel
-    const [siteInfoData, menusData] = await Promise.all([
-        ApiFetchPagesInfo(),
-        ApiFetchMenus()
-    ])
-    siteInfo().value = siteInfoData
-    useMenus().value = menusData
+    useMenus().value = await ApiFetchMenus()
 
     if(useRouter().currentRoute.value.path === '/declic-mobilite') useRouter().push('/forms/declic-mobilite')
 })

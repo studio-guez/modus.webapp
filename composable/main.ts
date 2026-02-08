@@ -1,5 +1,5 @@
 import {Ref} from "vue";
-import {IApiMenus, IApiSiteInfo} from "~/composable/adminApi/apiDefinitions";
+import {IApiMenus} from "~/composable/adminApi/apiDefinitions";
 
 export const arrayOfH2TitleIdInCurrentPage: () => Ref<{ anchor: string; name: string }[]> = () => {
     return useState(
@@ -40,9 +40,6 @@ export const cookieIsValidate: () => Ref<boolean> = () => {
 
 export const showMenu: () => Ref<boolean> =
     () => useState('showMenu', () => false)
-
-export const siteInfo: () => Ref<IApiSiteInfo | null > =
-    () => useState('siteInfo', () => null)
 
 export const useMenus: () => Ref<IApiMenus | null> =
     () => useState('menus', () => null)
