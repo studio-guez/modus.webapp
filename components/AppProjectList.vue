@@ -17,45 +17,46 @@
           </template>
           <!-- Tags as toggle filters -->
           <template v-else>
-            <div class="v-project-list__filter" v-for="tag of visibleTags" :key="tag.slug"
-              :class="{ 'v-project-list__filter--active': isTagSelected(tag.slug) }" @click="toggleTagFilter(tag.slug)">
+            <button type="button" class="v-project-list__filter" v-for="tag of visibleTags" :key="tag.slug"
+              :class="{ 'v-project-list__filter--active': isTagSelected(tag.slug) }"
+              :aria-pressed="isTagSelected(tag.slug)" @click="toggleTagFilter(tag.slug)">
               {{ tag.name }}
               <svg v-if="isTagSelected(tag.slug)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
-                stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
+                stroke="currentColor" stroke-width="2" viewBox="0 0 16 16" aria-hidden="true">
                 <path d="M4 4l8 8M12 4l-8 8" />
               </svg>
-            </div>
+            </button>
           </template>
         </div>
         <div class="v-project-list__filters-row" v-if="filterGroups.length > 0">
           <div class="v-project-list__filters">
             <!-- Dynamic filter groups -->
             <template v-for="group in filterGroups" :key="group.id">
-              <div class="v-project-list__filter" :class="[
+              <button type="button" class="v-project-list__filter" :class="[
                 `v-project-list__filter--${group.id}`,
                 { 'v-project-list__filter--active': isFilterSelected(group.id, option.key) }
               ]" v-for="option in getVisibleOptions(group)" :key="option.key" :style="{
                 '--filter-bg': option.bgColor || 'transparent',
                 '--filter-text': option.textColor || 'var(--app-color-grey-text)',
                 '--filter-border': option.borderColor || 'var(--app-color-grey-text)',
-              }" @click="toggleFilter(group, option.key)">
+              }" :aria-pressed="isFilterSelected(group.id, option.key)" @click="toggleFilter(group, option.key)">
                 {{ option.label }}
 
                 <svg v-if="isFilterSelected(group.id, option.key)" xmlns="http://www.w3.org/2000/svg" width="16"
-                  height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
+                  height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16" aria-hidden="true">
                   <path d="M4 4l8 8M12 4l-8 8" />
                 </svg>
-              </div>
+              </button>
             </template>
           </div>
-          <div class="v-project-list__filter v-project-list__filter--clear" v-if="hasActiveFilters"
+          <button type="button" class="v-project-list__filter v-project-list__filter--clear" v-if="hasActiveFilters"
             @click="clearTagFilter">
             Effacer tous les filtres
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
-              stroke-width="2" viewBox="0 0 16 16">
+              stroke-width="2" viewBox="0 0 16 16" aria-hidden="true">
               <path d="M4 4l8 8M12 4l-8 8" />
             </svg>
-          </div>
+          </button>
         </div>
         <template v-if="itemsToShow.length > 0">
           <div class="v-project-list__content__grid">
@@ -438,9 +439,14 @@ function handlePdfDownload(pdfUrl: string) {
 }
 
 .v-project-list__filter {
+  all: revert;
   --filter-bg: transparent;
   --filter-text: var(--app-color-grey-text);
   --filter-border: var(--app-color-grey-text);
+  box-sizing: border-box;
+  appearance: none;
+  font-family: inherit;
+  font-weight: inherit;
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
@@ -459,6 +465,11 @@ function handlePdfDownload(pdfUrl: string) {
     background-color: var(--app-color-orange-bright);
     color: var(--app-color-black);
     border-color: var(--app-color-orange-bright);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--app-color-orange-bright);
+    outline-offset: 2px;
   }
 
   svg {
