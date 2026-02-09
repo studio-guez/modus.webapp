@@ -36,7 +36,7 @@ interface ItemContent {
     body?: unknown
     pdffile?: string
     // Media-specific fields (from medias.json.php)
-    mediatype?: 'podcast' | 'video'
+    mediatype?: 'podcasts' | 'videos'
     spotifyurl?: string
     youtubeurl?: string
     // Tag page aggregation field (from tag.json.php)
@@ -62,8 +62,13 @@ export function resolveCardType(item: ItemData, pageType?: 'media' | 'report' | 
     const effectivePageType = pageType || content.pageType
     
     // Media page: check mediatype field directly (from medias.json.php)
-    if (effectivePageType === 'media' && content.mediatype) {
-        return content.mediatype
+    if (effectivePageType === 'media') {
+        switch (content.mediatype) {
+            case 'podcasts':
+                return 'podcast'
+            case 'videos':
+                return 'video'
+        }
     }
     
     // Report page
@@ -125,10 +130,10 @@ function buildHref(item: ItemData, cardType: CardType): string | undefined {
  */
 function extractMediaUrl(content: ItemContent, cardType: CardType): string | undefined {
     // For media page items, URLs are stored directly in content
-    if (content.mediatype === 'podcast' && content.spotifyurl) {
+    if (content.mediatype === 'podcasts' && content.spotifyurl) {
         return content.spotifyurl
     }
-    if (content.mediatype === 'video' && content.youtubeurl) {
+    if (content.mediatype === 'videos' && content.youtubeurl) {
         return content.youtubeurl
     }
 }
