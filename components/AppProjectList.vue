@@ -525,11 +525,11 @@ function handlePdfDownload(pdfUrl: string) {
 
 /* Simple fade transition for list items */
 .list-fade-enter-active {
-  transition: opacity 0.75s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .list-fade-leave-active {
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.25s ease-in-out;
 }
 
 .list-fade-enter-from,
