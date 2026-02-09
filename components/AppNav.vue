@@ -135,6 +135,14 @@ function toggleNav() {
 
 <style lang="scss" scoped>
 .v-app-nav {
+  @media (min-width: 768px) {
+    --app-base-padding-x: 2rem;
+  }
+
+  @media (min-width: 1024px) {
+    --app-base-padding-x: 2rem;
+  }
+
   pointer-events: none;
   width: 100%;
   display: flex;
@@ -148,7 +156,7 @@ function toggleNav() {
   z-index: 101;
   user-select: none;
   background-color: var(--app-color-white);
-  padding: 0 1.11111111111rem;
+  padding: 0 var(--app-base-padding-x);
 
   &.menu-is-open {
     &:before {

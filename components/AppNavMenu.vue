@@ -152,8 +152,9 @@ import { showMenu, useMenus } from "~/composable/main";
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding: 0.72222222222rem var(--app-base-padding-x);
+    padding: 0 var(--app-base-padding-x);
     box-sizing: border-box;
+    min-height: var(--app-nav__height); 
   }
 
   &__toggle {
