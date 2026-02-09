@@ -9,7 +9,7 @@
                 <img v-if="item.svgUrl" class="v-app-nav-menu__icon" :src="item.svgUrl" :alt="item.title">
                 <span v-else>{{ item.title }}</span>
             </a>
-            <nuxt-link v-else class="v-app-nav-menu__item v-app-nav-menu__item--top" :class="{ 'v-app-nav-menu__item--has-image': item.svgUrl }" :href="item.url">
+            <nuxt-link v-else class="v-app-nav-menu__item v-app-nav-menu__item--top" :class="{ 'v-app-nav-menu__item--has-image': item.svgUrl }" :href="item.url" @click="showMenu().value = false">
                 <img v-if="item.svgUrl" class="v-app-nav-menu__icon" :src="item.svgUrl" :alt="item.title">
                 <span v-else>{{ item.title }}</span>
             </nuxt-link>
@@ -34,7 +34,7 @@
               <img v-if="item.svgUrl" class="v-app-nav-menu__icon" :src="item.svgUrl" :alt="item.title">
               <span v-else>{{ item.title }}</span>
             </a>
-            <nuxt-link v-else class="v-app-nav-menu__item v-app-nav-menu__item--main" :class="{ 'v-app-nav-menu__item--has-image': item.svgUrl }" :href="item.url">
+            <nuxt-link v-else class="v-app-nav-menu__item v-app-nav-menu__item--main" :class="{ 'v-app-nav-menu__item--has-image': item.svgUrl }" :href="item.url" @click="showMenu().value = false">
               <img v-if="item.svgUrl" class="v-app-nav-menu__icon" :src="item.svgUrl" :alt="item.title">
               <span v-else>{{ item.title }}</span>
             </nuxt-link>
@@ -45,7 +45,7 @@
                   <img v-if="child.svgUrl" class="v-app-nav-menu__icon" :src="child.svgUrl" :alt="child.title">
                   <span v-else>{{ child.title }}</span>
                 </a>
-                <nuxt-link v-else class="v-app-nav-menu__item v-app-nav-menu__item--child" :class="{ 'v-app-nav-menu__item--has-image': child.svgUrl }" :href="child.url">
+                <nuxt-link v-else class="v-app-nav-menu__item v-app-nav-menu__item--child" :class="{ 'v-app-nav-menu__item--has-image': child.svgUrl }" :href="child.url" @click="showMenu().value = false">
                   <img v-if="child.svgUrl" class="v-app-nav-menu__icon" :src="child.svgUrl" :alt="child.title">
                   <span v-else>{{ child.title }}</span>
                 </nuxt-link>
@@ -62,7 +62,7 @@
             <img v-if="item.svgUrl" class="v-app-nav-menu__icon" :src="item.svgUrl" :alt="item.title">
             <span v-else>{{ item.title }}</span>
           </a>
-          <nuxt-link v-else class="v-app-nav-menu__item v-app-nav-menu__item--bottom" :class="{ 'v-app-nav-menu__item--has-image': item.svgUrl }" :href="item.url">
+          <nuxt-link v-else class="v-app-nav-menu__item v-app-nav-menu__item--bottom" :class="{ 'v-app-nav-menu__item--has-image': item.svgUrl }" :href="item.url" @click="showMenu().value = false">
             <img v-if="item.svgUrl" class="v-app-nav-menu__icon" :src="item.svgUrl" :alt="item.title">
             <span v-else>{{ item.title }}</span>
           </nuxt-link>
@@ -99,7 +99,7 @@
             <img v-if="item.svgUrl" class="v-app-nav-menu__icon" :src="item.svgUrl" :alt="item.title">
             <span v-else>{{ item.title }}</span>
           </a>
-          <nuxt-link v-else class="v-app-nav-menu__item v-app-nav-menu__item--footer" :href="item.url">
+          <nuxt-link v-else class="v-app-nav-menu__item v-app-nav-menu__item--footer" :href="item.url" @click="showMenu().value = false">
             <img v-if="item.svgUrl" class="v-app-nav-menu__icon" :src="item.svgUrl" :alt="item.title">
             <span v-else>{{ item.title }}</span>
           </nuxt-link>
