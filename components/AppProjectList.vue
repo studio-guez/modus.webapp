@@ -390,7 +390,7 @@ function handlePdfDownload(pdfUrl: string) {
 }
 
 .v-project-list__description {
-  padding: 0 var(--base-padding-x) 2.55555555556rem var(--base-padding-x);
+  padding: 0 var(--app-base-padding-x) 2.55555555556rem var(--app-base-padding-x);
   max-width: 85ch;
   text-align: center;
   text-wrap: balance;
@@ -399,7 +399,7 @@ function handlePdfDownload(pdfUrl: string) {
 }
 
 .v-project-list__tags {
-  padding: 1.33333333333rem var(--base-padding-x);
+  padding: 1.33333333333rem var(--app-base-padding-x);
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -407,7 +407,7 @@ function handlePdfDownload(pdfUrl: string) {
 }
 
 .v-project-list__filters-row {
-  padding: 1.33333333333rem var(--base-padding-x);
+  padding: 1.33333333333rem var(--app-base-padding-x);
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
@@ -500,7 +500,7 @@ function handlePdfDownload(pdfUrl: string) {
   --grid-gap: 1.11111111111rem;
   --item-per-row: 1;
 
-  padding: 0 var(--base-padding-x) 4.55555555556rem var(--base-padding-x);
+  padding: 0 var(--app-base-padding-x) 4.55555555556rem var(--app-base-padding-x);
   display: grid;
   grid-template-columns: repeat(var(--item-per-row), 1fr);
   width: 100%;
@@ -519,7 +519,7 @@ function handlePdfDownload(pdfUrl: string) {
 }
 
 .v-project-list__empty {
-  padding: 1rem var(--base-padding-x);
+  padding: 1rem var(--app-base-padding-x);
   text-align: center;
 }
 

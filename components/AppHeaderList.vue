@@ -35,7 +35,7 @@ const formattedText = computed(() => {
 .v-app-header-list {
     background: white;
     width: 100%;
-    padding: 6rem 8rem 6rem 8rem;
+    padding: 6rem var(--app-base-padding-x) 6rem var(--app-base-padding-x);
     position: relative;
     min-height: 23rem;
     display: flex;
@@ -61,6 +61,7 @@ const formattedText = computed(() => {
     text-wrap: balance;
     margin: 0;
     text-shadow: 0 4px 64.4px rgba(0, 0, 0, 0.30);
+    max-width: 68.3333333333rem;
 
     &:deep(mark) {
         background: transparent;

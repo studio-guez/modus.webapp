@@ -135,14 +135,12 @@ import { showMenu, useMenus } from "~/composable/main";
   pointer-events: all;
   border-radius: 2rem 0 0 2rem;
   
-  --base-padding-x: 0.5rem;
-
   @media (min-width: 768px) {
-    --base-padding-x: 2rem;
+    --app-base-padding-x: 2rem;
   }
 
   @media (min-width: 1024px) {
-    --base-padding-x: 2rem;
+    --app-base-padding-x: 2rem;
   }
 
   @media (max-width: 900px) {
@@ -154,7 +152,7 @@ import { showMenu, useMenus } from "~/composable/main";
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding: 0.72222222222rem var(--base-padding-x);
+    padding: 0.72222222222rem var(--app-base-padding-x);
     box-sizing: border-box;
   }
 
@@ -173,13 +171,13 @@ import { showMenu, useMenus } from "~/composable/main";
       flex-direction: column;
       align-items: flex-start;
       flex: 1;
-      padding: 1.55555555556rem var(--base-padding-x);
+      padding: 1.55555555556rem var(--app-base-padding-x);
       gap: 0.83333333333rem;
     }
     &--bottom {
       flex-direction: column;
       align-items: flex-start;
-      padding: 0.55555555555rem var(--base-padding-x);
+      padding: 0.55555555555rem var(--app-base-padding-x);
       gap: 0.83333333333rem;
     }
     &--footer {
@@ -188,7 +186,7 @@ import { showMenu, useMenus } from "~/composable/main";
         border-radius: 0 0 0 2rem;
         flex-direction: column;
         align-items: flex-start;
-        padding: 1.55555555556rem var(--base-padding-x);
+        padding: 1.55555555556rem var(--app-base-padding-x);
         gap: 1.55555555556rem;
 
         @media (max-width: 900px) {

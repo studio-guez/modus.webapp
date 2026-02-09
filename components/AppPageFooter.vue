@@ -94,7 +94,7 @@ const transformYValue: ComputedRef<number> = computed(() => {
     font-size: 2rem;
     font-weight: 700;
     line-height: 1.1;
-    padding: 2.55555555556rem var(--base-padding-x);
+    padding: 2.55555555556rem var(--app-base-padding-x);
 }
 
 .v-app-page-footer__footer__mailto__link {

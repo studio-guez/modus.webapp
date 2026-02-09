@@ -51,7 +51,7 @@
 <style lang="scss" scoped >
 .v-app-newsletter {
     background: var(--app-color-main--dark);
-    padding: 2.55555555556rem var(--base-padding-x);
+    padding: 2.55555555556rem var(--app-base-padding-x);
 
     .v-app-newsletter__input {
         font-size: 1.5rem;
