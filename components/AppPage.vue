@@ -13,62 +13,49 @@
                 :bg_focus="header_focus"
         />
       </template>
-    </template>
-    <main
-        class="v-app-page"
-        :class="{'v-app-page--no-top-padding': headerType === 'list' || useRoute().path === '/'}"
-    >
-      <template v-if="headerType !== 'list' && useRoute().path !== '/'">
-        <div
-          class="v-app-page__header"
-        >
-          <template v-if="headerCover || headerText">
-            
-              <app-header
-                      :headerSize="headerSize"
-                      :text="headerText"
-                      :bg-image="headerCover"
-                      :bg_focus="header_focus"
-              />
-          </template>
-          <template v-else>
-              <div class="v-app-page__header__loading">
-
-              </div>
-          </template>
-        </div>
+      <template v-else>
+        <app-header
+                :text="headerText"
+                :bg-image="headerCover"
+                :bg_focus="header_focus"
+                :headerSize="headerSize"
+        />
       </template>
+    </template>
+    <template v-else>
+        <div class="v-app-page__header__loading">
 
-        <div class="v-app-page__path"
-             v-if="path"
-        >
-            <div class="v-app-page__path__content app-font-small">
-                <nuxt-link href="/">Home</nuxt-link> / <nuxt-link href="/projects/">Les Projets Modus</nuxt-link> <span class="v-app-page__path__content__title">/ {{headerText?.split(' ').slice(0, 8).join(' ')}}…</span>
-                <div style="padding-top: .5rem; display: flex; justify-content: space-between; flex-direction: row; gap: 1rem; flex-wrap: wrap"
-                     v-if="status"
-                >
-                  <div class="v-app-page__status-button"
-                       style="
-                          font-weight: 600;
-                          font-size: .75rem;
-                          border: solid 2px;
-                          display: flex;
-                          align-items: center;
-                          justify-content: center;
-                          gap: .5rem;
-                          border-radius: 2rem;
-                          padding: .015rem .5rem .025rem;
-                          min-width: 3rem;
-                          text-align: center;
-                          "
-                  >{{status}}</div>
-                </div>
-            </div>
         </div>
-
-      <div class="v-app-page__content app-show-background-on-nav"
-           :class="{'v-app-page__content--bg-transparent': headerType === 'list' || useRoute().path === '/'}"
+    </template>
+    <main class="v-app-page">
+      <div class="v-app-page__path"
+            v-if="path"
       >
+          <div class="v-app-page__path__content app-font-small">
+              <nuxt-link href="/">Home</nuxt-link> / <nuxt-link href="/projects/">Les Projets Modus</nuxt-link> <span class="v-app-page__path__content__title">/ {{headerText?.split(' ').slice(0, 8).join(' ')}}…</span>
+              <div style="padding-top: .5rem; display: flex; justify-content: space-between; flex-direction: row; gap: 1rem; flex-wrap: wrap"
+                    v-if="status"
+              >
+                <div class="v-app-page__status-button"
+                      style="
+                        font-weight: 600;
+                        font-size: .75rem;
+                        border: solid 2px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: .5rem;
+                        border-radius: 2rem;
+                        padding: .015rem .5rem .025rem;
+                        min-width: 3rem;
+                        text-align: center;
+                        "
+                >{{status}}</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="v-app-page__content">
         <slot v-if="$slots.default" />
         <template v-else>
         <div class="v-app-page__content__grid">
@@ -327,11 +314,7 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
 
 <style lang="scss" scoped >
 .v-app-page {
-  padding-top: var(--app-header-height);
-}
-
-.v-app-page--no-top-padding {
-  padding-top: 0;
+  padding-top:0;
 }
 
 .v-app-page__header {
@@ -355,7 +338,7 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
 }
 
 .v-app-page__content {
-  background: var(--app-color-grey);
+  background: transparent;
   position: relative;
   z-index: 10;
   width: 100%;
@@ -363,10 +346,6 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
   @media (max-width: 900px) {
     box-shadow: 0 -5px 5px 0 var(--app-color-grey);
   }
-}
-
-.v-app-page__content--bg-transparent {
-  background: transparent;
 }
 
 .v-app-page__path {
