@@ -1,5 +1,6 @@
 <template>
   <aside class="v-report-sidebar" :class="{ 'v-report-sidebar--open': isOpen }">
+    <h2 class="v-report-sidebar__title">Sommaire</h2>
     <button 
       class="v-report-sidebar__toggle app-button app-button--small"
       @click="isOpen = !isOpen"
@@ -137,7 +138,7 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .v-report-sidebar {
   position: sticky;
-  top: calc(var(--app-nav__height) + 1rem);
+  top: calc(var(--app-nav__height) + 2.22222222222rem);
   align-self: start;
   
   @media (max-width: 700px) {
@@ -146,6 +147,19 @@ onUnmounted(() => {
     width: 100%;
     margin-bottom: 1rem;
   }
+}
+
+.v-report-sidebar__title {
+  reset: all;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 13.2222222222rem;
+  height: 3.77777777778rem;
+  font-size: 1.11111111111rem;
+  font-weight: 600;
+  color: var(--app-color-black);
+  margin: 0;
 }
 
 .v-report-sidebar__toggle {
@@ -188,27 +202,27 @@ onUnmounted(() => {
 
 .v-report-sidebar__item {
   margin: 0;
+  padding: 0;
+  &::before {
+    display: none;
+  }
 }
 
 .v-report-sidebar__link {
   display: block;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0;
   color: inherit;
   text-decoration: none;
-  border-left: 3px solid transparent;
   transition: all 0.2s ease;
-  font-size: 0.875rem;
-  line-height: 1.4;
+  font-size: 1.11111111111rem;
+  line-height: 1.2;
   
   &:hover {
-    background-color: var(--app-color-grey);
-    border-left-color: var(--app-color-main);
+    text-decoration: underline;
   }
   
   &--active {
-    border-left-color: var(--app-color-main);
-    font-weight: 600;
-    color: var(--app-color-main--dark);
+    text-decoration: underline;
   }
 }
 </style>
