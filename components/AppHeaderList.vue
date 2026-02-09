@@ -17,16 +17,18 @@
 </template>
 
 <script lang="ts" setup>
-    const props = defineProps<{
+import { markModus } from '~/utils/markModus'
+
+const props = defineProps<{
     bgImage?: string,
     bg_focus?: string,
     text?: string,
-    }>()
+}>()
 
-    const formattedText = computed(() => {
+const formattedText = computed(() => {
     if (!props.text) return ''
-    return props.text.replace(/modus/gi, '<mark>$&</mark>')
-    })
+    return markModus(props.text)
+})
 </script>
 
 <style lang="scss" scoped >
@@ -54,7 +56,7 @@
 .v-app-header-list__title {
     z-index: 1;
     color: var(--app-color-white);
-    font-size: 7rem;
+    font-size: var(--app-header-title-size);
     text-align: center;
     text-wrap: balance;
     margin: 0;

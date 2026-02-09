@@ -50,9 +50,14 @@
   --app-bullet-size: .75em;
 
   // header
-  --app-header-height: 100vh;
+  --app-header-height: calc(100svh - var(--app-nav__height));
 
   // podcast player
   --app-podcast-player-header-height: 2.5rem;
   --app-podcast-player-iframe-height: 152px;
+
+  --app-header-title-size: 7rem;
+  @media (max-width: 900px) {
+    --app-header-title-size: 10vw;
+  }
 }
