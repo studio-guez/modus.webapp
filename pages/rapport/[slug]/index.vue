@@ -44,11 +44,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="v-report-page__footer">
-
-        <!-- Share Button -->
-        <app-share-link />
-    </div>
+    <app-share-link />
 
     <app-page-footer />
   </div>
@@ -223,14 +219,6 @@ onMounted(async () => {
   padding: 0;
   border-radius: 0 1.66666666667rem 1.66666666667rem 1.66666666667rem;
   overflow: hidden;
-}
-
-// Footer
-.v-report-page__footer {
-  display: flex;
-  background-color: var(--app-color-grey);
-  justify-content: center;
-  padding: 2rem;
 }
 
 .v-report-page__download {

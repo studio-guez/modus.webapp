@@ -15,9 +15,7 @@
             :date_end="dateEnd"
             :power_subpages="powerSubpages"
         />
-        <div class="v-project-slug__footer">
-          <app-share-link />
-        </div>
+        <app-share-link />
         <app-page-footer/>
     </section>
 </template>
@@ -68,15 +66,3 @@ onMounted(async () => {
     powerSubpages.value = pageData.options.subpages
 })
 </script>
-
-
-
-
-
-<style lang="scss" scoped >
-.v-project-slug__footer {
-  display: flex;
-  position: relative;
-  justify-content: center;
-}
-</style>

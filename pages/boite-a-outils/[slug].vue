@@ -12,9 +12,7 @@
             :header-text="headerText"
             :power_subpages="powerSubpages"
         />
-        <div class="v-tool-slug__footer">
-          <app-share-link />
-        </div>
+        <app-share-link />
         <app-page-footer/>
     </section>
 </template>
@@ -58,12 +56,3 @@ onMounted(async () => {
     bodyContent.value = pageData.body
 })
 </script>
-
-
-<style lang="scss" scoped >
-.v-tool-slug__footer {
-  display: flex;
-  position: relative;
-  justify-content: center;
-}
-</style>
