@@ -1,6 +1,12 @@
 <template>
     <template v-if="headerCover || headerText">
-      <template v-if="headerType === 'list'">
+      <template v-if="useRoute().path === '/'">
+        <app-header-home
+          :text="headerText"
+          :bg-image="headerCover"
+        />
+      </template>
+      <template v-else-if="headerType === 'list'">
         <app-header-list
                 :text="headerText"
                 :bg-image="headerCover"
@@ -10,28 +16,20 @@
     </template>
     <main
         class="v-app-page"
-        :class="{'v-app-page--list': headerType === 'list'}"
+        :class="{'v-app-page--no-top-padding': headerType === 'list' || useRoute().path === '/'}"
     >
-      <template v-if="headerType !== 'list'">
+      <template v-if="headerType !== 'list' && useRoute().path !== '/'">
         <div
           class="v-app-page__header"
         >
           <template v-if="headerCover || headerText">
-            <template v-if="useRoute().path === '/'">
-              <app-header-home
-                :text="headerText"
-                :bg-image="headerCover"
-              />
-            </template>
             
-            <template v-else-if="headerType !== 'list'">
               <app-header
                       :headerSize="headerSize"
                       :text="headerText"
                       :bg-image="headerCover"
                       :bg_focus="header_focus"
               />
-            </template>
           </template>
           <template v-else>
               <div class="v-app-page__header__loading">
@@ -69,7 +67,7 @@
         </div>
 
       <div class="v-app-page__content app-show-background-on-nav"
-           :class="{'v-app-page__content--list': headerType === 'list'}"
+           :class="{'v-app-page__content--bg-transparent': headerType === 'list' || useRoute().path === '/'}"
       >
         <slot v-if="$slots.default" />
         <template v-else>
@@ -332,7 +330,7 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
   padding-top: var(--app-header-height);
 }
 
-.v-app-page--list {
+.v-app-page--no-top-padding {
   padding-top: 0;
 }
 
@@ -367,7 +365,7 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
   }
 }
 
-.v-app-page__content--list {
+.v-app-page__content--bg-transparent {
   background: transparent;
 }
 

@@ -9,14 +9,14 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --base-padding-x: 0.5rem;
+  --app-base-padding-x: 0.5rem;
 
   @media (min-width: 768px) {
-    --base-padding-x: 2.222222222rem;
+    --app-base-padding-x: 2.222222222rem;
   }
 
   @media (min-width: 1024px) {
-    --base-padding-x: 4.44444444444rem;
+    --app-base-padding-x: 4.44444444444rem;
   }
 
   // grid
@@ -56,8 +56,14 @@
   --app-podcast-player-header-height: 2.5rem;
   --app-podcast-player-iframe-height: 152px;
 
-  --app-header-title-size: 7rem;
-  @media (max-width: 900px) {
-    --app-header-title-size: 10vw;
+  --app-header-title-size: 10vw;
+  @media (min-width: 768px) {
+    --app-header-title-size: 5rem;
+  }
+  @media (min-width: 981px) {
+    --app-header-title-size: 6rem;
+  }
+  @media (min-width: 1281px) {
+    --app-header-title-size: 7rem;
   }
 }
