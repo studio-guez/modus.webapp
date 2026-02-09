@@ -28,7 +28,7 @@
             </button>
           </template>
         </div>
-        <div class="v-project-list__filters-row" v-if="filterGroups.length > 0">
+        <div class="v-project-list__filters-row" v-if="filterGroups.length > 0 || visibleTags.length > 0">
           <div class="v-project-list__filters">
             <!-- Dynamic filter groups -->
             <template v-for="group in filterGroups" :key="group.id">
