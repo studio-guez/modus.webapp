@@ -246,6 +246,22 @@ function toggleNav() {
   & a{
     display: flex;
     align-items: center;
+    text-decoration: none;
+    span{
+      color: var(--app-color-main--dark);
+      background-color: var(--app-color-yellow);
+      border-radius: 5em 5em 0 5em;
+      font-size: 1.11111111111rem;
+      line-height: 1em;
+      font-weight: 700;
+      padding: 0.2222222222222222rem 1.11111111111rem;
+      transition: color 0.3s ease, background-color 0.3s ease;
+    }
+
+    &:hover span {
+      background-color: var(--app-color-main--dark);
+      color: var(--app-color-yellow);
+    }
   }
     
   & svg{
