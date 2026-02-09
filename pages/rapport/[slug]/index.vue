@@ -164,7 +164,7 @@ onMounted(async () => {
 
 .v-report-page__main-layout {
   display: grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 1fr 5fr;
   gap: 2.33333333333rem;
   margin: 0 auto;
   padding: 0;
