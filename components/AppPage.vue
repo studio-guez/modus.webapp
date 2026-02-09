@@ -332,7 +332,7 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
 }
 
 .v-app-page__header__loading {
-    background: var(--app-color-grey);
+    background: var(--app-color-white);
     width: 100%;
     height: 100%;
 }
@@ -342,10 +342,6 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
   position: relative;
   z-index: 10;
   width: 100%;
-
-  @media (max-width: 900px) {
-    box-shadow: 0 -5px 5px 0 var(--app-color-grey);
-  }
 }
 
 .v-app-page__path {
@@ -355,8 +351,8 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
     z-index: 100;
     box-sizing: border-box;
     width: 100%;
-    background: var(--app-color-grey);
-    box-shadow: 0 10px 10px 0 var(--app-color-grey);
+    background: var(--app-color-white);
+    padding-bottom: 0.5rem;
 }
 
 
