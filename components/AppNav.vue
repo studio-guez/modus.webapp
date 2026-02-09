@@ -4,7 +4,7 @@
           'menu-is-open' : showMenu().value
          }"
     >
-      <div style="display: flex; align-items: center; flex-wrap: nowrap; gap: 1rem">
+      <div class="v-app-nav__left" @click="scrollToTop">
         <svg
                 @click="scrollToTop"
                 class="v-app-nav__logo"
@@ -50,29 +50,51 @@
         </div>
       </div>
 
-      <div style="display: flex; align-items: center; gap: 1rem">
+      <div class="v-app-nav__right">
+        <div class="v-app-nav__top-menu">
+        <template v-for="item of useMenus().value?.topMenu" :key="item.url">
+              <a v-if="item.openInNewTab" class="v-app-nav__menu__item" :href="item.url" target="_blank" rel="noopener noreferrer">
+                <img v-if="item.svgUrl" class="v-app-nav__menu__icon" :src="item.svgUrl" :alt="item.title">
+                <span v-else>{{ item.title }}</span>
+              </a>
+              <nuxt-link v-else class="v-app-nav__menu__item" :href="item.url">
+                <img v-if="item.svgUrl" class="v-app-nav__menu__icon" :src="item.svgUrl" :alt="item.title">
+                <span v-else>{{ item.title }}</span>
+              </nuxt-link>
+            </template>
+        </div>
           <div class="app__icon">
             <a href="https://ch.linkedin.com/company/fondation-modus" target="_blank">
-                <SvgLinkedin />
+                <span class="v-app-nav__menu__icon-social">
+                  <SvgLinkedin />
+                </span>
             </a>
             <a href="https://www.youtube.com/@modus-ge" target="_blank">
-                <SvgYoutube />
+                <span class="v-app-nav__menu__icon-social">
+                  <SvgYoutube />
+                </span>
             </a>
             <a href="https://www.instagram.com/fondation_modus/" target="_blank">
-                <SvgInstagram />
+                <span class="v-app-nav__menu__icon-social">
+                  <SvgInstagram />
+                </span>
             </a>
             <a href="https://open.spotify.com/show/1nWW7TtBUhy9z7uf1pncIE?si=f3b45773979b4b76" target="_blank">
-                <SvgSpotify />
+                <span class="v-app-nav__menu__icon-social">
+                  <SvgSpotify />
+                </span>
             </a>
           </div>
 
         <div class="v-app-nav__menu-toggle"
              @click="toggleNav"
         >
-          <img alt="ouvrir le menu"
-               draggable="false"
-               src="@/assets/menu_icon.svg"
-          />
+          <svg width="30" height="30" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M60 30C60 46.5685 46.5685 60 30 60C13.4315 60 0 46.5685 0 30C0 13.4315 13.4315 0 30 0C46.5685 0 60 13.4315 60 30Z" fill="var(--app-color-main)"/>
+            <rect x="13" y="18" width="34" height="4" fill="var(--app-color-white)"/>
+            <rect x="13" y="28" width="34" height="4" fill="var(--app-color-white)"/>
+            <rect x="13" y="38" width="34" height="4" fill="var(--app-color-white)"/>
+          </svg>
         </div>
       </div>
 
@@ -153,16 +175,24 @@
             <!-- Social icons -->
             <div class="app__icon">
               <a href="https://ch.linkedin.com/company/fondation-modus" target="_blank">
-                  <SvgLinkedin />
+                  <span class="v-app-nav__menu__icon-social">
+                    <SvgLinkedin />
+                  </span>
               </a>
               <a href="https://www.youtube.com/@modus-ge" target="_blank">
-                  <SvgYoutube />
+                  <span class="v-app-nav__menu__icon-social">
+                    <SvgYoutube />
+                  </span>
               </a>
               <a href="https://www.instagram.com/fondation_modus/" target="_blank">
-                  <SvgInstagram />
+                  <span class="v-app-nav__menu__icon-social">
+                    <SvgInstagram />
+                  </span>
               </a>
               <a href="https://open.spotify.com/show/1nWW7TtBUhy9z7uf1pncIE?si=f3b45773979b4b76" target="_blank">
-                  <SvgSpotify />
+                  <span class="v-app-nav__menu__icon-social">
+                    <SvgSpotify />
+                  </span>
               </a>
             </div>
           </div>
@@ -206,7 +236,7 @@ function toggleNav() {
   pointer-events: none;
   width: 100%;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   height: var(--app-nav__height);
   box-sizing: border-box;
@@ -222,6 +252,25 @@ function toggleNav() {
     &:before {
       background: rgba(255, 255, 255, 0);
       backdrop-filter: blur(0px);
+    }
+  }
+}
+
+.v-app-nav__left {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 1rem;
+}
+
+.v-app-nav__right {
+  display: flex;
+  align-items: stretch;
+  gap: 1rem;
+
+  .app__icon{
+    @media (max-width: 452px) {
+      display: none;
     }
   }
 }
@@ -245,7 +294,30 @@ function toggleNav() {
 }
 
 .app__icon {
+  display: flex;
+  align-items: stretch;
   pointer-events: all;
+  gap: 0;
+  margin-right: 2rem;
+
+  & a{
+    display: flex;
+    align-items: center;
+    padding: 0 0.125rem;
+    height: auto;
+    background-color: transparent;
+    border-radius: 0;
+  }
+}
+
+.v-app-nav__menu__icon-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.675rem;
+  width: 1.675rem;
+  background-color: var(--app-color-main--dark);
+  border-radius: 200px;
 }
 
 // Backdrop overlay
@@ -260,6 +332,21 @@ function toggleNav() {
   backdrop-filter: blur(10px);
   pointer-events: all;
   cursor: pointer;
+}
+
+.v-app-nav__top-menu{
+  display: none;
+  align-items: stretch;
+  gap: 1rem;
+  pointer-events: all;
+  margin-right: 2rem;
+  & svg{
+    height: 1.55555555556rem;
+    width: auto;
+  }
+  @media (min-width: 741px) {
+    display: flex;
+  }
 }
 
 // Menu drawer
@@ -322,9 +409,9 @@ function toggleNav() {
   }
 
   &__item {
-    display: block;
+    display: flex;
+    align-items: center;
     text-decoration: none;
-    padding: var(--app-gutter);
     box-sizing: border-box;
     border-radius: 5em;
     font-size: 2rem;
