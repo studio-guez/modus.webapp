@@ -45,18 +45,9 @@
 
     <!-- Footer -->
     <div class="v-report-page__footer">
-      <div class="v-report-page__footer-actions">
 
         <!-- Share Button -->
-        <div class="v-report-page__share" @click="shareClicked">
-          <button class="app-button app-button--small">{{ textButton }}</button>
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-send"
-            viewBox="0 0 16 16">
-            <path
-              d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
-          </svg>
-        </div>
-      </div>
+        <app-share-link />
     </div>
 
     <app-page-footer />
@@ -67,7 +58,6 @@
 import { ref, computed, onMounted } from 'vue'
 import type { Ref, UnwrapRef } from 'vue'
 import { ApiFetchPage } from '~/composable/adminApi/apiFetch'
-import { copyCurrentUrlToClipboard } from '~/utils/copyCurrentUrlToClipboard'
 import { buildPdfUrl } from '~/utils/backendUrl'
 import AppPageFooter from '~/components/AppPageFooter.vue'
 import AppReportSidebar from '~/components/AppReportSidebar.vue'
@@ -167,13 +157,6 @@ onMounted(async () => {
   bibliography.value = (pageData as any).bibliography || []
   relatedReports.value = (pageData as any).relatedReports || []
 })
-
-const textButton = ref('Copier le lien de cette page')
-
-function shareClicked() {
-  copyCurrentUrlToClipboard()
-  textButton.value = 'Lien copié'
-}
 </script>
 
 <style lang="scss" scoped>
@@ -250,18 +233,6 @@ function shareClicked() {
   padding: 2rem;
 }
 
-.v-report-page__footer-actions {
-  display: flex;
-  gap: 3rem;
-  align-items: flex-start;
-
-  @media (max-width: 700px) {
-    flex-direction: column;
-    gap: 2rem;
-    align-items: center;
-  }
-}
-
 .v-report-page__download {
   display: flex;
   flex-direction: column;
@@ -278,42 +249,6 @@ function shareClicked() {
 
   &:hover svg {
     transform: translateY(4px);
-  }
-}
-
-.v-report-page__share {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-
-  svg {
-    display: block;
-  }
-
-  &:hover svg {
-    animation: takeoff 4s ease-in-out forwards;
-  }
-}
-
-@keyframes takeoff {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 1;
-  }
-
-  25% {
-    opacity: 0;
-  }
-
-  50% {
-    transform: translate(300px, -200px) rotate(30deg);
-  }
-
-  100% {
-    transform: translate(600px, -600px) rotate(90deg);
-    opacity: 0;
   }
 }
 </style>
