@@ -158,8 +158,6 @@ onMounted(async () => {
 
 .v-report-page {
   min-height: 100vh;
-  background: var(--app-color-grey);
-  padding: 2.22222222222rem var(--app-base-padding-x) 2.22222222222rem 2rem;
 }
 
 .v-report-page__main-layout {
@@ -167,7 +165,8 @@ onMounted(async () => {
   grid-template-columns: 1fr 5fr;
   gap: 2.33333333333rem;
   margin: 0 auto;
-  padding: 0;
+  background: var(--app-color-grey);
+  padding: 2.22222222222rem var(--app-base-padding-x) 2.22222222222rem 2rem;
 
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
@@ -232,6 +231,7 @@ onMounted(async () => {
   position: fixed;
   right: 2rem;
   top: 50%;
+  z-index: 11;
   svg {
     display: block;
     transition: transform 0.3s ease;
