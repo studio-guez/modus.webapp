@@ -78,7 +78,7 @@ function closePlayer() {
   position: fixed;
   bottom: 1rem;
   right: 1rem;
-  z-index: 1000;
+  z-index: 100;
   width: 480px;
   max-width: calc(100vw - 2rem);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);

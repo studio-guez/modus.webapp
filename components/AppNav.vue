@@ -145,7 +145,7 @@ function toggleNav() {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 101;
   user-select: none;
   background-color: var(--app-color-white);
   padding: 0 1.11111111111rem;
