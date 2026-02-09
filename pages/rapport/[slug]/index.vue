@@ -31,13 +31,9 @@
           <app-report-tab-en-lien v-show="activeTab === 'enlien'" :tags="parsedTags" :related-reports="relatedReports" />
         </div>
         <!-- Download PDF Button -->
-        <a :href="pdfDownloadUrl" class="v-report-page__download" target="_blank" rel="noopener">
-          <button class="app-button app-button--small">Télécharger le PDF</button>
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
-            <path
-              d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
-            <path
-              d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+        <a :href="pdfDownloadUrl" class="v-report-page__download" target="_blank" rel="noopener" title="Télécharger le rapport au format PDF" aria-label="Télécharger lef rapport au format PDF">
+          <svg xmlns="http://www.w3.org/2000/svg" width="63" height="63" viewBox="0 0 63 63" fill="none">
+              <path d="M54.2732 38.7669V49.1047C54.2732 50.4756 53.7286 51.7903 52.7593 52.7597C51.7899 53.729 50.4752 54.2736 49.1043 54.2736H12.9218C11.551 54.2736 10.2362 53.729 9.26687 52.7597C8.29751 51.7903 7.75293 50.4756 7.75293 49.1047V38.7669M18.0908 25.8446L31.0131 38.7669M31.0131 38.7669L43.9354 25.8446M31.0131 38.7669V7.75336" stroke="#1E1E1E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
       </div>
@@ -223,16 +219,22 @@ onMounted(async () => {
 
 .v-report-page__download {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
   cursor: pointer;
   text-decoration: none;
-  color: inherit;
-
+  background-color: var(--app-color-yellow);
+  color: var(--app-color-black);
+  width: 4.72222222222rem;
+  height: 4.72222222222rem;
+  border-radius: 100%;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  right: 2rem;
+  top: 50%;
   svg {
     display: block;
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease;
   }
 
   &:hover svg {
