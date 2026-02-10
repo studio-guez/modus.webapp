@@ -9,14 +9,14 @@
       <span>Sommaire</span>
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
-        width="16" 
-        height="16" 
+        width="18" 
+        height="18" 
         fill="currentColor" 
         viewBox="0 0 16 16"
         class="v-report-sidebar__toggle-icon"
         :class="{ 'v-report-sidebar__toggle-icon--open': isOpen }"
       >
-        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" stroke="currentColor" stroke-width="0.5"/>
       </svg>
     </button>
     
@@ -193,6 +193,9 @@ onUnmounted(() => {
     display: flex;
     background-color: var(--app-color-main--dark);
     color: var(--app-color-white);
+  }
+  @media (max-width: 1024px) {
+    font-size: 0.88888888888rem;;
   }
 }
 

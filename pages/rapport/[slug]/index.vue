@@ -322,7 +322,7 @@ onUnmounted(() => {
   border-radius: 0 1.66666666667rem 1.66666666667rem 1.66666666667rem;
   overflow: hidden;
   @media (max-width: 1024px) {
-    border-radius: 0 1.11111111111rem 1.11111111111rem 0;
+    border-radius: 0 1.11111111111rem 1.11111111111rem 1.11111111111rem;
   }
 }
 
