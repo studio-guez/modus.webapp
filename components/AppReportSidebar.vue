@@ -171,8 +171,7 @@ onUnmounted(() => {
   justify-content: flex-start;
   width: 13.2222222222rem;
   height: 3.77777777778rem;
-  font-size: 1.11111111111rem;
-  font-weight: 600;
+  font-size: 1.11111111111rem;  font-weight: 600;
   color: var(--app-color-black);
   margin: 0;
   
@@ -236,8 +235,12 @@ onUnmounted(() => {
   color: inherit;
   text-decoration: none;
   transition: all 0.2s ease;
-  font-size: 1.11111111111rem;
+  font-size: 0.88888888888rem;
   line-height: 1.2;
+
+  @media (min-width: 768px) {
+    font-size: 1.11111111111rem;
+  }
   
   &:hover {
     text-decoration: underline;

@@ -65,7 +65,8 @@ const imageSrc = computed(() => {
 .v-report-image {
   margin: 0 0 1rem 0;
   gap: 0.5rem;
-  padding: 0 var(--app-base-padding-x);
+  padding: 0 var(--app-report-tab-padding-x);
+  width: 100%;
 }
 
 .v-report-image__img {
@@ -76,27 +77,15 @@ const imageSrc = computed(() => {
 }
 
 .v-report-image--full {
-  width: 100%;
-  padding: 0;
-  
-  .v-report-image__img {
-    max-height: 600px;
-  }
-}
-
-.v-report-image--large {
-  width: 100%;
-  
-  .v-report-image__img {
-    max-height: 500px;
+  @media (min-width: 768px) {
+    padding: 0;
   }
 }
 
 .v-report-image--small {
-  width: 35.1111111111rem;
-  max-width: 100%;
-  .v-report-image__img {
-    max-height: 350px;
+  @media (min-width: 768px) {
+    width: 35.1111111111rem;
+    max-width: 100%;
   }
 }
 

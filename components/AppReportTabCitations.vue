@@ -156,8 +156,14 @@ async function copyToClipboard(styleKey: string, plainText: string, html: string
 
 .v-app-report-tab-citations__style-row{
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  flex-direction: column;
   gap: 0.61111111111rem;
+  max-width: 100%;
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+  }
 }
 
 .v-app-report-tab-citations__copy-btn {
@@ -185,6 +191,7 @@ async function copyToClipboard(styleKey: string, plainText: string, html: string
   background-color: #F2F3F2;
   font-weight: 500;
   white-space: pre-line;
+  max-width: 100%;
 
   :deep(a) {
     color: var(--app-color-main);

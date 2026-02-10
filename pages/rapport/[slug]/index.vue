@@ -240,6 +240,7 @@ onMounted(async () => {
   }
 
   @media (max-width: 1024px) {
+    font-size: 0.88888888888rem;;
     border-radius: 0 1.11111111111rem 1.11111111111rem 0;
     width: 2.22222222222rem;
     writing-mode: vertical-rl;
@@ -299,9 +300,15 @@ onMounted(async () => {
   }
 
   @media (max-width: 1024px) {
+    width: 3rem;
+    height: 3rem;
     bottom: 0.5rem;
     top: auto;
     right: 0.5rem;
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
   }
 }
 </style>
