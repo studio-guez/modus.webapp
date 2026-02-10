@@ -192,19 +192,6 @@ export interface IApiBody {
         image: IApiImage[],
         content: {
             content: {
-                titlecontent: string,
-                text: string,
-            },
-            id: string,
-            isHidden: false,
-            type: "listPoints"
-        }
-    }
-    |
-    {
-        image: IApiImage[],
-        content: {
-            content: {
                 image: string[],
                 linktitle: string,
                 text: string,

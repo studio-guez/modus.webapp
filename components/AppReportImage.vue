@@ -58,23 +58,26 @@ const imageSrc = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+*{
+  box-sizing: border-box;
+}
+
 .v-report-image {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
+  margin: 0 0 1rem 0;
   gap: 0.5rem;
+  padding: 0 var(--app-base-padding-x);
 }
 
 .v-report-image__img {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: var(--app-radius-small);
   object-fit: cover;
 }
 
 .v-report-image--full {
-  grid-column: 1 / -1;
+  width: 100%;
+  padding: 0;
   
   .v-report-image__img {
     max-height: 600px;
@@ -82,10 +85,7 @@ const imageSrc = computed(() => {
 }
 
 .v-report-image--large {
-  grid-column: 1 / -1;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
   
   .v-report-image__img {
     max-height: 500px;
@@ -93,18 +93,17 @@ const imageSrc = computed(() => {
 }
 
 .v-report-image--small {
-  max-width: 450px;
-  
+  width: 35.1111111111rem;
+  max-width: 100%;
   .v-report-image__img {
     max-height: 350px;
   }
 }
 
 .v-report-image__caption {
-  font-size: 0.875rem;
-  color: #666;
-  font-style: italic;
-  text-align: center;
-  padding: 0 1rem;
+  font-size: 0.66666666666rem;
+  color: var(--app-color-main);
+  line-height: 1.08333333333;
+  margin-top: 0.55555555555rem;
 }
 </style>

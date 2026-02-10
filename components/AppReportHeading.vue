@@ -1,14 +1,11 @@
 <template>
-  <div 
+  <component :is="level" 
     class="v-report-heading" 
     :class="`v-report-heading--${level}`"
     :id="headingId"
+    v-html="text"
   >
-    <component :is="level" class="v-report-heading__text">
-      <a :href="`#${headingId}`" class="v-report-heading__anchor">#</a>
-      <span v-html="text" />
-    </component>
-  </div>
+  </component>
 </template>
 
 <script setup lang="ts">
@@ -28,37 +25,22 @@ const headingId = computed(() => {
 <style lang="scss" scoped>
 .v-report-heading {
   scroll-margin-top: calc(var(--app-nav__height) + 2rem);
+  padding: 0 var(--app-base-padding-x);
 }
 
-.v-report-heading__text {
-  position: relative;
-  display: inline-block;
-}
-
-.v-report-heading__anchor {
-  position: absolute;
-  left: -1.5rem;
-  color: var(--app-color-main);
-  text-decoration: none;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  font-weight: normal;
-}
-
-.v-report-heading:hover .v-report-heading__anchor {
-  opacity: 1;
-}
-
-.v-report-heading--h2 h2 {
-  font-size: 1.75rem;
+.v-report-heading--h2 {
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 1rem;
   color: var(--app-color-main--dark);
+  margin-bottom: 0.5rem 0 1rem 0;
+  line-height: 1.1;
 }
 
-.v-report-heading--h3 h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
+.v-report-heading--h3 {
+  font-size: 1.33333333333rem;
+  font-weight: 700;
+  margin-bottom: 0 0 1rem 0;
+  color: var(--app-color-black);
+  line-height: 1.5;
 }
 </style>
