@@ -1,6 +1,7 @@
 <template>
   <div class="v-report-page">
 
+    <main>
     <!-- Main Layout: Sidebar (1/5) + Tabs (4/5) -->
     <div class="v-report-page__main-layout">
       <!-- Left: Sidebar TOC (1/5) -->
@@ -41,6 +42,7 @@
 
     <!-- Footer -->
     <app-share-link />
+    </main>
 
     <app-page-footer />
   </div>
