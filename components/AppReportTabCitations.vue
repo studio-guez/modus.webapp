@@ -1,38 +1,41 @@
 <template>
   <div class="v-app-report-tab-citations">
     <div class="v-app-report-tab-citations__summary" v-if="summary">
-      <h3 class="v-app-report-tab-citations__section-title">Résumé</h3>
+      <div class="v-app-report-tab-citations__section-title">Résumé</div>
       <p class="v-app-report-tab-citations__summary-text">{{ summary }}</p>
     </div>
     
     <div class="v-app-report-tab-citations__meta" v-if="year">
-      <h3 class="v-app-report-tab-citations__section-title">Année de publication</h3>
+      <div class="v-app-report-tab-citations__section-title">Année de publication</div>
       <p class="v-app-report-tab-citations__year">{{ year }}</p>
     </div>
     
     <div class="v-app-report-tab-citations__citations">
-      <h3 class="v-app-report-tab-citations__section-title">Citer ce rapport</h3>
-      <p class="v-app-report-tab-citations__instructions">
-        Cliquez sur un style de citation pour le copier dans votre presse-papiers.
-      </p>
-      
+      <div class="v-app-report-tab-citations__section-title">Comment citer la page</div>
       <div class="v-app-report-tab-citations__styles">
         <div 
           v-for="style in citationStyles" 
           :key="style.key"
           class="v-app-report-tab-citations__style"
         >
-          <div class="v-app-report-tab-citations__style-header">
-            <span class="v-app-report-tab-citations__style-name">{{ style.label }}</span>
+          <div class="v-app-report-tab-citations__style-title">{{ style.label }}</div>
+          <div class="v-app-report-tab-citations__style-row">
+            <div class="v-app-report-tab-citations__style-text" v-html="style.content"></div>
             <button 
               class="v-app-report-tab-citations__copy-btn app-button app-button--small"
-              @click="copyToClipboard(style.key, style.citation)"
+              @click="copyToClipboard(style.key, style.citation, style.content)"
             >
-              {{ copiedStyle === style.key ? 'Copié !' : 'Copier' }}
+              <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23" fill="none">
+                <g clip-path="url(#clip0_2140_1505)">
+                  <path d="M20.4455 0H7.66667C6.256 0 5.11213 1.14693 5.11213 2.55453V5.10907H2.55453C1.14693 5.10907 0 6.256 0 7.66667V20.4455C0 21.8561 1.14693 23 2.55453 23H15.3333C16.744 23 17.8879 21.8531 17.8879 20.4455V17.8909H20.4424C21.8531 17.8909 22.9969 16.744 22.9969 15.3364V2.55453C22.9969 1.14693 21.8531 0 20.4424 0H20.4455ZM16.6121 20.4455C16.6121 21.1508 16.0387 21.7243 15.3333 21.7243H2.55453C1.8492 21.7243 1.27573 21.1508 1.27573 20.4455V7.66667C1.27573 6.96133 1.8492 6.38787 2.55453 6.38787H15.3333C16.0387 6.38787 16.6121 6.96133 16.6121 7.66667V20.4455ZM21.7212 15.3333C21.7212 16.0387 21.1477 16.6121 20.4424 16.6121H17.8879V7.66667C17.8879 6.256 16.7409 5.11213 15.3333 5.11213H6.38787V2.55453C6.38787 1.8492 6.96133 1.27573 7.66667 1.27573H20.4455C21.1508 1.27573 21.7243 1.8492 21.7243 2.55453V15.3333H21.7212Z" fill="black"/>
+                </g>
+                <defs>
+                  <clipPath id="clip0_2140_1505">
+                    <rect width="23" height="23" fill="white"/>
+                  </clipPath>
+                </defs>
+              </svg>
             </button>
-          </div>
-          <div class="v-app-report-tab-citations__style-text">
-            {{ style.citation }}
           </div>
         </div>
       </div>
@@ -42,10 +45,11 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { formatCitationDate, type CitationStyle } from '~/utils/formatCitationDate'
+import { generateCitationStyles, type CitationStyleItem } from '~/utils/formatCitations'
 
 const props = defineProps<{
   title: string
+  slug: string
   summary?: string
   dateStart?: string
   url?: string
@@ -72,78 +76,40 @@ const accessDate = computed(() => {
   return now.toISOString()
 })
 
-interface CitationStyleItem {
-  key: string
-  label: string
-  citation: string
-}
-
 const citationStyles = computed<CitationStyleItem[]>(() => {
-  const title = props.title || 'Untitled Report'
-  const dateStr = props.dateStart || new Date().toISOString()
-  const url = currentUrl.value
-  const accessed = accessDate.value
-  
-  return [
-    {
-      key: 'apa',
-      label: 'APA Style',
-      citation: `Modus. (${formatCitationDate(dateStr, 'apa')}). ${title}. ${url}`
-    },
-    {
-      key: 'mla',
-      label: 'MLA Style',
-      citation: `Modus. "${title}." Modus, ${formatCitationDate(dateStr, 'mla')}, ${url}.`
-    },
-    {
-      key: 'mhra',
-      label: 'MHRA Style',
-      citation: `Modus, '${title}', ${formatCitationDate(dateStr, 'mhra')} <${url}> [accessed ${formatCitationDate(accessed, 'mhra')}]`
-    },
-    {
-      key: 'chicago',
-      label: 'Chicago Style',
-      citation: `Modus. "${title}." Modus. ${formatCitationDate(dateStr, 'chicago')}. ${url}.`
-    },
-    {
-      key: 'cbe',
-      label: 'CBE/CSE Style',
-      citation: `Modus. ${title} [Internet]. ${formatCitationDate(dateStr, 'cbe')} [cited ${formatCitationDate(accessed, 'cbe')}]. Available from: ${url}`
-    },
-    {
-      key: 'bluebook',
-      label: 'Bluebook Style',
-      citation: `Modus, ${title}, Modus (${formatCitationDate(dateStr, 'bluebook')}), ${url}.`
-    },
-    {
-      key: 'bibtex',
-      label: 'BibTeX',
-      citation: generateBibtex(title, dateStr, url)
-    }
-  ]
+  return generateCitationStyles({
+    title: props.title || 'Untitled Report',
+    slug: props.slug,
+    dateStr: props.dateStart || new Date().toISOString(),
+    url: currentUrl.value,
+    accessedDate: accessDate.value
+  })
 })
 
-function generateBibtex(title: string, dateStr: string, url: string): string {
-  const year = formatCitationDate(dateStr, 'bibtex')
-  const key = title.toLowerCase().replace(/\s+/g, '_').replace(/[^\w_]/g, '').substring(0, 20)
-  return `@misc{modus_${key}_${year},
-  author = {Modus},
-  title = {${title}},
-  year = {${year}},
-  url = {${url}},
-  note = {Accessed: ${formatCitationDate(accessDate.value, 'chicago')}}
-}`
-}
-
-async function copyToClipboard(styleKey: string, text: string) {
+async function copyToClipboard(styleKey: string, plainText: string, html: string) {
   try {
-    await navigator.clipboard.writeText(text)
+    // Write both plain text and HTML to clipboard
+    // Word and rich text editors will use HTML, plain text editors will use text
+    const clipboardItem = new ClipboardItem({
+      'text/plain': new Blob([plainText], { type: 'text/plain' }),
+      'text/html': new Blob([html], { type: 'text/html' })
+    })
+    await navigator.clipboard.write([clipboardItem])
     copiedStyle.value = styleKey
     setTimeout(() => {
       copiedStyle.value = null
     }, 2000)
   } catch (err) {
-    console.error('Failed to copy:', err)
+    // Fallback to plain text if ClipboardItem not supported
+    try {
+      await navigator.clipboard.writeText(plainText)
+      copiedStyle.value = styleKey
+      setTimeout(() => {
+        copiedStyle.value = null
+      }, 2000)
+    } catch (fallbackErr) {
+      console.error('Failed to copy:', fallbackErr)
+    }
   }
 }
 </script>
@@ -154,55 +120,33 @@ async function copyToClipboard(styleKey: string, text: string) {
   flex-direction: column;
   gap: 2rem;
   background: var(--app-color-sage);
+  padding: var(--app-report-tab-padding-y) var(--app-report-tab-padding-x);
+  min-height: var(--app-report-tab-min-height);
+  font-size: 0.88888888888rem;
+  color: var(--app-color-black);
 }
 
 .v-app-report-tab-citations__section-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: var(--app-color-main--dark);
-}
-
-.v-app-report-tab-citations__summary-text {
-  line-height: 1.6;
-  color: #333;
-}
-
-.v-app-report-tab-citations__year {
-  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--app-color-main);
 }
 
-.v-app-report-tab-citations__instructions {
-  font-size: 0.875rem;
-  color: #666;
-  margin-bottom: 1rem;
+.v-app-report-tab-citations__summary-text, .v-app-report-tab-citations__year {
+  font-size: 0.88888888888rem;
+  font-weight: 500;
+  margin: 0;
 }
 
 .v-app-report-tab-citations__styles {
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.v-app-report-tab-citations__style {
-  background-color: var(--app-color-grey);
-  border-radius: var(--app-radius-small);
-  padding: 1rem;
-}
-
-.v-app-report-tab-citations__style-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.v-app-report-tab-citations__style-name {
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: var(--app-color-main--dark);
+.v-app-report-tab-citations__style-title {
+  font-size: 0.88888888888rem;
+  font-weight: 700;
+  color: var(--app-color-main);
 }
 
 .v-app-report-tab-citations__copy-btn {
@@ -210,11 +154,30 @@ async function copyToClipboard(styleKey: string, text: string) {
 }
 
 .v-app-report-tab-citations__style-text {
-  font-family: monospace;
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: #333;
-  word-break: break-word;
-  white-space: pre-wrap;
+  box-sizing: border-box;
+  display: block;
+  align-items: center;
+  padding: .58333333333rem .83333333333rem;
+  line-height: 1.4;
+  font-size: .88888888888rem;
+  border-radius: 2rem;
+  color: var(--app-color-black);
+  border: none;
+  background-color: #F2F3F2;
+  font-weight: 500;
+  white-space: pre-line;
+
+  :deep(a) {
+    color: var(--app-color-main);
+    text-decoration: underline;
+  }
+
+  :deep(pre) {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
 }
 </style>
