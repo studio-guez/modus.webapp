@@ -1,7 +1,10 @@
 import {ApiPowerBIResponse, IApiMenus, IApiPage, IApiProjects} from "~/composable/adminApi/apiDefinitions";
 
-const baseUrl = 'https://modus-admin.sdrvl.ch/'
-// const baseUrl = 'http://localhost:8000/'
+// In Docker, use host.docker.internal to reach host machine
+// In browser, use localhost since browser runs on host
+const baseUrl = import.meta.env.DEV 
+    ? 'http://localhost:8080/' 
+    : 'https://modus-admin.sdrvl.ch/'
 
 export async function ApiFetchPage(apiPath: string): Promise<IApiPage> {
     return ((await fetch(`${baseUrl}${apiPath}.json`)).json())
