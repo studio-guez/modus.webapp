@@ -152,6 +152,7 @@ async function copyToClipboard(styleKey: string, plainText: string, html: string
   font-size: 0.88888888888rem;
   font-weight: 700;
   color: var(--app-color-main);
+  margin-bottom: 0.25rem;
 }
 
 .v-app-report-tab-citations__style-row{

@@ -71,12 +71,14 @@ function formatYear(dateStr?: string): string {
 .v-report-tab-enlien__related-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.25rem;
 }
 
 .v-report-tab-enlien__related-item {
   display: block;
   text-decoration: none;
+  font-size: 0.88888888888rem;
+  font-weight: 700;
 }
 
 .v-report-tab-enlien__related-title{
