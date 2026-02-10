@@ -178,6 +178,9 @@ onUnmounted(() => {
 
   padding: 0 var(--app-base-padding-x) 0.25rem var(--app-base-padding-x);
   z-index: 100;
+  @media (max-width: 1024px) {
+    display: none;
+  }
 }
 
 .v-report-tab-rapport__bib-item {

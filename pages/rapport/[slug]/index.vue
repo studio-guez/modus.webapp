@@ -187,16 +187,28 @@ onMounted(async () => {
 
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
+    padding-top: 4.22222222222rem;
+    padding-left: var(--app-base-padding-x);
   }
 }
 
 .v-report-page__right {
   min-width: 0;
+  @media (max-width: 1024px) {
+    display: flex;
+  }
 }
 
 .v-report-page__tabs {
   display: flex;
   max-width: calc(100% - 1.66666666667rem);
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    flex-shrink: 0;
+    height: fit-content;
+    border-radius: 1.11111111111rem 0 0 1.11111111111rem;
+    overflow: hidden;
+  }
 }
 
 .v-report-page__tab {
@@ -209,10 +221,11 @@ onMounted(async () => {
   font-weight: 600;
   cursor: pointer;
   border-radius: 1.66666666667rem 1.66666666667rem 0 0;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
   color: var(--app-color-black);
   position: relative;
   margin: 0;
+  padding: 0;
 
   &:not(.v-report-page__tab--main):hover{
     background: var(--app-color-sage);
@@ -225,12 +238,39 @@ onMounted(async () => {
   &--main {
     background: var(--app-color-white);
   }
+
+  @media (max-width: 1024px) {
+    border-radius: 0 1.11111111111rem 1.11111111111rem 0;
+    width: 2.22222222222rem;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-orientation: mixed;
+    height: calc(9rem + 1.11111111111rem);
+    margin-top: -1.11111111111rem;
+    padding-bottom: 1.11111111111rem;
+    filter: drop-shadow(0 -4px 4px rgba(0, 0, 0, 0.15));
+    &:first-child {
+      height: 9rem;
+      margin-top: 0;
+      padding-bottom: 0;
+    }
+    &:nth-child(1) { z-index: 4; }
+    &:nth-child(2) { z-index: 3; }
+    &:nth-child(3) { z-index: 2; }
+    &:nth-child(4) { z-index: 1; }
+    &--active {
+      z-index: 5!important;
+    }
+  }
 }
 
 .v-report-page__content {
   padding: 0;
   border-radius: 0 1.66666666667rem 1.66666666667rem 1.66666666667rem;
   overflow: hidden;
+  @media (max-width: 1024px) {
+    border-radius: 0 1.11111111111rem 1.11111111111rem 0;
+  }
 }
 
 .v-report-page__download {
@@ -256,6 +296,12 @@ onMounted(async () => {
 
   &:hover svg {
     transform: translateY(4px);
+  }
+
+  @media (max-width: 1024px) {
+    bottom: 0.5rem;
+    top: auto;
+    right: 0.5rem;
   }
 }
 </style>

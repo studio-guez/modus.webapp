@@ -3,6 +3,7 @@
     <h2 class="v-report-sidebar__title">Sommaire</h2>
     <button 
       class="v-report-sidebar__toggle app-button app-button--small"
+      :class="{ 'v-report-sidebar__toggle--open': isOpen }"
       @click="isOpen = !isOpen"
     >
       <span>Sommaire</span>
@@ -30,7 +31,7 @@
             :href="`#${heading.id}`"
             class="v-report-sidebar__link"
             :class="{ 'v-report-sidebar__link--active': activeId === heading.id }"
-            @click="handleClick(heading.id)"
+            @click="handleClick(heading.id, $event)"
           >
             {{ heading.text }}
           </a>
@@ -95,15 +96,20 @@ const headings = computed<HeadingItem[]>(() => {
   return result
 })
 
-function handleClick(id: string) {
+function handleClick(id: string, event: Event) {
+  event.preventDefault()
   activeId.value = id
+  const el = document.getElementById(id)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' })
+  }
   if (isMobile.value) {
     isOpen.value = false
   }
 }
 
 function checkMobile() {
-  isMobile.value = window.innerWidth <= 700
+  isMobile.value = window.innerWidth <=  1024
 }
 
 function handleScroll() {
@@ -136,17 +142,25 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
+*{
+  box-sizing: border-box;
+}
 .v-report-sidebar {
   position: sticky;
   top: calc(var(--app-nav__height) + 2.22222222222rem);
   align-self: start;
   min-width: 0;
   
-  @media (max-width: 700px) {
-    position: relative;
-    top: 0;
-    width: 100%;
+  @media (max-width: 1024px) {
+    position: fixed;
+    top: calc(var(--app-nav__height) + 1rem);
+    left: var(--app-base-padding-x);
+    right: var(--app-base-padding-x);
+    z-index: 100;
     margin-bottom: 1rem;
+    box-shadow: 0 4px 11.1px 0 rgba(0, 0, 0, 0.15);
+    border-radius: 1.11111111111rem;
+    overflow: hidden;
   }
 }
 
@@ -161,6 +175,10 @@ onUnmounted(() => {
   font-weight: 600;
   color: var(--app-color-black);
   margin: 0;
+  
+  @media (max-width: 1024px) {
+    display: none;
+  }
 }
 
 .v-report-sidebar__toggle {
@@ -169,9 +187,13 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
+  height: 2.22222222222rem;
+  border-radius: 0;
   
-  @media (max-width: 700px) {
+  @media (max-width: 1024px) {
     display: flex;
+    background-color: var(--app-color-main--dark);
+    color: var(--app-color-white);
   }
 }
 
@@ -184,11 +206,10 @@ onUnmounted(() => {
 }
 
 .v-report-sidebar__nav {
-  @media (max-width: 700px) {
-    background-color: var(--app-color-grey);
-    border-radius: var(--app-radius-small);
-    margin-top: 0.5rem;
+  @media (max-width: 1024px) {
+    background-color: var(--app-color-white);
     padding: 1rem;
+    font-weight: 500;
   }
 }
 
