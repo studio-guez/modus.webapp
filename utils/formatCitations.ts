@@ -8,15 +8,30 @@ const MONTHS_FR_ABBR = [
   'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'
 ]
 
-function parseDate(dateString: string) {
-  const date = new Date(dateString)
+function parseDate(dateString: string, isPublicationDate = false) {
+  // Check if the date string has a time component
+  // Date-only formats: "2024-01-15", "January 15, 2024", etc.
+  // Date-time formats include "T" or contain ":" for time
+  const hasTime = dateString.includes('T') || /\d{1,2}:\d{2}/.test(dateString)
+  
+  let date: Date
+  if (isPublicationDate && !hasTime) {
+    // For publication dates without time, assume 13:00 CET (12:00 UTC)
+    const baseDate = new Date(dateString)
+    if (isNaN(baseDate.getTime())) return null
+    // Set to 12:00 UTC (which is 13:00 CET)
+    date = new Date(Date.UTC(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), 12, 0, 0))
+  } else {
+    date = new Date(dateString)
+  }
+  
   if (isNaN(date.getTime())) return null
   return {
-    day: date.getDate(),
-    month: date.getMonth(),
-    year: date.getFullYear(),
-    hours: String(date.getHours()).padStart(2, '0'),
-    minutes: String(date.getMinutes()).padStart(2, '0')
+    day: date.getUTCDate(),
+    month: date.getUTCMonth(),
+    year: date.getUTCFullYear(),
+    hours: String(date.getUTCHours()).padStart(2, '0'),
+    minutes: String(date.getUTCMinutes()).padStart(2, '0')
   }
 }
 
@@ -36,7 +51,7 @@ export interface CitationParams {
 }
 
 function generateBibtex(title: string, slug: string, dateStr: string, url: string, accessedDate: string): string {
-  const pub = parseDate(dateStr)
+  const pub = parseDate(dateStr, true)
   const acc = parseDate(accessedDate)
   if (!pub || !acc) return ''
   
@@ -50,7 +65,7 @@ function generateBibtex(title: string, slug: string, dateStr: string, url: strin
 }
 
 function generateBibtexHtml(title: string, slug: string, dateStr: string, url: string, accessedDate: string): string {
-  const pub = parseDate(dateStr)
+  const pub = parseDate(dateStr, true)
   const acc = parseDate(accessedDate)
   if (!pub || !acc) return ''
   
@@ -67,7 +82,7 @@ export function generateCitationStyles(params: CitationParams): CitationStyleIte
   const { title, slug, dateStr, url, accessedDate } = params
   const link = `<a href="${url}">${url}</a>`
   
-  const pub = parseDate(dateStr)
+  const pub = parseDate(dateStr, true)
   const acc = parseDate(accessedDate)
   
   if (!pub || !acc) {
