@@ -36,6 +36,8 @@ defineProps<{
     flex-direction: column;
     gap: 2rem;
     background: var(--app-color-sage);
+    padding: var(--app-report-tab-padding-y) var(--app-report-tab-padding-x);
+    min-height: var(--app-report-tab-min-height);
 }
 .v-report-tab-bibliographie__title {
   font-size: 1.5rem;

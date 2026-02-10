@@ -52,11 +52,6 @@
 
   // header
   --app-header-height: calc(100svh - var(--app-nav__height));
-
-  // podcast player
-  --app-podcast-player-header-height: 2.5rem;
-  --app-podcast-player-iframe-height: 152px;
-
   --app-header-title-size: 10vw;
   @media (min-width: 768px) {
     --app-header-title-size: 5rem;
@@ -67,4 +62,23 @@
   @media (min-width: 1281px) {
     --app-header-title-size: 7rem;
   }
+
+  // podcast player
+  --app-podcast-player-header-height: 2.5rem;
+  --app-podcast-player-iframe-height: 152px;
+
+  // report tab-size
+  --app-report-tab-min-height: 35rem;
+  --app-report-tab-padding-x: 2rem;
+  @media (min-width: 1281px) {
+    --app-report-tab-padding-x: 5rem;
+  }
+  @media (min-width: 1461px) {
+    --app-report-tab-padding-x: 7rem;
+  }
+  --app-report-tab-padding-y: 2rem;
+  @media (min-width: 1281px) {
+    --app-report-tab-padding-y: 4.77777777778rem;
+  }
+
 }

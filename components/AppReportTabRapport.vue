@@ -52,6 +52,8 @@ defineProps<{
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  padding: var(--app-report-tab-padding-y) var(--app-report-tab-padding-x);
+  min-height: var(--app-report-tab-min-height);
 }
 
 .v-report-tab-rapport__section {

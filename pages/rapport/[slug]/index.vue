@@ -24,7 +24,7 @@
           <app-report-tab-bibliographie v-show="activeTab === 'bibliographie'" :bibliography="bibliography" />
 
           <!-- Tab: Citations -->
-          <app-report-tab-citations v-show="activeTab === 'citations'" :title="headerText || ''" :summary="summary"
+          <app-report-tab-citations v-show="activeTab === 'citations'" :title="headerText || ''" :slug="currentSlug || ''" :summary="summary"
             :date-start="dateStart" />
 
           <!-- Tab: En lien -->
@@ -179,7 +179,7 @@ onMounted(async () => {
 
 .v-report-page__tabs {
   display: flex;
-  flex-wrap: wrap;
+  max-width: calc(100% - 1.66666666667rem);
 }
 
 .v-report-page__tab {
