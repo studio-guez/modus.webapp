@@ -42,6 +42,10 @@ const formattedText = computed(() => {
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
+    @media (max-width: 1024px) {
+        padding: 3rem var(--app-base-padding-x) 3rem var(--app-base-padding-x);
+        min-height: 10rem;
+    }
 }
 .v-app-header-list__featured-image {
     width: 100%;
