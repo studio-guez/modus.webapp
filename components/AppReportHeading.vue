@@ -24,7 +24,7 @@ const headingId = computed(() => {
 
 <style lang="scss" scoped>
 .v-report-heading {
-  scroll-margin-top: calc(var(--app-nav__height) + 2rem);
+  scroll-margin-top: calc(var(--app-nav__height) + 1rem);
   padding: 0 var(--app-base-padding-x);
 }
 

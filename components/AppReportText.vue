@@ -9,7 +9,7 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
-*{
+* {
   box-sizing: border-box;
 }
 
@@ -19,45 +19,45 @@ defineProps<{
   padding: 0 var(--app-base-padding-x);
   font-size: 1.33333333333rem;
   font-weight: 500;
-  
+
   :deep(p) {
     margin: 0 0 1rem 0;
     font-weight: 500;
   }
-  
-  :deep(strong) {
+
+  :deep(strong, b) {
     font-weight: 600;
   }
-  
+
   :deep(em) {
     font-style: italic;
   }
-  
+
   :deep(u) {
     text-decoration: underline;
   }
-  
+
   :deep(a) {
     color: var(--app-color-main);
     text-decoration: underline;
     transition: color 0.2s ease;
-    
+
     &:hover {
       color: var(--app-color-main--dark);
     }
   }
-  
+
   :deep(mark) {
     background-color: transparent;
     padding: 0;
     color: var(--app-color-main);
   }
-  
+
   :deep(ul),
   :deep(ol) {
     margin: 0 0 1rem 0;
   }
-  
+
   :deep(li) {
     margin: 0;
   }
