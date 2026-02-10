@@ -191,7 +191,7 @@ onMounted(async () => {
 }
 
 .v-report-page__right {
-  min-width: 0; // Prevent grid blowout
+  min-width: 0;
 }
 
 .v-report-page__tabs {

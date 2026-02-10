@@ -140,6 +140,7 @@ onUnmounted(() => {
   position: sticky;
   top: calc(var(--app-nav__height) + 2.22222222222rem);
   align-self: start;
+  min-width: 0;
   
   @media (max-width: 700px) {
     position: relative;

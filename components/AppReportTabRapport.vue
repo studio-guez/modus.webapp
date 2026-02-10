@@ -175,8 +175,8 @@ onUnmounted(() => {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 0 var(--app-base-padding-x);
-  padding-bottom: 0.5rem;
+
+  padding: 0 var(--app-base-padding-x) 0.25rem var(--app-base-padding-x);
   z-index: 100;
 }
 
