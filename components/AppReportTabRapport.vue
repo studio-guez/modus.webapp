@@ -1,5 +1,5 @@
 <template>
-  <article class="v-report-tab-rapport">
+  <article ref="articleRef" class="v-report-tab-rapport">
     <h1 class="v-report-tab-rapport__title">{{ title }}</h1>
     <template v-if="bodyContent.length > 0">
       <template v-for="(item, index) in bodyContent" :key="index">
@@ -25,18 +25,119 @@
         </template>
       </template>
     </template>
+
+    <!-- Floating bibliography tooltip -->
+    <Transition name="tooltip-container">
+      <div v-if="visibleRefs.length > 0" class="v-report-tab-rapport__bib-tooltip">
+        <TransitionGroup name="bib-item" tag="div" class="v-report-tab-rapport__bib-list">
+          <div v-for="refIndex in visibleRefs" :key="refIndex" class="v-report-tab-rapport__bib-item">
+            <span class="v-report-tab-rapport__bib-number">[{{ refIndex }}]</span>
+            <span class="v-report-tab-rapport__bib-text">{{ getBibliographyText(refIndex) }}</span>
+            <a v-if="getBibliographyUrl(refIndex)" :href="getBibliographyUrl(refIndex)" target="_blank" rel="noopener noreferrer" class="v-report-tab-rapport__bib-url">
+              {{ getBibliographyUrl(refIndex) }}
+            </a>
+          </div>
+        </TransitionGroup>
+      </div>
+    </Transition>
   </article>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import AppReportHeading from '~/components/AppReportHeading.vue'
 import AppReportText from '~/components/AppReportText.vue'
 import AppReportImage from '~/components/AppReportImage.vue'
 
-defineProps<{
+interface BibliographyItem {
+  id?: string
+  index?: number
+  text?: string
+  url?: string
+}
+
+const props = defineProps<{
   title: string
   bodyContent: any[]
+  bibliography?: BibliographyItem[]
 }>()
+
+const articleRef = ref<HTMLElement | null>(null)
+const visibleRefs = ref<number[]>([])
+let observer: IntersectionObserver | null = null
+
+const getBibliographyText = (index: number): string => {
+  const item = props.bibliography?.find((b: BibliographyItem) => b.index === index)
+  return item?.text || ''
+}
+
+const getBibliographyUrl = (index: number): string | undefined => {
+  const item = props.bibliography?.find((b: BibliographyItem) => b.index === index)
+  return item?.url
+}
+
+const setupObserver = () => {
+  if (!articleRef.value || typeof IntersectionObserver === 'undefined') return
+
+  // Clean up existing observer
+  if (observer) {
+    observer.disconnect()
+  }
+
+  const refElements = articleRef.value.querySelectorAll('.bib-ref[data-ref]')
+  if (refElements.length === 0) return
+
+  // Get nav height to exclude refs behind it
+  const navEl = document.querySelector('.v-app-nav')
+  const navHeight = navEl ? navEl.getBoundingClientRect().height : 0
+
+  const visibleSet = new Set<number>()
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const refNumber = parseInt((entry.target as HTMLElement).dataset.ref || '', 10)
+        if (isNaN(refNumber)) return
+
+        if (entry.isIntersecting) {
+          visibleSet.add(refNumber)
+        } else {
+          visibleSet.delete(refNumber)
+        }
+      })
+
+      visibleRefs.value = Array.from(visibleSet).sort((a, b) => a - b)
+    },
+    {
+      root: null,
+      rootMargin: `-${navHeight}px 0px 0px 0px`,
+      threshold: 0.1,
+    }
+  )
+
+  refElements.forEach((el: Element) => {
+    observer!.observe(el)
+  })
+}
+
+onMounted(() => {
+  nextTick(() => {
+    setupObserver()
+  })
+})
+
+// Re-setup observer when body content changes
+watch(() => props.bodyContent, () => {
+  nextTick(() => {
+    setupObserver()
+  })
+}, { deep: true })
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect()
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -66,5 +167,88 @@ defineProps<{
 
 .v-report-tab-rapport__section--full {
   width: 100%;
+}
+
+// Floating bibliography tooltip
+.v-report-tab-rapport__bib-tooltip {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 var(--app-base-padding-x);
+  padding-bottom: 0.5rem;
+  z-index: 100;
+}
+
+.v-report-tab-rapport__bib-item {
+  font-size: 0.88888888888rem;
+  line-height: 1.4;
+  color: var(--app-color-black);
+  font-weight: 500;
+  background-color: var(--app-color-sage);
+  padding: .75rem 1.11111111111rem;
+  border-radius: 2000px;
+}
+
+.v-report-tab-rapport__bib-number {
+  font-weight: 700;
+  margin-right: 0.25rem;
+}
+
+.v-report-tab-rapport__bib-text {
+  margin-right: 0.5rem;
+}
+
+.v-report-tab-rapport__bib-url {
+  color: var(--app-color-main);
+  word-break: break-all;
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Bibliography list container
+.v-report-tab-rapport__bib-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+// Container transition (when all items appear/disappear)
+.tooltip-container-enter-active,
+.tooltip-container-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.tooltip-container-enter-from,
+.tooltip-container-leave-to {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+// Individual item transitions
+.bib-item-enter-active {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bib-item-leave-active {
+  transition: opacity 0.25s ease-out;
+}
+
+// Moving items transition (push/pull effect)
+.bib-item-move {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bib-item-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.bib-item-leave-to {
+  opacity: 0;
 }
 </style>
