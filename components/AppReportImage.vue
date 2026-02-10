@@ -105,5 +105,6 @@ const imageSrc = computed(() => {
   color: var(--app-color-main);
   line-height: 1.08333333333;
   margin-top: 0.55555555555rem;
+  font-weight: 500;
 }
 </style>
