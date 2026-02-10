@@ -409,6 +409,7 @@ function handlePdfDownload(pdfUrl: string) {
 .v-project-list__filters-row {
   padding: 1.33333333333rem var(--app-base-padding-x);
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.5rem;
   min-height: 4.94444444444rem;
@@ -416,6 +417,7 @@ function handlePdfDownload(pdfUrl: string) {
 
 .v-project-list__filters {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
 }
