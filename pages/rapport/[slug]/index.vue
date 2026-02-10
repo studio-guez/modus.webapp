@@ -28,7 +28,7 @@
             :date-start="dateStart" />
 
           <!-- Tab: En lien -->
-          <app-report-tab-en-lien v-show="activeTab === 'enlien'" :tags="parsedTags" :related-reports="relatedReports" />
+          <app-report-tab-en-lien v-show="activeTab === 'en-lien'" :tags="parsedTags" :related-reports="relatedReports" />
         </div>
         <!-- Download PDF Button -->
         <a :href="pdfDownloadUrl" class="v-report-page__download" target="_blank" rel="noopener" title="Télécharger le rapport au format PDF" aria-label="Télécharger lef rapport au format PDF">
@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import type { Ref, UnwrapRef } from 'vue'
 import { ApiFetchPage } from '~/composable/adminApi/apiFetch'
 import { buildPdfUrl } from '~/utils/backendUrl'
@@ -88,14 +88,31 @@ interface RelatedReport {
   preview?: string
 }
 
-const tabs = [
-  { key: 'rapport', label: 'Rapport', class: 'v-report-page__tab--main' },
-  { key: 'bibliographie', label: 'Bibliographie' },
-  { key: 'citations', label: 'Citations' },
-  { key: 'enlien', label: 'En lien' },
-]
+const tabs = computed(() => {
+  const result: { key: string; label: string; class?: string }[] = [
+    { key: 'rapport', label: 'Rapport', class: 'v-report-page__tab--main' },
+  ]
+  if (bibliography.value && bibliography.value.length > 0) {
+    result.push({ key: 'bibliographie', label: 'Bibliographie' })
+  }
+  result.push({ key: 'citations', label: 'Citations' })
+  if (parsedTags.value && parsedTags.value.length > 0) {
+    result.push({ key: 'en-lien', label: 'En lien' })
+  }
+  return result
+})
 
-const activeTab = ref('rapport')
+const route = useRoute()
+const router = useRouter()
+
+const validTabs = ['rapport', 'bibliographie', 'citations', 'en-lien']
+const initialTab = validTabs.includes(route.query.tab as string) ? (route.query.tab as string) : 'rapport'
+const activeTab = ref(initialTab)
+
+// Update URL when tab changes
+watch(activeTab, (newTab) => {
+  router.replace({ query: { ...route.query, tab: newTab } })
+})
 
 const headerCover: Ref<UnwrapRef<string | undefined>> = ref(undefined)
 const headerFocus: Ref<UnwrapRef<string | undefined>> = ref(undefined)

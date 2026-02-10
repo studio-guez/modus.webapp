@@ -1,5 +1,5 @@
 <template>
-  <div class="v-app-report-tab-citations">
+  <section class="v-app-report-tab-citations">
     <div class="v-app-report-tab-citations__summary" v-if="summary">
       <div class="v-app-report-tab-citations__section-title">Résumé</div>
       <p class="v-app-report-tab-citations__summary-text">{{ summary }}</p>
@@ -23,9 +23,10 @@
             <div class="v-app-report-tab-citations__style-text" v-html="style.content"></div>
             <button 
               class="v-app-report-tab-citations__copy-btn app-button app-button--small"
+              :class="{ 'is-copied': copiedStyle === style.key }"
               @click="copyToClipboard(style.key, style.citation, style.content)"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23" fill="none">
+              <svg v-if="copiedStyle !== style.key" xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23" fill="none">
                 <g clip-path="url(#clip0_2140_1505)">
                   <path d="M20.4455 0H7.66667C6.256 0 5.11213 1.14693 5.11213 2.55453V5.10907H2.55453C1.14693 5.10907 0 6.256 0 7.66667V20.4455C0 21.8561 1.14693 23 2.55453 23H15.3333C16.744 23 17.8879 21.8531 17.8879 20.4455V17.8909H20.4424C21.8531 17.8909 22.9969 16.744 22.9969 15.3364V2.55453C22.9969 1.14693 21.8531 0 20.4424 0H20.4455ZM16.6121 20.4455C16.6121 21.1508 16.0387 21.7243 15.3333 21.7243H2.55453C1.8492 21.7243 1.27573 21.1508 1.27573 20.4455V7.66667C1.27573 6.96133 1.8492 6.38787 2.55453 6.38787H15.3333C16.0387 6.38787 16.6121 6.96133 16.6121 7.66667V20.4455ZM21.7212 15.3333C21.7212 16.0387 21.1477 16.6121 20.4424 16.6121H17.8879V7.66667C17.8879 6.256 16.7409 5.11213 15.3333 5.11213H6.38787V2.55453C6.38787 1.8492 6.96133 1.27573 7.66667 1.27573H20.4455C21.1508 1.27573 21.7243 1.8492 21.7243 2.55453V15.3333H21.7212Z" fill="black"/>
                 </g>
@@ -35,12 +36,15 @@
                   </clipPath>
                 </defs>
               </svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23" fill="none">
+                <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" fill="currentColor"/>
+              </svg>
             </button>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -124,6 +128,7 @@ async function copyToClipboard(styleKey: string, plainText: string, html: string
   min-height: var(--app-report-tab-min-height);
   font-size: 0.88888888888rem;
   color: var(--app-color-black);
+  line-height: 1.25;
 }
 
 .v-app-report-tab-citations__section-title {
@@ -149,8 +154,23 @@ async function copyToClipboard(styleKey: string, plainText: string, html: string
   color: var(--app-color-main);
 }
 
+.v-app-report-tab-citations__style-row{
+  display: flex;
+  align-items: center;
+  gap: 0.61111111111rem;
+}
+
 .v-app-report-tab-citations__copy-btn {
+  all: unset;
+  display: flex;
+  cursor: pointer;
   flex-shrink: 0;
+  &:hover {
+    background-color: transparent;
+  }
+  &.is-copied {
+    color: var(--app-color-main);
+  }
 }
 
 .v-app-report-tab-citations__style-text {
@@ -158,9 +178,8 @@ async function copyToClipboard(styleKey: string, plainText: string, html: string
   display: block;
   align-items: center;
   padding: .58333333333rem .83333333333rem;
-  line-height: 1.4;
   font-size: .88888888888rem;
-  border-radius: 2rem;
+  border-radius: .83333333333rem;
   color: var(--app-color-black);
   border: none;
   background-color: #F2F3F2;
