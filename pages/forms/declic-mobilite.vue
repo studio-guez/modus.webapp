@@ -6,6 +6,7 @@
             :header-cover="headerCover"
             :header-text="formHeaderText"
             :body-content="formBodyContent"
+            :header-size="'regular'"
     />
     <div class="v-proto-form__bottom_content" >
       <div class="v-proto-form__bottom_content__section">
@@ -105,7 +106,7 @@ const bodyContent: Ref<UnwrapRef<undefined | IApiBody>> = ref(undefined)
 onMounted(async () => {
     const pageData = await ApiFetchPage('proposer-un-projet')
 
-    headerCover.value = '/250313MODUS_declic-mobilite_banner-web.png'
+    headerCover.value = '/declic-mobilite/header_web_page_declic.jpg'
     headerText.value = pageData.options.headerTitle
 
     bodyContent.value = pageData.body
@@ -275,10 +276,6 @@ const formBodyContent: IApiBody = {
 
 <style>
 .v-proto-form {
-    .v-app-header__container {
-        //background: #e0d1c1;
-    }
-
     h1 {
         color: #ff4d84;
     }

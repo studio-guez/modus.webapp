@@ -329,6 +329,11 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
   @media (max-width: 900px) {
     height: calc( var(--app-header-height) );
   }
+
+  .v-app-page--header-small & {
+    height: auto;
+    position: relative;
+  }
 }
 
 .v-app-page__header__loading {

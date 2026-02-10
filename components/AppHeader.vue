@@ -48,6 +48,28 @@ const props = defineProps<{
     align-items: stretch;
     justify-content: space-between;
     position: relative;
+
+  &.v-app-header--regular {
+    height: auto;
+    background: var(--app-color-grey);
+
+    .v-app-header__container {
+      height: auto;
+      position: relative;
+
+      .v-app-header__container__graphic-box {
+        height: auto;
+        position: relative;
+
+        .v-app-header__graphic-box__module_1 {
+          height: auto;
+          max-height: 75vh;
+          object-fit: cover;
+          top: 0;
+        }
+      }
+    }
+  }
 }
 
 .v-app-header__image {
