@@ -1,8 +1,8 @@
 <template>
     <section class="v-app-newsletter child-remove-margin" >
-        <h2
+        <p
             class="v-app-newsletter__title"
-        >Laissez vos coordonnées pour recevoir nos informations</h2
+        >Laissez vos coordonnées pour recevoir nos informations</p
         >
         <form method="post"
               action="https://newsletter.infomaniak.com/external/submit"
@@ -29,7 +29,7 @@
                 required="required"
                 data-inf-error="Merci de renseigner une adresse email"
             />
-            <input class="app-button" type="submit" name="" value="Envoyer">
+            <input class="app-button app-button--small" type="submit" name="" value="Envoyer">
         </form>
     </section>
 </template>
@@ -50,8 +50,8 @@
 
 <style lang="scss" scoped >
 .v-app-newsletter {
-    background: linear-gradient(to right, var(--app-color-main), var(--app-color-main--dark));
-    padding: 2rem var(--app-gutter) 3rem;
+    background: var(--app-color-main--dark);
+    padding: 2.55555555556rem var(--app-base-padding-x);
 
     .v-app-newsletter__input {
         font-size: 1.5rem;
@@ -65,56 +65,53 @@
 }
 
 .v-app-newsletter__title {
-    color: white;
+    color: var(--app-color-white);
+    font-size: 2.66666666667rem;
     background: transparent !important;
-    text-align: left;
+    text-align: center;
+    text-wrap: balance;
     padding: 0;
     font-weight: 600;
+    margin-bottom: 1.77777777778rem;
+    line-height: 1;
+    max-width: none;
 }
 
 form {
     display: flex;
-    gap: var(--app-gutter);
-
-    @media (max-width: 900px) {
-        flex-direction: column;
-        align-items: center;
-    }
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 input[type='email'] {
     all: unset;
     font-family: inherit;
     background: white;
-    height: 3rem;
     border-radius: 3rem;
-    padding: 0 2rem;
+    padding: 0.75rem 0.83333333333rem;
     width: 100%;
-    font-style: italic;
     box-sizing: border-box;
+    margin-bottom: 1.77777777778rem;
+    font-size:1.77777777778rem;
+    font-weight: 500;
+    line-height: 1;
+    max-width: 60ch;
 
     &::placeholder {
-        color: black;
-        font-style: italic;
-    }
-
-    @media (max-width: 900px) {
-        height: 2.5rem;
-        padding: 0 1rem;
-        width: 100%;
+        color: var(--app-color-main--dark);
     }
 }
 
 input[type='submit'] {
-    background: linear-gradient(to right, var(--app-color-main), var(--app-color-main--dark));
+    background-color: var(--app-color-yellow);
+    color: var(--app-color-black);
     border: none;
-    color: white;
-    margin: auto;
     width: auto;
 
-    @media (max-width: 900px) {
-        display: block;
-        width: auto;
+    &:hover {
+        background-color: var(--app-color-yellow-light);
+        color: var(--app-color-black);
     }
 }
 

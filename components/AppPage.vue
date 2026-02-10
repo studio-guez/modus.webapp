@@ -1,77 +1,63 @@
 <template>
-    <main
-        class="v-app-page"
-        :class="{
-          'v-app-page--header-small': headerSize === 'regular'
-        }"
-    >
-      <div
-        class="v-app-page__header"
-      >
-        <template v-if="headerCover || headerText">
-          <template v-if="useRoute().path === '/'">
-            <app-header-home
-              :text="headerText"
-              :bg-image="headerCover"
-            />
-          </template>
-          <template v-else>
-            <app-header
-                    :headerSize="headerSize"
-                    :text="headerText"
-                    :bg-image="headerCover"
-                    :bg_focus="header_focus"
-            />
-          </template>
-        </template>
-        <template v-else>
-            <div class="v-app-page__header__loading">
+    <template v-if="headerCover || headerText">
+      <template v-if="useRoute().path === '/'">
+        <app-header-home
+          :text="headerText"
+          :bg-image="headerCover"
+        />
+      </template>
+      <template v-else-if="headerType === 'list'">
+        <app-header-list
+                :text="headerText"
+                :bg-image="headerCover"
+                :bg_focus="header_focus"
+        />
+      </template>
+      <template v-else>
+        <app-header
+                :text="headerText"
+                :bg-image="headerCover"
+                :bg_focus="header_focus"
+                :headerSize="headerSize"
+        />
+      </template>
+    </template>
+    <template v-else>
+        <div class="v-app-page__header__loading">
 
-            </div>
-        </template>
+        </div>
+    </template>
+    <main class="v-app-page">
+      <div class="v-app-page__path"
+            v-if="path"
+      >
+          <div class="v-app-page__path__content app-font-small">
+              <nuxt-link href="/">Home</nuxt-link> / <nuxt-link href="/projects/">Les Projets Modus</nuxt-link> <span class="v-app-page__path__content__title">/ {{headerText?.split(' ').slice(0, 8).join(' ')}}…</span>
+              <div style="padding-top: .5rem; display: flex; justify-content: space-between; flex-direction: row; gap: 1rem; flex-wrap: wrap"
+                    v-if="status"
+              >
+                <div class="v-app-page__status-button"
+                      style="
+                        font-weight: 600;
+                        font-size: .75rem;
+                        border: solid 2px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: .5rem;
+                        border-radius: 2rem;
+                        padding: .015rem .5rem .025rem;
+                        min-width: 3rem;
+                        text-align: center;
+                        "
+                >{{status}}</div>
+              </div>
+          </div>
       </div>
 
-        <div class="v-app-page__path"
-             v-if="path"
-        >
-            <div class="v-app-page__path__content app-font-small">
-                <nuxt-link href="/">Home</nuxt-link> / <nuxt-link href="/projects/">Les Projets Modus</nuxt-link> <span class="v-app-page__path__content__title">/ {{headerText?.split(' ').slice(0, 8).join(' ')}}…</span>
-                <div style="padding-top: .5rem; display: flex; justify-content: space-between; flex-direction: row; gap: 1rem; flex-wrap: wrap"
-                     v-if="category"
-                >
-                  <div style="
-                          font-weight: 600;
-                          font-size: .75rem;
-                          border: solid;
-                          display: block;
-                          border-radius: 2rem;
-                          padding: .15rem .5rem .25rem;
-                          color: white;
-                          background: var(--app-color-main--dark);
-                        ">{{apiProjectMap[category]}}</div>
-                  <div class="v-app-page__status-button"
-                       style="
-                          font-weight: 600;
-                          font-size: .75rem;
-                          border: solid 2px;
-                          display: flex;
-                          align-items: center;
-                          justify-content: center;
-                          gap: .5rem;
-                          border-radius: 2rem;
-                          padding: .015rem .5rem .025rem;
-                          min-width: 3rem;
-                          text-align: center;
-                          "
-                       v-if="status"
-                  >{{status}}</div>
-                </div>
-            </div>
-        </div>
-
-      <div class="v-app-page__content app-show-background-on-nav"
-           v-if="withoutBody !== true"
-      >
+      <div class="v-app-page__content">
+        <slot v-if="$slots.default" />
+        <template v-else>
         <div class="v-app-page__content__grid">
             <template v-if="titleContent">
                 <div class="v-app-page__section v-app-page__section--full">
@@ -251,15 +237,8 @@
             </div>
           </div>
         </template>
+        </template>
       </div>
-
-
-
-
-
-
-
-
     </main>
 </template>
 
@@ -269,11 +248,7 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import {useIsIntersected} from "~/composable/main";
 import {
-    apiProjectMap,
-    ApiProjectMap,
-    ApiProjectType,
     IApiBody,
     IApiPage__subpage
 } from "~/composable/adminApi/apiDefinitions";
@@ -289,11 +264,10 @@ const props = defineProps<{
   headerCover?: string
   header_focus?: string
   bodyContent?: IApiBody
-  headerSize?: 'small' | 'regular'
-  withoutBody?: boolean
+  headerSize?: 'small'
+  headerType?: 'default' | 'list'
   titleContent?: string
   path?: boolean
-  category?: ApiProjectType
   date_start?: string,
   is_project_with_duration?: "true" | "false",
   date_end?: string,
@@ -319,23 +293,7 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
 })
 
 
-nextTick(() => {
-    window.setTimeout(() => {
-        const elementsToSetBackgroundNav = document.querySelectorAll('.app-show-background-on-nav')
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                useIsIntersected().value = entry.isIntersecting;
-            })
-        }, {
-            rootMargin: `0px 0px ${window.innerHeight * -1}px 0px`
-        })
-
-        elementsToSetBackgroundNav.forEach((value) => {
-            observer.observe(value)
-        })
-    }, 2_000)
-})
 
 // onMounted(async () => {
 //
@@ -356,11 +314,7 @@ nextTick(() => {
 
 <style lang="scss" scoped >
 .v-app-page {
-  padding-top: var(--app-header-height);
-
-  &.v-app-page--header-small {
-    padding-top: var(--app-nav__height);
-  }
+  padding-top:0;
 }
 
 .v-app-page__header {
@@ -383,20 +337,16 @@ nextTick(() => {
 }
 
 .v-app-page__header__loading {
-    background: var(--app-color-grey);
+    background: var(--app-color-white);
     width: 100%;
     height: 100%;
 }
 
 .v-app-page__content {
-  background: var(--app-color-grey);
+  background: transparent;
   position: relative;
   z-index: 10;
   width: 100%;
-
-  @media (max-width: 900px) {
-    box-shadow: 0 -5px 5px 0 var(--app-color-grey);
-  }
 }
 
 .v-app-page__path {
@@ -406,8 +356,8 @@ nextTick(() => {
     z-index: 100;
     box-sizing: border-box;
     width: 100%;
-    background: var(--app-color-grey);
-    box-shadow: 0 10px 10px 0 var(--app-color-grey);
+    background: var(--app-color-white);
+    padding-bottom: 0.5rem;
 }
 
 
