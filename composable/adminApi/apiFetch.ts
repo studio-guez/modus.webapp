@@ -4,7 +4,7 @@ import {ApiPowerBIResponse, IApiMenus, IApiPage, IApiProjects} from "~/composabl
 // In browser, use localhost since browser runs on host
 const baseUrl = import.meta.env.DEV 
     ? 'http://localhost:8080/' 
-    : 'https://modus-admin.sdrvl.ch/'
+    : 'https://cms-staging.modus-ge.ch/'
 
 export async function ApiFetchPage(apiPath: string): Promise<IApiPage> {
     return ((await fetch(`${baseUrl}${apiPath}.json`)).json())
