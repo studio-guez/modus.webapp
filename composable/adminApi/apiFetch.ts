@@ -1,31 +1,37 @@
 import {ApiPowerBIResponse, IApiMenus, IApiPage, IApiProjects} from "~/composable/adminApi/apiDefinitions";
 
-// In Docker, use host.docker.internal to reach host machine
-// In browser, use localhost since browser runs on host
-const baseUrl = import.meta.env.DEV 
-    ? 'http://localhost:8080/' 
-    : 'https://cms-staging.modus-ge.ch/'
+function getBaseUrl(): string {
+    const config = useRuntimeConfig()
+    const url = config.public.apiBaseUrl as string
+    return url.endsWith('/') ? url : url + '/'
+}
 
 export async function ApiFetchPage(apiPath: string): Promise<IApiPage> {
+    const baseUrl = getBaseUrl()
     return ((await fetch(`${baseUrl}${apiPath}.json`)).json())
 }
 
 export async function ApiFetchPage_powerBiSubPage(apiPath: string): Promise<IApiPage> {
+    const baseUrl = getBaseUrl()
     return ((await fetch(`${baseUrl}${apiPath}.json`)).json())
 }
 
 export async function ApiFetchPagePowerBIPage(apiPath: string): Promise<ApiPowerBIResponse> {
+    const baseUrl = getBaseUrl()
     return ((await fetch(`${baseUrl}${apiPath}.json`)).json())
 }
 
 export async function ApiFetchProjects(apiPath: string): Promise<IApiProjects> {
+    const baseUrl = getBaseUrl()
     return ((await fetch(`${baseUrl}${apiPath}.json`)).json())
 }
 
 export async function ApiFetchPagesInfo() {
+    const baseUrl = getBaseUrl()
     return ((await fetch(`${baseUrl}pages-info.json`)).json())
 }
 
 export async function ApiFetchMenus(): Promise<IApiMenus> {
+    const baseUrl = getBaseUrl()
     return ((await fetch(`${baseUrl}menus.json`)).json())
 }

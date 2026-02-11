@@ -34,6 +34,9 @@
 
 import {UnwrapNestedRefs, UnwrapRef} from "vue";
 
+const config = useRuntimeConfig()
+const apiBaseUrl = config.public.apiBaseUrl as string
+
 let status: Ref<UnwrapRef<"sending PROGRESS" | "sending ERROR" | "sending OK" | "nothing">> = ref("nothing")
 let responseMassage = ref('')
 
@@ -78,7 +81,7 @@ async function sendMessageData() {
         return
     }
 
-    const contactUrl = new URL('https://modus-admin.sdrvl.ch/contact?')
+    const contactUrl = new URL(`${apiBaseUrl}/contact?`)
 
     for(const itemKey in formData) {
         contactUrl.searchParams.append(itemKey, formData[itemKey] )
