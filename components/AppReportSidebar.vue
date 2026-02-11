@@ -9,14 +9,14 @@
       <span>Sommaire</span>
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
-        width="16" 
-        height="16" 
+        width="18" 
+        height="18" 
         fill="currentColor" 
         viewBox="0 0 16 16"
         class="v-report-sidebar__toggle-icon"
         :class="{ 'v-report-sidebar__toggle-icon--open': isOpen }"
       >
-        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" stroke="currentColor" stroke-width="0.5"/>
       </svg>
     </button>
     
@@ -171,8 +171,7 @@ onUnmounted(() => {
   justify-content: flex-start;
   width: 13.2222222222rem;
   height: 3.77777777778rem;
-  font-size: 1.11111111111rem;
-  font-weight: 600;
+  font-size: 1.11111111111rem;  font-weight: 600;
   color: var(--app-color-black);
   margin: 0;
   
@@ -194,6 +193,9 @@ onUnmounted(() => {
     display: flex;
     background-color: var(--app-color-main--dark);
     color: var(--app-color-white);
+  }
+  @media (max-width: 1024px) {
+    font-size: 0.88888888888rem;;
   }
 }
 
@@ -236,8 +238,12 @@ onUnmounted(() => {
   color: inherit;
   text-decoration: none;
   transition: all 0.2s ease;
-  font-size: 1.11111111111rem;
+  font-size: 0.88888888888rem;
   line-height: 1.2;
+
+  @media (min-width: 768px) {
+    font-size: 1.11111111111rem;
+  }
   
   &:hover {
     text-decoration: underline;

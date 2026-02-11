@@ -67,12 +67,12 @@
   --app-podcast-player-header-height: 2.5rem;
   --app-podcast-player-iframe-height: 152px;
 
-  // report tab-size
+  // reports
   --app-report-tab-min-height: 35rem;
   @media (max-width: 1024px) {
     --app-report-tab-min-height: calc(100dvh - var(--app-nav__height) - 4.22222222222rem);
   }
-  --app-report-tab-padding-x: 2rem;
+  --app-report-tab-padding-x: 1.33333333333rem;
   @media (min-width: 1281px) {
     --app-report-tab-padding-x: 5rem;
   }

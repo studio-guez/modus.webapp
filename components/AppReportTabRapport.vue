@@ -152,13 +152,18 @@ onUnmounted(() => {
 }
 
 .v-report-tab-rapport__title {
-  font-size: 3.55555555556rem;
-  font-weight: 600;
+  font-size: 2rem;
+  font-weight: 700;
   color: var(--app-color-main);
   margin: 0 0 1rem 0;
-  padding: 0 var(--app-base-padding-x);
+  padding: 0 var(--app-report-tab-padding-x);
   text-wrap: balance;
   line-height: 1.14;
+
+  @media (min-width: 768px) {
+    font-weight: 600;
+    font-size: 3.55555555556rem;
+  }
 }
 
 .v-report-tab-rapport__section {
