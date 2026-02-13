@@ -77,6 +77,9 @@ const props = defineProps<{
         flex-direction: row;
         padding: 4.22222222222rem 0;
         border-radius: 0;
+        @media (max-width: 900px) {
+            padding: var(--app-gutter) 0;
+        }
     }
 }
 
@@ -110,7 +113,7 @@ const props = defineProps<{
       padding: 2.77777777778rem;
       align-items: center;
       @media (max-width: 900px) {
-        border-radius: var(--app-radius-small) var(--app-radius-small) 0 var(--app-radius-small);
+        border-radius: var(--app-radius-small) var(--app-radius-small) 0.255555555555rem var(--app-radius-small);
         display:block;
         padding: 1rem;
       }
