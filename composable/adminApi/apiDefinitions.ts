@@ -242,6 +242,26 @@ export interface IApiBody {
             type: "navigateProjectsByTags"
         },
     }
+    |
+    {
+        image: IApiImage[],
+        content: {
+            content: {
+                sectiontitle: string,
+                sectionsubtitle: string,
+                image: string[],
+                cards: {
+                    title: string,
+                    subtitle: string,
+                    slug: string,
+                    color: 'green-light' | 'green-medium' | 'green-dark'
+                }[]
+            },
+            id: string,
+            isHidden: boolean,
+            type: "internalLinks"
+        },
+    }
 }
 
 export interface IApiBodyContent_video {

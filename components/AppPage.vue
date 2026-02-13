@@ -62,9 +62,9 @@
 
           <template v-for="(segment, segIdx) of bodyContentSegments" :key="segIdx">
 
-            <!-- Breakout: full-width internalLink rendered outside the grid -->
+            <!-- Breakout: full-width blocks rendered outside the grid -->
             <template v-if="segment.type === 'breakout'">
-              <div class="v-app-page__breakout">
+              <div class="v-app-page__breakout" v-if="segment.item.content.type === 'internalLink'">
                 <app-internal-link
                   :src="segment.item.image[0].resize.reg"
                   :title="segment.item.content.content.linktitle"
@@ -72,6 +72,14 @@
                   :href="segment.item.content.content.link"
                   :style-design="segment.item.content.content.style"
                   :is-full="true"
+                />
+              </div>
+              <div class="v-app-page__breakout" v-else-if="segment.item.content.type === 'internalLinks'">
+                <app-internal-links
+                  :src="segment.item.image[0]?.resize?.reg"
+                  :title="segment.item.content.content.sectiontitle"
+                  :subtitle="segment.item.content.content.sectionsubtitle"
+                  :cards="segment.item.content.content.cards"
                 />
               </div>
             </template>
@@ -307,7 +315,8 @@ function getIdParamInVideoYoutubeURL(url: string): string {
 }
 
 function isBreakoutItem(item: any): boolean {
-    return item.content.type === 'internalLink' && item.content.content.width === 'true'
+    return (item.content.type === 'internalLink' && item.content.content.width === 'true')
+        || item.content.type === 'internalLinks'
 }
 
 type BodyContentSegment =
