@@ -82,6 +82,13 @@
                   :cards="segment.item.content.content.cards"
                 />
               </div>
+              <div class="v-app-page__breakout" v-else-if="segment.item.content.type === 'highlights'">
+                <app-highlights
+                  :title="segment.item.content.content.highlightstitle"
+                  :subtitle="segment.item.content.content.highlightssubtitle"
+                  :items="segment.item.highlightsItems || []"
+                />
+              </div>
             </template>
 
             <!-- Grid segment: regular content inside the 2-column grid -->
@@ -317,6 +324,7 @@ function getIdParamInVideoYoutubeURL(url: string): string {
 function isBreakoutItem(item: any): boolean {
     return (item.content.type === 'internalLink' && item.content.content.width === 'true')
         || item.content.type === 'internalLinks'
+        || item.content.type === 'highlights'
 }
 
 type BodyContentSegment =

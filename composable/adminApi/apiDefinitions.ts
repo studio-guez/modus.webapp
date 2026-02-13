@@ -262,6 +262,21 @@ export interface IApiBody {
             type: "internalLinks"
         },
     }
+    |
+    {
+        image: IApiImage[],
+        highlightsItems: IApiSingleProject[],
+        content: {
+            content: {
+                highlightstitle: string,
+                highlightssubtitle: string,
+                highlightsitems: string,
+            },
+            id: string,
+            isHidden: boolean,
+            type: "highlights"
+        },
+    }
 }
 
 export interface IApiBodyContent_video {
