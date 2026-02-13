@@ -159,6 +159,9 @@ const props = defineProps<{
       font-weight: 600;
       margin: 0;
       line-height: 1.14;
+      @media (max-width: 1280px) {
+        font-size: 2.5rem;
+      }
       @media (max-width: 900px) {
         color: var(--app-color-main--dark);
         font-weight: 900;
@@ -196,9 +199,6 @@ const props = defineProps<{
     font-weight: 600;
     .v-app-internal-link--full & {
         margin-bottom: 1.38888888889rem;
-      @media (max-width: 900px) {
-          margin-bottom: 0;
-      }
     }
 }
 </style>
