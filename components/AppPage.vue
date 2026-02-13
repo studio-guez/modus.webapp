@@ -211,6 +211,15 @@
                     </div>
                   </template>
 
+                  <template v-else-if="bodyContentItem.content.type === 'navigateProjectsByTags'">
+                    <div class="v-app-page__section v-app-page__section--full">
+                      <app-navigate-projects-by-tags
+                              :title="bodyContentItem.content.content.title"
+                              :button-text="bodyContentItem.content.content.buttontext"
+                      />
+                    </div>
+                  </template>
+
                 </template>
               </div>
             </template>
