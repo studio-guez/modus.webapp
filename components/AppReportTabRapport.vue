@@ -32,10 +32,7 @@
         <TransitionGroup name="bib-item" tag="div" class="v-report-tab-rapport__bib-list">
           <div v-for="refIndex in visibleRefs" :key="refIndex" class="v-report-tab-rapport__bib-item">
             <span class="v-report-tab-rapport__bib-number">[{{ refIndex }}]</span>
-            <span class="v-report-tab-rapport__bib-text">{{ getBibliographyText(refIndex) }}</span>
-            <a v-if="getBibliographyUrl(refIndex)" :href="getBibliographyUrl(refIndex)" target="_blank" rel="noopener noreferrer" class="v-report-tab-rapport__bib-url">
-              {{ getBibliographyUrl(refIndex) }}
-            </a>
+            <span class="v-report-tab-rapport__bib-text" v-html="getBibliographyText(refIndex)"></span>
           </div>
         </TransitionGroup>
       </div>
@@ -53,7 +50,6 @@ interface BibliographyItem {
   id?: string
   index?: number
   text?: string
-  url?: string
 }
 
 const props = defineProps<{
@@ -69,11 +65,6 @@ let observer: IntersectionObserver | null = null
 const getBibliographyText = (index: number): string => {
   const item = props.bibliography?.find((b: BibliographyItem) => b.index === index)
   return item?.text || ''
-}
-
-const getBibliographyUrl = (index: number): string | undefined => {
-  const item = props.bibliography?.find((b: BibliographyItem) => b.index === index)
-  return item?.url
 }
 
 const setupObserver = () => {
@@ -204,16 +195,14 @@ onUnmounted(() => {
 }
 
 .v-report-tab-rapport__bib-text {
-  margin-right: 0.5rem;
-}
-
-.v-report-tab-rapport__bib-url {
-  color: var(--app-color-main);
-  word-break: break-all;
-  text-decoration: none;
-  
-  &:hover {
-    text-decoration: underline;
+  :deep(a) {
+    color: var(--app-color-main);
+    word-break: break-all;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 

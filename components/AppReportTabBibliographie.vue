@@ -1,8 +1,7 @@
 <template>
   <section class="v-report-tab-bibliographie">
       <div v-for="(item, index) in bibliography" :key="item.id || index" class="v-report-tab-bibliographie__item">
-        <span class="v-report-tab-bibliographie__number">[{{ item.index }}]</span>
-        <span v-html="item.text"></span>
+        <span class="v-report-tab-bibliographie__number">[{{ item.index }}]</span> <span v-html="item.text"></span>
       </div>
   </section>
 </template>
