@@ -168,7 +168,7 @@ onMounted(() => {
 .v-app-highlights__header {
   text-align: center;
   margin-bottom: 2.5rem;
-  padding: 0 var(--app-base-padding-x);
+  padding: 0 var(--app-base-gutter);
 }
 
 .v-app-highlights__title {
@@ -199,9 +199,10 @@ onMounted(() => {
 
 /* Scrollable track */
 .v-app-highlights__track {
+  --padding-x: max(var(--app-gutter), calc((100vw - 1300px ) / 2 + var(--app-gutter)));
   display: flex;
   gap: 1.11111111111rem;
-  padding: 0 var(--app-gutter);
+  padding: 0 var(--padding-x) 0 var(--padding-x);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
@@ -214,7 +215,10 @@ onMounted(() => {
 }
 
 .v-app-highlights__item {
-  flex: 0 0 min(85vw, 33rem);
+  flex: 0 0 calc(33vw - 0.74074074074rem);
   display: flex;
+  @media (max-width: 900px) {
+    flex: 0 0 95%;
+  }
 }
 </style>
