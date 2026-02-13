@@ -102,7 +102,7 @@ const props = defineProps<{
     gap: 1rem;
 
     .v-app-internal-link--full & {
-      background-color: var(--app-color-white);
+      background-color: var(--app-color-grey);
       border-radius: var(--app-radius-large) var(--app-radius-large) 0.55555555555rem var(--app-radius-large);
       display: grid;
       grid-template-columns: 1fr 1fr;
