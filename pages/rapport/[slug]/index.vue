@@ -62,7 +62,6 @@ import AppReportTabEnLien from '~/components/AppReportTabEnLien.vue'
 interface BibliographyItem {
   id?: string
   text?: string
-  url?: string
 }
 
 interface Tag {

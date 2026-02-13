@@ -2,11 +2,7 @@
   <section class="v-report-tab-bibliographie">
       <div v-for="(item, index) in bibliography" :key="item.id || index" class="v-report-tab-bibliographie__item">
         <span class="v-report-tab-bibliographie__number">[{{ item.index }}]</span>
-        {{ item.text }}
-        <a v-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer"
-          class="v-report-tab-bibliographie__url">
-          {{ item.url }}
-        </a>
+        <span v-html="item.text"></span>
       </div>
   </section>
 </template>
@@ -16,7 +12,6 @@ interface BibliographyItem {
   id?: string
   index?: number
   text?: string
-  url?: string
 }
 
 defineProps<{
@@ -45,7 +40,7 @@ defineProps<{
   font-weight: 700;
 }
 
-.v-report-tab-bibliographie__url {
+.v-report-tab-bibliographie__item :deep(a) {
   color: var(--app-color-main);
   word-break: break-all;
   text-decoration: none;
