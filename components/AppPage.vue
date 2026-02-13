@@ -27,7 +27,7 @@
 
         </div>
     </template>
-    <main class="v-app-page">
+    <main class="v-app-page" :class="{ 'v-app-page--home': useRoute().path === '/' }">
       <div class="v-app-page__path"
             v-if="path"
       >
@@ -371,6 +371,10 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
 <style lang="scss" scoped >
 .v-app-page {
   padding-top:0;
+
+  &.v-app-page--home {
+    background: var(--app-color-grey);
+  }
 }
 
 .v-app-page__header {
