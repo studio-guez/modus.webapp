@@ -1,4 +1,4 @@
-import {ApiPowerBIResponse, IApiMenus, IApiPage, IApiProjects} from "~/composable/adminApi/apiDefinitions";
+import {ApiPowerBIResponse, IApiMenus, IApiPage, IApiProjectTags, IApiProjects} from "~/composable/adminApi/apiDefinitions";
 
 function getBaseUrl(): string {
     const config = useRuntimeConfig()
@@ -34,4 +34,9 @@ export async function ApiFetchPagesInfo() {
 export async function ApiFetchMenus(): Promise<IApiMenus> {
     const baseUrl = getBaseUrl()
     return ((await fetch(`${baseUrl}menus.json`)).json())
+}
+
+export async function ApiFetchProjectTags(): Promise<IApiProjectTags> {
+    const baseUrl = getBaseUrl()
+    return ((await fetch(`${baseUrl}project-tags.json`)).json())
 }

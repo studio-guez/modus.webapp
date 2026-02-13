@@ -230,6 +230,18 @@ export interface IApiBody {
             type: "dropdown"
         },
     }
+    |
+    {
+        content: {
+            content: {
+                title: string,
+                buttontext: string
+            },
+            id: string,
+            isHidden: boolean,
+            type: "navigateProjectsByTags"
+        },
+    }
 }
 
 export interface IApiBodyContent_video {
@@ -301,6 +313,10 @@ export interface IApiImage {
 export interface IApiTag {
     slug: string,
     name: string,
+}
+
+export interface IApiProjectTags {
+    tags: IApiTag[]
 }
 
 export interface IApiProjects {
