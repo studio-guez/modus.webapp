@@ -95,5 +95,9 @@ const imageSrc = computed(() => {
   line-height: 1.08333333333;
   margin-top: 0.55555555555rem;
   font-weight: 500;
+
+  .v-report-image--full & {
+  padding: 0 var(--app-report-tab-padding-x);
+  }
 }
 </style>
