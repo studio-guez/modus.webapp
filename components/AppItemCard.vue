@@ -25,8 +25,10 @@
                         :style="{ objectPosition: objectPosition }"
                     />
                 </component>
-                <div class="v-app-item-card__header__date" v-if="dateLabel">
-                    {{ dateLabel }}
+                <div class="v-app-item-card__header__date-container" v-if="dateLabel">
+                    <div class="v-app-item-card__header__date">
+                        {{ dateLabel }}
+                    </div>
                 </div>
                 <div class="v-app-item-card__header__overlay" v-if="overlayIcon">
                     <!-- Play icon for video -->
@@ -297,10 +299,21 @@ function handleActionClick() {
     aspect-ratio: 441/250;
 }
 
-.v-app-item-card__header__date {
+.v-app-item-card__header__date-container {
+    box-sizing: border-box;
     position: absolute;
     top: 1rem;
-    right: 1.66666666667rem;
+    padding: 0 1.66666666667rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    @media (min-width: 741px) {
+        justify-content: flex-end;
+    }
+}
+
+.v-app-item-card__header__date {
     background: var(--app-color-yellow);
     border-radius: 1000px;
     color: var(--app-color-black);
