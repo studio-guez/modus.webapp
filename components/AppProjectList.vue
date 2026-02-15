@@ -504,19 +504,9 @@ function handlePdfDownload(pdfUrl: string) {
 
   padding: 0 var(--app-base-padding-x) 4.55555555556rem var(--app-base-padding-x);
   display: grid;
-  grid-template-columns: repeat(var(--item-per-row), 1fr);
+  grid-template-columns: repeat(auto-fit,minmax(22rem,1fr));
   width: 100%;
   gap: var(--grid-gap);
-
-  @media (min-width: 741px) {
-    --item-per-row: 2;
-    /* 2 columns */
-  }
-
-  @media (min-width: 1381px) {
-    --item-per-row: 3;
-    /* 3 columns */
-  }
 
 }
 
