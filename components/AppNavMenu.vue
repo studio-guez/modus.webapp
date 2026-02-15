@@ -172,6 +172,8 @@ import { showMenu, useMenus } from "~/composable/main";
       flex-direction: column;
       align-items: flex-start;
       flex: 1;
+      min-height: 0;
+      overflow-y: auto;
       padding: 1.55555555556rem var(--app-base-padding-x);
       gap: 0.83333333333rem;
     }
