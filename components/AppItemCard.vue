@@ -397,9 +397,15 @@ function handleActionClick() {
 }
 
 .v-app-item-card__preview {
-    padding: 0 1.66666666667rem 1.66666666667rem 1.66666666667rem;
-    margin: auto 0 0 0;
+    box-sizing: border-box;
+    padding: 0 1.66666666667rem 0 1.66666666667rem;
+    margin: auto 0 1.66666666667rem 0;
     font-size: 1.33333333333rem;
+    max-height: calc(100% - 10.5rem);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 8;
 }
 
 .v-app-item-card__status-container {
