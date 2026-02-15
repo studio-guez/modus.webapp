@@ -220,5 +220,8 @@ onMounted(() => {
   @media (max-width: 767px) {
     flex: 0 0 95%;
   }
+  @media (min-width: 1921px) {
+  flex: 0 0 max(26rem, calc(20vw - 0.74074074074rem));
+  }
 }
 </style>
