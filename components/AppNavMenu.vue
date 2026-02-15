@@ -193,6 +193,8 @@ import { showMenu, useMenus } from "~/composable/main";
         gap: 1.55555555556rem;
 
         @media (max-width: 900px) {
+            padding: 0.75rem var(--app-base-padding-x);
+            gap: 0.775rem;
             border-radius: 0;
         }
     }
@@ -213,6 +215,7 @@ import { showMenu, useMenus } from "~/composable/main";
         flex-direction: column;
         align-items: flex-start;
         gap: 0.83333333333rem;
+        margin-left: 0.75rem;
     }
   }
 
@@ -287,7 +290,8 @@ import { showMenu, useMenus } from "~/composable/main";
     }
 
     @media (max-width: 900px) {
-      font-size: 1.5rem;
+      padding: 0.75rem;
+      font-size: 1rem;
     }
   }
 
@@ -307,7 +311,8 @@ import { showMenu, useMenus } from "~/composable/main";
     }
 
     @media (max-width: 900px) {
-      font-size: 1.25rem;
+      padding: 0.75rem;
+      font-size: 0.75rem;
     }
   }
 
@@ -325,6 +330,11 @@ import { showMenu, useMenus } from "~/composable/main";
       color: var(--app-color-main--dark);
       background-color: var(--app-color-yellow);
     }
+
+    @media (max-width: 900px) {
+      padding: 0.75rem;
+      font-size: 0.75rem;
+    }
   }
 
   &__item--footer {
@@ -335,6 +345,10 @@ import { showMenu, useMenus } from "~/composable/main";
 
     &:hover {
       color: var(--app-color-main);
+    }
+
+    @media (max-width: 900px) {
+      font-size: 0.75rem;
     }
   }
 
