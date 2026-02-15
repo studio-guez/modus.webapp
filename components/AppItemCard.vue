@@ -419,6 +419,7 @@ function handleActionClick() {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 8;
+    line-height: 1.25;
 }
 
 .v-app-item-card__status-container {
