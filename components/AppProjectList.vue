@@ -6,16 +6,14 @@
           {{ preview }}
         </div>
 
-        <!-- Tag filters (from backend availableTags) or tag links -->
+        <!-- Tag filters (from backend availableTags) or tag links - hidden on mobile -->
         <div class="v-project-list__tags" v-if="visibleTags.length > 0">
-          <!-- Tags as navigation links (for tag pages) -->
           <template v-if="tagsAsLinks">
             <NuxtLink v-for="tag of visibleTags" :key="tag.slug" :to="`/tag/${tag.slug}`"
               class="v-project-list__filter v-project-list__filter--link">
               {{ tag.name }}
             </NuxtLink>
           </template>
-          <!-- Tags as toggle filters -->
           <template v-else>
             <button type="button" class="v-project-list__filter" v-for="tag of visibleTags" :key="tag.slug"
               :class="{ 'v-project-list__filter--active': isTagSelected(tag.slug) }"
@@ -28,6 +26,77 @@
             </button>
           </template>
         </div>
+
+        <!-- Mobile filter button -->
+        <div class="v-project-list__mobile-filter-trigger" v-if="hasMobileFilters">
+          <button type="button" class="v-project-list__mobile-filter-btn app-button app-button--small" @click="openMobileFilter">
+            <span>Filtrer<span v-if="activeFiltersCount > 0"> ({{ activeFiltersCount }})</span></span>
+          </button>
+        </div>
+
+        <!-- Mobile filter modal -->
+        <Teleport to="body">
+          <Transition name="filter-modal">
+            <div class="v-project-list__modal-overlay" v-if="isMobileFilterOpen" @click.self="closeMobileFilter">
+              <div class="v-project-list__modal">
+                <div class="v-project-list__modal-header">
+                  <span class="v-project-list__modal-title">Filtrer</span>
+                  <button type="button" class="v-project-list__modal-close" @click="closeMobileFilter" aria-label="Fermer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
+                      <path d="M4 4l8 8M12 4l-8 8" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="v-project-list__modal-body">
+                  <!-- Tag filters (non-link) inside modal -->
+                  <div class="v-project-list__modal-section" v-if="visibleTags.length > 0 && !tagsAsLinks">
+                    <div class="v-project-list__modal-filters">
+                      <button type="button" class="v-project-list__filter" v-for="tag of visibleTags" :key="tag.slug"
+                        :class="{ 'v-project-list__filter--active': isTagSelected(tag.slug) }"
+                        :aria-pressed="isTagSelected(tag.slug)" @click="toggleTagFilter(tag.slug)">
+                        {{ tag.name }}
+                        <svg v-if="isTagSelected(tag.slug)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                          stroke="currentColor" stroke-width="2" viewBox="0 0 16 16" aria-hidden="true">
+                          <path d="M4 4l8 8M12 4l-8 8" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <!-- Dynamic filter groups inside modal -->
+                  <template v-for="group in filterGroups" :key="group.id">
+                    <div class="v-project-list__modal-section" v-if="getVisibleOptions(group).length > 0">
+                      <div class="v-project-list__modal-filters">
+                        <button type="button" class="v-project-list__filter" :class="[
+                          `v-project-list__filter--${group.id}`,
+                          { 'v-project-list__filter--active': isFilterSelected(group.id, option.key) }
+                        ]" v-for="option in getVisibleOptions(group)" :key="option.key" :style="{
+                          '--filter-bg': option.bgColor || 'transparent',
+                          '--filter-text': option.textColor || 'var(--app-color-grey-text)',
+                          '--filter-border': option.borderColor || 'var(--app-color-grey-text)',
+                        }" :aria-pressed="isFilterSelected(group.id, option.key)" @click="toggleFilter(group, option.key)">
+                          {{ option.label }}
+                          <svg v-if="isFilterSelected(group.id, option.key)" xmlns="http://www.w3.org/2000/svg" width="16"
+                            height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16" aria-hidden="true">
+                            <path d="M4 4l8 8M12 4l-8 8" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+                <div class="v-project-list__modal-footer">
+                  <button type="button" class="v-project-list__modal-clear" v-if="hasActiveFilters" @click="clearTagFilter">
+                    Effacer tous les filtres
+                  </button>
+                  <button type="button" class="v-project-list__modal-apply app-button app-button--small" @click="closeMobileFilter">
+                    Appliquer
+                  </button>
+                </div>
+              </div>
+            </div>
+          </Transition>
+        </Teleport>
+
         <div class="v-project-list__filters-row" v-if="filterGroups.length > 0 || visibleTags.length > 0">
           <div class="v-project-list__filters">
             <!-- Dynamic filter groups -->
@@ -125,6 +194,30 @@ const emit = defineEmits<{
   (e: 'play-podcast', mediaUrl: string, title: string): void
   (e: 'pdf-download', pdfUrl: string): void
 }>()
+
+// Mobile filter modal state
+const isMobileFilterOpen = ref(false)
+
+// Whether the mobile filter button should show (has non-link tag filters or filter groups)
+const hasMobileFilters = computed(() => {
+  const hasTagFilters = !props.tagsAsLinks && visibleTags.value.length > 0
+  const hasGroupFilters = props.filterGroups.length > 0
+  return hasTagFilters || hasGroupFilters
+})
+
+function openMobileFilter() {
+  isMobileFilterOpen.value = true
+  document.body.style.overflow = 'hidden'
+}
+
+function closeMobileFilter() {
+  isMobileFilterOpen.value = false
+  document.body.style.overflow = ''
+}
+
+onUnmounted(() => {
+  document.body.style.overflow = ''
+})
 
 const runtimeConfig = useRuntimeConfig()
 const backendBaseUrl = runtimeConfig.public.backendBaseUrl as string
@@ -349,10 +442,15 @@ function updateQueryParams() {
   router.push({ query })
 }
 
-const hasActiveFilters = computed(() => {
-  if (selectedTags.value.length > 0) return true
-  return props.filterGroups.some((g: FilterGroup) => (filterSelections.value[g.id]?.length ?? 0) > 0)
+const activeFiltersCount = computed(() => {
+  let count = selectedTags.value.length
+  for (const g of props.filterGroups) {
+    count += filterSelections.value[g.id]?.length ?? 0
+  }
+  return count
 })
+
+const hasActiveFilters = computed(() => activeFiltersCount.value > 0)
 
 // Watch for query param changes
 watch(() => route.query, (newQuery: Record<string, string | (string | null)[] | null | undefined>) => {
@@ -404,6 +502,181 @@ function handlePdfDownload(pdfUrl: string) {
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.5rem;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.v-project-list__mobile-filter-trigger {
+  display: none;
+  padding: 0.5rem var(--app-base-padding-x);
+  font-variant-ligatures: no-contextual;
+  position: sticky;
+  top: var(--app-nav__height, 0px);
+  z-index: 50;
+  background-color: var(--app-color-white);
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+.v-project-list__mobile-filter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background-color: var(--app-color-main--dark);
+  color: var(--app-color-white);
+  border-color: var(--app-color-main--dark);
+
+  &:hover {
+    background-color: var(--app-color-main--dark);
+    color: var(--app-color-white);
+    filter: brightness(0.9);
+  }
+
+  svg {
+    width: 1em;
+    height: 1em;
+  }
+}
+
+// Mobile filter modal
+.v-project-list__modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+}
+
+.v-project-list__modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100dvh;
+  background-color: var(--app-color-white);
+  overflow: hidden;
+}
+
+.v-project-list__modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background-color: var(--app-color-main--dark);
+  color: var(--app-color-white);
+  flex-shrink: 0;
+}
+
+.v-project-list__modal-title {
+  font-size: 1.11111111111rem;
+  font-weight: 600;
+}
+
+.v-project-list__modal-close {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--app-color-white);
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.v-project-list__modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.v-project-list__modal-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.v-project-list__modal-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.v-project-list__modal-footer {
+  flex-shrink: 0;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-top: 1px solid #e5e5e5;
+  background-color: var(--app-color-white);
+}
+
+.v-project-list__modal-apply {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  background-color: var(--app-color-main--dark);
+  color: var(--app-color-white);
+  border-color: var(--app-color-main--dark);
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+
+  &:hover {
+    background-color: var(--app-color-main--dark);
+    color: var(--app-color-white);
+    filter: brightness(0.9);
+  }
+}
+
+.v-project-list__modal-clear {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.88888888888rem;
+  color: var(--app-color-grey-text);
+  text-decoration: underline;
+}
+
+// Modal transition
+.filter-modal-enter-active {
+  transition: opacity 0.25s ease;
+  .v-project-list__modal {
+    transition: transform 0.25s ease;
+  }
+}
+.filter-modal-leave-active {
+  transition: opacity 0.2s ease;
+  .v-project-list__modal {
+    transition: transform 0.2s ease;
+  }
+}
+.filter-modal-enter-from {
+  opacity: 0;
+  .v-project-list__modal {
+    transform: translateY(100%);
+  }
+}
+.filter-modal-leave-to {
+  opacity: 0;
+  .v-project-list__modal {
+    transform: translateY(100%);
+  }
 }
 
 .v-project-list__filters-row {
@@ -413,6 +686,10 @@ function handlePdfDownload(pdfUrl: string) {
   justify-content: space-between;
   gap: 0.5rem;
   min-height: 4.94444444444rem;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 }
 
 .v-project-list__filters {
