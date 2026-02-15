@@ -215,9 +215,9 @@ onMounted(() => {
 }
 
 .v-app-highlights__item {
-  flex: 0 0 calc(33vw - 0.74074074074rem);
+  flex: 0 0 max(22rem, calc(33vw - 0.74074074074rem));
   display: flex;
-  @media (max-width: 900px) {
+  @media (max-width: 767px) {
     flex: 0 0 95%;
   }
 }
