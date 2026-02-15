@@ -240,13 +240,6 @@ import { showMenu, useMenus } from "~/composable/main";
     transition: color 0.3s ease, background-color 0.3s ease;
     max-width: 100%;
     min-width: 0;
-    overflow: hidden;
-
-    & > span {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
 
     &--has-image {
       background-color: transparent !important;
