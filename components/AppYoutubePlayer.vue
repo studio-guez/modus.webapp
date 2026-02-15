@@ -1,5 +1,5 @@
 <template>
-  <section class="v-youtube-player" v-if="youtubeUrl">
+  <section class="v-youtube-player" :class="{ 'v-youtube-player--short': isShort }" v-if="youtubeUrl">
     <div class="v-youtube-player__container">
       <button
         @click="closePlayer"
@@ -34,36 +34,44 @@ import { useYoutubeUrl, useYoutubeTitle } from '~/composable/main'
 const youtubeUrl = useYoutubeUrl()
 const youtubeTitle = useYoutubeTitle()
 
-const embedUrl = computed(() => {
-  if (!youtubeUrl.value) return null
-  
-  const url = youtubeUrl.value
-  let videoId: string | null = null
-  
-  // Handle various YouTube URL formats
+// Detect if the URL is a YouTube Short
+const isShort = computed(() => {
+  if (!youtubeUrl.value) return false
+  return /youtube\.com\/shorts\//.test(youtubeUrl.value)
+})
+
+function extractVideoId(url: string): string | null {
   // youtu.be/VIDEO_ID
   const shortMatch = url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/)
-  if (shortMatch) {
-    videoId = shortMatch[1]
-  }
-  
+  if (shortMatch) return shortMatch[1]
+
   // youtube.com/watch?v=VIDEO_ID
   const watchMatch = url.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/)
-  if (watchMatch) {
-    videoId = watchMatch[1]
-  }
-  
-  // youtube.com/embed/VIDEO_ID (already embed URL)
+  if (watchMatch) return watchMatch[1]
+
+  // youtube.com/embed/VIDEO_ID
   const embedMatch = url.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/)
-  if (embedMatch) {
-    videoId = embedMatch[1]
-  }
-  
+  if (embedMatch) return embedMatch[1]
+
+  // youtube.com/shorts/VIDEO_ID
+  const shortsMatch = url.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/)
+  if (shortsMatch) return shortsMatch[1]
+
+  return null
+}
+
+const embedUrl = computed(() => {
+  if (!youtubeUrl.value) return null
+
+  const videoId = extractVideoId(youtubeUrl.value)
   if (!videoId) {
-    console.error('Invalid YouTube URL:', url)
+    console.error('Invalid YouTube URL:', youtubeUrl.value)
     return null
   }
-  
+
+  if (isShort.value) {
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}`
+  }
   return `https://www.youtube.com/embed/${videoId}?autoplay=1`
 })
 
@@ -89,6 +97,10 @@ function closePlayer() {
   &:hover .v-youtube-player__close-btn{
     opacity: 1;
   }
+}
+
+.v-youtube-player--short {
+  width: 270px;
 }
 
 .v-youtube-player__container {
@@ -119,6 +131,10 @@ function closePlayer() {
   padding-bottom: 56.25%; // 16:9 aspect ratio
   height: 0;
   overflow: hidden;
+
+  .v-youtube-player--short & {
+    padding-bottom: 177.78%; // 9:16 aspect ratio for Shorts
+  }
   
   iframe {
     position: absolute;
