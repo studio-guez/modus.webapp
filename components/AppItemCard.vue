@@ -4,11 +4,27 @@
     >
         <div class="v-app-item-card__front">
             <div class="v-app-item-card__header">
-                <img class="v-app-item-card__header__img"
-                    alt="cover"
-                    :src="imgSrc"
-                    :style="{ objectPosition: objectPosition }"
-                />
+                <NuxtLink v-if="clickBehavior === 'navigate'" :to="href" class="v-app-item-card__header__link">
+                    <img class="v-app-item-card__header__img"
+                        alt="cover"
+                        :src="imgSrc"
+                        :style="{ objectPosition: objectPosition }"
+                    />
+                </NuxtLink>
+                <a v-else-if="clickBehavior === 'external'" :href="href" target="_blank" class="v-app-item-card__header__link">
+                    <img class="v-app-item-card__header__img"
+                        alt="cover"
+                        :src="imgSrc"
+                        :style="{ objectPosition: objectPosition }"
+                    />
+                </a>
+                <component v-else :is="'button'" class="v-app-item-card__header__link" @click.stop="handleActionClick">
+                    <img class="v-app-item-card__header__img"
+                        alt="cover"
+                        :src="imgSrc"
+                        :style="{ objectPosition: objectPosition }"
+                    />
+                </component>
                 <div class="v-app-item-card__header__date" v-if="dateLabel">
                     {{ dateLabel }}
                 </div>
@@ -266,6 +282,13 @@ function handleActionClick() {
     width: 100%;
 }
 
+.v-app-item-card__header__link {
+    all: unset;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+}
+
 .v-app-item-card__header__img {
     display: block;
     width: 100%;
@@ -294,6 +317,7 @@ function handleActionClick() {
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
 }
 
 // Overlay icons
