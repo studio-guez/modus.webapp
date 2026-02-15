@@ -130,8 +130,21 @@ function toggleNav() {
     showMenu().value = !showMenu().value
 }
 
+watch(showMenu(), (isOpen) => {
+    if (import.meta.client) {
+        document.body.classList.toggle('menu-is-open--no-scroll', isOpen)
+    }
+})
+
 </script>
 
+
+<style lang="scss">
+body.menu-is-open--no-scroll {
+  overflow: hidden;
+  touch-action: none;
+}
+</style>
 
 <style lang="scss" scoped>
 .v-app-nav {
