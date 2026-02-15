@@ -121,7 +121,7 @@ import { showMenu, useMenus } from "~/composable/main";
   position: fixed;
   top: 0;
   right: 0;
-  height: 100%;
+  height: 100dvh;
   z-index: 1000;
   display: flex;
   flex-direction: column;
