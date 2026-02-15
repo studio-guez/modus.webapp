@@ -165,7 +165,6 @@ onUnmounted(() => {
 }
 
 .v-report-sidebar__title {
-  reset: all;
   display: flex;
   align-items: center;
   justify-content: flex-start;
