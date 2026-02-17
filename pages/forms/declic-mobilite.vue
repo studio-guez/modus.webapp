@@ -146,7 +146,7 @@ const formBodyContent: IApiBody = {
 
                         <ul>
                           <li>Avoir 18 ans ou plus</li>
-                          <li>Résider sur le territoire du Canton de Genève ou du district de Nyon</li>
+                          <li>Résider sur le territoire du Canton de Genève</li>
                           <li>Détenir un ou plusieur(s) véhicule(s) (voiture, moto ou scooter ; thermique ou électrique)</li>
                           <li>S’engager à ne pas utiliser son véhicule pendant un mois</li>
                           <li>Accepter de partager votre expérience avec l’équipe organisatrice</li>

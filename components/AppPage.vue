@@ -171,7 +171,7 @@
                   <template v-else-if="bodyContentItem.content.type === 'video'">
                     <div class="v-app-page__section v-app-page__section--full" style="max-width: 60rem">
                       <app-video
-                              :video_id="getIdParamInVideoYoutubeURL(bodyContentItem.content.content.url)"
+                              :video_embed_url="videoPlatformUrlFormat(bodyContentItem.content.content.url)?.src || null"
                               :video_caption="bodyContentItem.content.content.caption"
                       />
                     </div>
@@ -299,6 +299,7 @@ import {addIdsToH2} from "~/utils/addIdsToH2";
 import {copyCurrentUrlToClipboard} from "~/utils/copyCurrentUrlToClipboard";
 import AppDropDown from "~/components/AppDropDown.vue";
 import {ApiFetchPage_powerBiSubPage} from "~/composable/adminApi/apiFetch";
+import {videoPlatformUrlFormat} from "~/composable/videoPlatformUrlFormat";
 
 const props = defineProps<{
   headerText?: string
@@ -316,10 +317,6 @@ const props = defineProps<{
 }>()
 
 const parentSlug = useRoute().path
-
-function getIdParamInVideoYoutubeURL(url: string): string {
-    return new URL(url).searchParams.get('v') || ''
-}
 
 function isBreakoutItem(item: any): boolean {
     return (item.content.type === 'internalLink' && item.content.content.width === 'true')

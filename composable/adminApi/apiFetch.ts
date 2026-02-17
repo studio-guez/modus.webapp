@@ -8,7 +8,7 @@ function getBaseUrl(): string {
 
 export async function ApiFetchPage(apiPath: string): Promise<IApiPage> {
     const baseUrl = getBaseUrl()
-    return ((await fetch(`${baseUrl}${apiPath}.json`)).json())
+    return ((await fetch(`${getBaseUrl()}${apiPath}.json`)).json())
 }
 
 export async function ApiFetchPage_powerBiSubPage(apiPath: string): Promise<IApiPage> {

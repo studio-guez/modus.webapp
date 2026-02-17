@@ -8,17 +8,24 @@
     >
         <template v-if="cookieIsValidate().value" >
 
-          <iframe width="560"
-                  height="315"
-                  :src="`https://www.youtube-nocookie.com/embed/${video_id}?si=SAxUi0YavSnxZa-b&amp;controls=0`"
-                  title="YouTube video player"
+          <iframe v-if="video_embed_url"
+                  width="1280"
+                  height="720"
+                  :src="video_embed_url"
+                  title="Video player"
                   frameborder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allowfullscreen
           ></iframe>
+          <div v-else
+               class="v-app-video__msg"
+          >
+            <div>Problème avec l'URL de la vidéo.</div>
+          </div>
         </template>
         <div v-else
-             class="v-app-video__cookie-msg"
+             class="v-app-video__msg"
         >
             <button @click="cookieIsValidate().value = true" style="max-width: none">Accepter les cookies</button>
         </div>
@@ -30,13 +37,12 @@
 
 
 <script lang="ts" setup>
-import {declareExportAllDeclaration} from "@babel/types";
 import Player from "@vimeo/player";
 import {Ref, UnwrapRef} from "vue";
 import {cookieIsValidate} from "~/composable/main";
 
-const props = defineProps<{
-    video_id: string,
+defineProps<{
+    video_embed_url: string | null,
     video_caption: string,
 }>()
 
@@ -121,7 +127,7 @@ iframe {
     height: 100%;
 }
 
-.v-app-video__cookie-msg {
+.v-app-video__msg {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -133,11 +139,5 @@ iframe {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-
-    button {
-        //font-size: .5rem;
-        //padding: .5em;
-        //line-height: 1em;
-    }
 }
 </style>
