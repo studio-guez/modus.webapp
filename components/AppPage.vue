@@ -1,226 +1,253 @@
 <template>
-    <main
-        class="v-app-page"
-        :class="{
-          'v-app-page--header-small': headerSize === 'regular'
-        }"
-    >
-      <div
-        class="v-app-page__header"
-      >
-        <template v-if="headerCover || headerText">
-          <template v-if="useRoute().path === '/'">
-            <app-header-home
-              :text="headerText"
-              :bg-image="headerCover"
-            />
-          </template>
-          <template v-else>
-            <app-header
-                    :headerSize="headerSize"
-                    :text="headerText"
-                    :bg-image="headerCover"
-                    :bg_focus="header_focus"
-            />
-          </template>
-        </template>
-        <template v-else>
-            <div class="v-app-page__header__loading">
+    <template v-if="headerCover || headerText">
+      <template v-if="useRoute().path === '/'">
+        <app-header-home
+          :text="headerText"
+          :bg-image="headerCover"
+        />
+      </template>
+      <template v-else-if="headerType === 'list'">
+        <app-header-list
+                :text="headerText"
+                :bg-image="headerCover"
+                :bg_focus="header_focus"
+        />
+      </template>
+      <template v-else>
+        <app-header
+                :text="headerText"
+                :bg-image="headerCover"
+                :bg_focus="header_focus"
+                :headerSize="headerSize"
+        />
+      </template>
+    </template>
+    <template v-else>
+        <div class="v-app-page__header__loading">
 
-            </div>
-        </template>
+        </div>
+    </template>
+    <main class="v-app-page" :class="{ 'v-app-page--home': useRoute().path === '/' }">
+      <div class="v-app-page__path"
+            v-if="path"
+      >
+          <div class="v-app-page__path__content app-font-small">
+              <nuxt-link href="/">Home</nuxt-link> / <nuxt-link href="/projects/">Les Projets Modus</nuxt-link> <span class="v-app-page__path__content__title">/ {{headerText?.split(' ').slice(0, 8).join(' ')}}…</span>
+              <div style="padding-top: .5rem; display: flex; justify-content: space-between; flex-direction: row; gap: 1rem; flex-wrap: wrap"
+                    v-if="status"
+              >
+                <div class="v-app-page__status-button"
+                      style="
+                        font-weight: 600;
+                        font-size: .75rem;
+                        border: solid 2px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: .5rem;
+                        border-radius: 2rem;
+                        padding: .015rem .5rem .025rem;
+                        min-width: 3rem;
+                        text-align: center;
+                        "
+                >{{status}}</div>
+              </div>
+          </div>
       </div>
 
-        <div class="v-app-page__path"
-             v-if="path"
-        >
-            <div class="v-app-page__path__content app-font-small">
-                <nuxt-link href="/">Home</nuxt-link> / <nuxt-link href="/projects/">Les Projets Modus</nuxt-link> <span class="v-app-page__path__content__title">/ {{headerText?.split(' ').slice(0, 8).join(' ')}}…</span>
-                <div style="padding-top: .5rem; display: flex; justify-content: space-between; flex-direction: row; gap: 1rem; flex-wrap: wrap"
-                     v-if="category"
-                >
-                  <div style="
-                          font-weight: 600;
-                          font-size: .75rem;
-                          border: solid;
-                          display: block;
-                          border-radius: 2rem;
-                          padding: .15rem .5rem .25rem;
-                          color: white;
-                          background: var(--app-color-main--dark);
-                        ">{{apiProjectMap[category]}}</div>
-                  <div class="v-app-page__status-button"
-                       style="
-                          font-weight: 600;
-                          font-size: .75rem;
-                          border: solid 2px;
-                          display: flex;
-                          align-items: center;
-                          justify-content: center;
-                          gap: .5rem;
-                          border-radius: 2rem;
-                          padding: .015rem .5rem .025rem;
-                          min-width: 3rem;
-                          text-align: center;
-                          "
-                       v-if="status"
-                  >{{status}}</div>
-                </div>
-            </div>
-        </div>
+      <div class="v-app-page__content">
+        <slot v-if="$slots.default" />
+        <template v-else>
+        <template v-if="bodyContent">
 
-      <div class="v-app-page__content app-show-background-on-nav"
-           v-if="withoutBody !== true"
-      >
-        <div class="v-app-page__content__grid">
-            <template v-if="titleContent">
-                <div class="v-app-page__section v-app-page__section--full">
+          <template v-for="(segment, segIdx) of bodyContentSegments" :key="segIdx">
+
+            <!-- Breakout: full-width blocks rendered outside the grid -->
+            <template v-if="segment.type === 'breakout'">
+              <div class="v-app-page__breakout" v-if="segment.item.content.type === 'internalLink'">
+                <app-internal-link
+                  :src="segment.item.image[0].resize.reg"
+                  :title="segment.item.content.content.linktitle"
+                  :description="segment.item.content.content.text"
+                  :href="segment.item.content.content.link"
+                  :style-design="segment.item.content.content.style"
+                  :is-full="true"
+                />
+              </div>
+              <div class="v-app-page__breakout" v-else-if="segment.item.content.type === 'internalLinks'">
+                <app-internal-links
+                  :src="segment.item.image[0]?.resize?.reg"
+                  :title="segment.item.content.content.sectiontitle"
+                  :subtitle="segment.item.content.content.sectionsubtitle"
+                  :cards="segment.item.content.content.cards"
+                />
+              </div>
+              <div class="v-app-page__breakout" v-else-if="segment.item.content.type === 'highlights'">
+                <app-highlights
+                  :title="segment.item.content.content.highlightstitle"
+                  :subtitle="segment.item.content.content.highlightssubtitle"
+                  :items="segment.item.highlightsItems || []"
+                />
+              </div>
+            </template>
+
+            <!-- Grid segment: regular content inside the 2-column grid -->
+            <template v-else>
+              <div class="v-app-page__content__grid">
+
+                <template v-if="segIdx === 0 && titleContent">
+                  <div class="v-app-page__section v-app-page__section--full">
                     <h1>{{titleContent}}</h1>
-                </div>
-            </template>
-
-
-          <template v-if="bodyContent">
-
-            <template v-for="bodyContentItem of bodyContent">
-
-              <template v-if="bodyContentItem.content.type === 'mdheading'">
-
-                <template v-if="bodyContentItem.content.content.level === 'h2'">
-                  <div class="v-app-page__section v-app-page__section--full">
-                    <h2 v-html="bodyContentItem.content.content.text" />
                   </div>
                 </template>
 
-                <template v-else-if="bodyContentItem.content.content.level === 'h3'">
-                  <div class="v-app-page__section v-app-page__section--full">
-                    <h3 v-html="bodyContentItem.content.content.text" />
-                  </div>
-                </template>
+                <template v-for="bodyContentItem of segment.items">
 
-              </template>
+                  <template v-if="bodyContentItem.content.type === 'mdheading'">
+                    <template v-if="bodyContentItem.content.content.level === 'h2'">
+                      <div class="v-app-page__section v-app-page__section--full">
+                        <h2 v-html="bodyContentItem.content.content.text" />
+                      </div>
+                    </template>
+                    <template v-else-if="bodyContentItem.content.content.level === 'h3'">
+                      <div class="v-app-page__section v-app-page__section--full">
+                        <h3 v-html="bodyContentItem.content.content.text" />
+                      </div>
+                    </template>
+                  </template>
 
-                <template v-else-if="bodyContentItem.content.type === 'mdimage'">
+                  <template v-else-if="bodyContentItem.content.type === 'mdimage'">
                     <div class="v-app-page__section v-app-page__section--full">
-                        <div class="v-app-page__section__img">
-                            <img class="v-app-page__section__img__item"
-                                 :alt="bodyContentItem.image[0].alt || 'Pas de description pour cette image'"
-                                 :src="bodyContentItem.image[0].resize.large"
-                            />
-                            <div class="v-app-page__section__img__caption"
-                                 v-if="bodyContentItem.image[0].caption"
-                            >{{bodyContentItem.image[0].caption}}</div>
-                        </div>
+                      <div class="v-app-page__section__img">
+                        <img class="v-app-page__section__img__item"
+                             :alt="bodyContentItem.image[0].alt || 'Pas de description pour cette image'"
+                             :src="bodyContentItem.image[0].resize.large"
+                        />
+                        <div class="v-app-page__section__img__caption"
+                             v-if="bodyContentItem.image[0].caption"
+                        >{{bodyContentItem.image[0].caption}}</div>
+                      </div>
                     </div>
+                  </template>
+
+                  <template v-else-if="bodyContentItem.content.type === 'simpleText'">
+                    <div class="v-app-page__section">
+                      <app-text-content
+                        :text="bodyContentItem.content.content.text"
+                        variant="yellow-block"
+                      />
+                    </div>
+                  </template>
+
+                  <template v-else-if="bodyContentItem.content.type === 'body'">
+                    <div class="v-app-page__section v-app-page__section--body v-app-page__section--full">
+                      <div v-html="addIdsToH2(bodyContentItem.content.content.text)"/>
+                    </div>
+                  </template>
+
+                  <template v-else-if="bodyContentItem.content.type === 'profiles'">
+                    <div class="v-app-page__section v-app-page__section--full">
+                      <app-profiles
+                        :profiles-data="bodyContentItem.content.content"
+                        :profiles-images-data="bodyContentItem.profilesImages"
+                      />
+                    </div>
+                  </template>
+
+                  <!-- Non-full-width internalLink stays in the grid -->
+                  <template v-else-if="bodyContentItem.content.type === 'internalLink'">
+                    <div class="v-app-page__section">
+                      <app-internal-link
+                        :src="bodyContentItem.image[0].resize.reg"
+                        :title="bodyContentItem.content.content.linktitle"
+                        :description="bodyContentItem.content.content.text"
+                        :href="bodyContentItem.content.content.link"
+                        :style-design="bodyContentItem.content.content.style"
+                        :is-full="false"
+                      />
+                    </div>
+                  </template>
+
+                  <template v-else-if="bodyContentItem.content.type === 'video'">
+                    <div class="v-app-page__section v-app-page__section--full" style="max-width: 60rem">
+                      <app-video
+                              :video_embed_url="videoPlatformUrlFormat(bodyContentItem.content.content.url)?.src || null"
+                              :video_caption="bodyContentItem.content.content.caption"
+                      />
+                    </div>
+                  </template>
+
+                  <template v-else-if="bodyContentItem.content.type === 'spotify'">
+                    <div class="v-app-page__section v-app-page__section--full" style="max-width: 60rem">
+                      <app-spotify
+                              :podcast_link="bodyContentItem.content.content.url"
+                              :podcast_caption="bodyContentItem.content.content.caption"
+                              :spotify-data="bodyContentItem.content"
+                      />
+                    </div>
+                  </template>
+
+                  <template v-else-if="bodyContentItem.content.type === 'listPoints'">
+                    <div class="v-app-page__section">
+                      <app-list-points
+                              :title="bodyContentItem.content.content.titlecontent"
+                              :content="bodyContentItem.content.content.text"
+                      />
+                    </div>
+                  </template>
+
+                  <template v-else-if="bodyContentItem.content.type === 'actuality'">
+                    <div class="v-app-page__section v-app-page__section--full">
+                      <app-actuality
+                              :title="bodyContentItem.content.content.linktitle"
+                              :url="bodyContentItem.content.content.link"
+                              :description="bodyContentItem.content.content.text"
+                              :src="bodyContentItem.image[0]"
+                      />
+                    </div>
+                  </template>
+
+                  <template v-else-if="bodyContentItem.content.type === 'linksSection'">
+                    <div class="v-app-page__section v-app-page__section--full">
+                      <app-link-section
+                              :title="bodyContentItem.content.content.title"
+                              :links="bodyContentItem.content.content.links"
+                      />
+                    </div>
+                  </template>
+
+                  <template v-else-if="bodyContentItem.content.type === 'dropdown'">
+                    <div class="v-app-page__section v-app-page__section--full">
+                      <app-drop-down
+                              :title="bodyContentItem.content.content.title"
+                              :dropdown_content="bodyContentItem.content.content.dropdown_content"
+                              :dropdown_intro="bodyContentItem.content.content.dropdown_intro"
+                      />
+                    </div>
+                  </template>
+
+                  <template v-else-if="bodyContentItem.content.type === 'navigateProjectsByTags'">
+                    <div class="v-app-page__section v-app-page__section--full">
+                      <app-navigate-projects-by-tags
+                              :title="bodyContentItem.content.content.title"
+                              :button-text="bodyContentItem.content.content.buttontext"
+                      />
+                    </div>
+                  </template>
+
                 </template>
-
-
-              <template v-else-if="bodyContentItem.content.type === 'simpleText'">
-                <div class="v-app-page__section">
-                  <app-text-content
-                    :text="bodyContentItem.content.content.text"
-                    variant="yellow-block"
-                  />
-                </div>
-              </template>
-
-              <template v-else-if="bodyContentItem.content.type === 'body'">
-                <div class="v-app-page__section v-app-page__section--body v-app-page__section--full">
-                  <div v-html="addIdsToH2(bodyContentItem.content.content.text)"/>
-                </div>
-              </template>
-
-
-              <template v-else-if="bodyContentItem.content.type === 'profiles'">
-                <div class="v-app-page__section v-app-page__section--full">
-                  <app-profiles
-                    :profiles-data="bodyContentItem.content.content"
-                    :profiles-images-data="bodyContentItem.profilesImages"
-                  />
-                </div>
-              </template>
-
-              <template v-else-if="bodyContentItem.content.type === 'internalLink'">
-                <div class="v-app-page__section"
-                     :class="{'v-app-page__section--full': bodyContentItem.content.content.width === 'true'}"
-                >
-                  <app-internal-link
-                    :src="bodyContentItem.image[0].resize.reg"
-                    :title="bodyContentItem.content.content.linktitle"
-                    :description="bodyContentItem.content.content.text"
-                    :href="bodyContentItem.content.content.link"
-                    :style-design="bodyContentItem.content.content.style"
-                    :is-full="bodyContentItem.content.content.width === 'true'"
-                  />
-                </div>
-              </template>
-
-              <template v-else-if="bodyContentItem.content.type === 'video'">
-                <div class="v-app-page__section v-app-page__section--full" style="max-width: 60rem">
-                  <app-video
-                          :video_embed_url="videoPlatformUrlFormat(bodyContentItem.content.content.url)?.src || null"
-                          :video_caption="bodyContentItem.content.content.caption"
-                  />
-                </div>
-              </template>
-
-              <template v-else-if="bodyContentItem.content.type === 'spotify'">
-                <div class="v-app-page__section v-app-page__section--full" style="max-width: 60rem">
-                  <app-spotify
-                          :podcast_link="bodyContentItem.content.content.url"
-                          :podcast_caption="bodyContentItem.content.content.caption"
-                          :spotify-data="bodyContentItem.content"
-                  />
-                </div>
-              </template>
-
-              <template v-else-if="bodyContentItem.content.type === 'listPoints'">
-                <div class="v-app-page__section">
-                  <app-list-points
-                          :title="bodyContentItem.content.content.titlecontent"
-                          :content="bodyContentItem.content.content.text"
-                  />
-                </div>
-              </template>
-
-              <template v-else-if="bodyContentItem.content.type === 'actuality'">
-                <div class="v-app-page__section v-app-page__section--full">
-                  <app-actuality
-                          :title="bodyContentItem.content.content.linktitle"
-                          :url="bodyContentItem.content.content.link"
-                          :description="bodyContentItem.content.content.text"
-                          :src="bodyContentItem.image[0]"
-                  />
-                </div>
-              </template>
-
-              <template v-else-if="bodyContentItem.content.type === 'linksSection'">
-                <div class="v-app-page__section v-app-page__section--full">
-                  <app-link-section
-                          :title="bodyContentItem.content.content.title"
-                          :links="bodyContentItem.content.content.links"
-                  />
-                </div>
-              </template>
-
-              <template v-else-if="bodyContentItem.content.type === 'dropdown'">
-                <div class="v-app-page__section v-app-page__section--full">
-                  <app-drop-down
-                          :title="bodyContentItem.content.content.title"
-                          :dropdown_content="bodyContentItem.content.content.dropdown_content"
-                          :dropdown_intro="bodyContentItem.content.content.dropdown_intro"
-                  />
-                </div>
-              </template>
-
-
+              </div>
             </template>
+
           </template>
 
-          <template v-else>
+        </template>
+
+        <template v-else>
+          <div class="v-app-page__content__grid">
             chargement du contenu…
-          </template>
-        </div>
+          </div>
+        </template>
 
 
         <template v-if="power_subpages && power_subpages[0]">
@@ -251,15 +278,8 @@
             </div>
           </div>
         </template>
+        </template>
       </div>
-
-
-
-
-
-
-
-
     </main>
 </template>
 
@@ -269,11 +289,7 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import {useIsIntersected} from "~/composable/main";
 import {
-    apiProjectMap,
-    ApiProjectMap,
-    ApiProjectType,
     IApiBody,
     IApiPage__subpage
 } from "~/composable/adminApi/apiDefinitions";
@@ -290,11 +306,10 @@ const props = defineProps<{
   headerCover?: string
   header_focus?: string
   bodyContent?: IApiBody
-  headerSize?: 'small' | 'regular'
-  withoutBody?: boolean
+  headerSize?: 'small'
+  headerType?: 'default' | 'list'
   titleContent?: string
   path?: boolean
-  category?: ApiProjectType
   date_start?: string,
   is_project_with_duration?: "true" | "false",
   date_end?: string,
@@ -302,6 +317,38 @@ const props = defineProps<{
 }>()
 
 const parentSlug = useRoute().path
+
+function isBreakoutItem(item: any): boolean {
+    return (item.content.type === 'internalLink' && item.content.content.width === 'true')
+        || item.content.type === 'internalLinks'
+        || item.content.type === 'highlights'
+}
+
+type BodyContentSegment =
+    | { type: 'grid', items: any[] }
+    | { type: 'breakout', item: any }
+
+const bodyContentSegments = computed<BodyContentSegment[]>(() => {
+    if (!props.bodyContent) return []
+    const segments: BodyContentSegment[] = []
+    let currentGridItems: any[] = []
+
+    for (const bodyContentItem of Object.values(props.bodyContent)) {
+        if (isBreakoutItem(bodyContentItem)) {
+            if (currentGridItems.length) {
+                segments.push({ type: 'grid', items: [...currentGridItems] })
+                currentGridItems = []
+            }
+            segments.push({ type: 'breakout', item: bodyContentItem })
+        } else {
+            currentGridItems.push(bodyContentItem)
+        }
+    }
+    if (currentGridItems.length) {
+        segments.push({ type: 'grid', items: currentGridItems })
+    }
+    return segments
+})
 
 const status: ComputedRef<null | 'En cours' | 'Terminé'> = computed(() => {
     if(props.is_project_with_duration === 'false') return null
@@ -316,23 +363,7 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
 })
 
 
-nextTick(() => {
-    window.setTimeout(() => {
-        const elementsToSetBackgroundNav = document.querySelectorAll('.app-show-background-on-nav')
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                useIsIntersected().value = entry.isIntersecting;
-            })
-        }, {
-            rootMargin: `0px 0px ${window.innerHeight * -1}px 0px`
-        })
-
-        elementsToSetBackgroundNav.forEach((value) => {
-            observer.observe(value)
-        })
-    }, 2_000)
-})
 
 // onMounted(async () => {
 //
@@ -353,10 +384,10 @@ nextTick(() => {
 
 <style lang="scss" scoped >
 .v-app-page {
-  padding-top: var(--app-header-height);
+  padding-top:0;
 
-  &.v-app-page--header-small {
-    padding-top: var(--app-nav__height);
+  &.v-app-page--home {
+    background: var(--app-color-grey);
   }
 }
 
@@ -380,20 +411,21 @@ nextTick(() => {
 }
 
 .v-app-page__header__loading {
-    background: var(--app-color-grey);
+    background: var(--app-color-white);
     width: 100%;
     height: 100%;
 }
 
 .v-app-page__content {
-  background: var(--app-color-grey);
+  background: transparent;
   position: relative;
   z-index: 10;
   width: 100%;
+}
 
-  @media (max-width: 900px) {
-    box-shadow: 0 -5px 5px 0 var(--app-color-grey);
-  }
+.v-app-page__breakout {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .v-app-page__path {
@@ -403,8 +435,8 @@ nextTick(() => {
     z-index: 100;
     box-sizing: border-box;
     width: 100%;
-    background: var(--app-color-grey);
-    box-shadow: 0 10px 10px 0 var(--app-color-grey);
+    background: var(--app-color-white);
+    padding-bottom: 0.5rem;
 }
 
 
@@ -430,11 +462,15 @@ nextTick(() => {
   max-width: 1300px;
   margin-left: auto;
   margin-right: auto;
-  gap: 2rem;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  column-gap: 2rem;
+  row-gap: 4rem;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
   padding-left: var(--app-gutter);
   padding-right: var(--app-gutter);
+    @media (max-width: 900px) {
+      row-gap: 2rem;
+    }
 }
 
 .v-app-page__section__img {

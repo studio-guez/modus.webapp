@@ -1,55 +1,14 @@
-export type ApiProjectType =
-    'platform'
-    | 'laboratory'
-    | 'library'
-    | 'imaginary'
-    | 'planting'
-
-export type ApiProjectMap = {[key in ApiProjectType]: string}
-
-export const apiProjectMap: ApiProjectMap = {
-    'imaginary' : 'La Fabrique des Imaginaires',
-    'laboratory' : 'Le Laboratoire',
-    'platform' : 'La Plateforme',
-    'planting' : 'La Plantation',
-    'library' : 'La Bibliothèque',
-}
-
-const apiProjectTypes: ApiProjectType[] = (() => {
-    return [
-        'platform',
-        'laboratory',
-        'library',
-        'imaginary',
-        'planting',
-    ];
-})();
-
-export const isApiProjectType = (str: string): str is ApiProjectType => {
-    return apiProjectTypes.includes(str as ApiProjectType);
-};
-
-export const imageUrlMap: ApiProjectMap = {
-    'library':   'img_bibliotheque.svg',
-    'imaginary':   'img_imaginaires.svg',
-    'laboratory': 'img_laboratoire.svg',
-    'planting':  'img_plantation.svg',
-    'platform':  'img_plateforme.svg',
-}
-
-
-
 export interface IApiPage {
     "options": {
-        "showInNav": boolean,
-        "showNewsletter": boolean,
         "headerTitle": string,
         "headerImage": IApiImage | null
-        "category": ApiProjectType | undefined
         dateStart: string,
         isProjectWithDuration: "true" | "false",
         dateEnd: string,
         subpages: IApiPage__subpage[]
+        isExternalLink?: boolean,
+        externalUrl?: string,
+        preview?: string,
     },
     "body": IApiBody,
     title?: {
@@ -105,7 +64,7 @@ export interface IApiPage__subpage__power_bi_pages {
         "uri": string,
         "url": string
     },
-    "power_bi_pages":         {
+    "power_bi_pages": {
         "content": {
             "image": string[],
             "power_bi_pages_number": string,
@@ -114,7 +73,7 @@ export interface IApiPage__subpage__power_bi_pages {
             "power_bi_pages_link": string,
             "id": string
         },
-        "image":             {
+        "image": {
             "focus": null,
             "caption": string,
             "alt": null,
@@ -125,11 +84,11 @@ export interface IApiPage__subpage__power_bi_pages {
             "width": number,
             "height": number,
             "resize": {
-                "tiny":     string,
-                "small":    string,
-                "reg":      string,
-                "large":    string,
-                "xxl":      string
+                "tiny": string,
+                "small": string,
+                "reg": string,
+                "large": string,
+                "xxl": string
             }
         }[]
     }[]
@@ -137,153 +96,187 @@ export interface IApiPage__subpage__power_bi_pages {
 
 export interface IApiBody {
     [key: string]:
-        {
-            "image": IApiImage[],
+    {
+        "image": IApiImage[],
+        "content": {
             "content": {
-                "content": {
-                    "level": "h2" | "h3",
-                    "text": string
-                },
-                "id": string,
-                "isHidden": boolean,
-                "type": "mdheading"
-            }
-        }
-        |
-        {
-            "image": IApiImage[],
-            content: IApiBodyContent_video
-        }
-        |
-        {
-            "image": IApiImage[],
-            content: IApiBodyContent_spotify
-        }
-        |
-        {
-            "image": IApiImage[],
-            "content": {
-                "content": {
-                    image: [
-                        "file://MFDDVR1e0EFYnsDD"
-                    ],
-                    alt: "",
-                    caption: ""
-                },
-                "id": string,
-                "isHidden": boolean,
-                "type": "mdimage"
-            }
-        }
-        |
-        {
-            "image": IApiImage[],
-            "content": {
-                "content": {
-                    "text": string
-                },
-                "id": string,
-                "isHidden": boolean,
-                "type": "simpleText"
-            }
-        }
-        |
-        {
-            "image": IApiImage[],
-            "content": {
-                "content": {
-                    "text": string
-                },
-                "id": string,
-                "isHidden": boolean,
-                "type": "body"
-            }
-        }
-        |
-        {
-            "image": IApiImage[],
-            "content": {
-                "content": IApiProfiles,
-                "id": string,
-                "isHidden": boolean,
-                "type": "profiles"
+                "level": "h2" | "h3",
+                "text": string
             },
-            profilesImages: IApiProfilesImages[]
+            "id": string,
+            "isHidden": boolean,
+            "type": "mdheading"
         }
-        |
-        {
-            "image": IApiImage[],
+    }
+    |
+    {
+        "image": IApiImage[],
+        content: IApiBodyContent_video
+    }
+    |
+    {
+        "image": IApiImage[],
+        content: IApiBodyContent_spotify
+    }
+    |
+    {
+        "image": IApiImage[],
+        "content": {
             "content": {
-                "content": {
-                    "image": string[],
-                    "linktitle": string,
-                    "text": string,
-                    "link": string
-                    "style": "circle" | 'default',
-                    "width": "true" | 'false',
-                },
-                "id": string,
-                "isHidden": boolean,
-                "type": "internalLink"
+                image: [
+                    "file://MFDDVR1e0EFYnsDD"
+                ],
+                alt: "",
+                caption: ""
+            },
+            "id": string,
+            "isHidden": boolean,
+            "type": "mdimage"
+        }
+    }
+    |
+    {
+        "image": IApiImage[],
+        "content": {
+            "content": {
+                "text": string
+            },
+            "id": string,
+            "isHidden": boolean,
+            "type": "simpleText"
+        }
+    }
+    |
+    {
+        "image": IApiImage[],
+        "content": {
+            "content": {
+                "text": string
+            },
+            "id": string,
+            "isHidden": boolean,
+            "type": "body"
+        }
+    }
+    |
+    {
+        "image": IApiImage[],
+        "content": {
+            "content": IApiProfiles,
+            "id": string,
+            "isHidden": boolean,
+            "type": "profiles"
+        },
+        profilesImages: IApiProfilesImages[]
+    }
+    |
+    {
+        "image": IApiImage[],
+        "content": {
+            "content": {
+                "image": string[],
+                "linktitle": string,
+                "text": string,
+                "link": string
+                "style": "circle" | 'default',
+                "width": "true" | 'false',
+            },
+            "id": string,
+            "isHidden": boolean,
+            "type": "internalLink"
 
-            }
         }
-        |
-        {
-            image: IApiImage[],
+    }
+    |
+    {
+        image: IApiImage[],
+        content: {
             content: {
-                content: {
-                    titlecontent: string,
-                    text: string,
-                },
-                id: string,
-                isHidden: false,
-                type: "listPoints"
-            }
-        }
-        |
-        {
-            image: IApiImage[],
-            content: {
-                content: {
-                    image: string[],
-                    linktitle: string,
-                    text: string,
-                    link: string
-                },
-                id: string,
-                isHidden: boolean,
-                type: "actuality"
-            }
-        }
-        |
-        {
-            content: {
-                content: {
-                    title: string,
-                    links: {
-                        name: "Instagram.com, Genève en selle",
-                        url: "https://www.instagram.com/geneve_en_selle/"
-                    }[]
-                },
-                id: string,
-                isHidden: boolean,
-                type: "linksSection"
-            }
-        }
-        |
-        {
-            content: {
-                content: {
-                    title: string,
-                    dropdown_content: string
-                    dropdown_intro: string
-                },
-                id: string,
-                isHidden: false,
-                type: "dropdown"
+                image: string[],
+                linktitle: string,
+                text: string,
+                link: string
             },
+            id: string,
+            isHidden: boolean,
+            type: "actuality"
         }
+    }
+    |
+    {
+        content: {
+            content: {
+                title: string,
+                links: {
+                    name: "Instagram.com, Genève en selle",
+                    url: "https://www.instagram.com/geneve_en_selle/"
+                }[]
+            },
+            id: string,
+            isHidden: boolean,
+            type: "linksSection"
+        }
+    }
+    |
+    {
+        content: {
+            content: {
+                title: string,
+                dropdown_content: string
+                dropdown_intro: string
+            },
+            id: string,
+            isHidden: false,
+            type: "dropdown"
+        },
+    }
+    |
+    {
+        content: {
+            content: {
+                title: string,
+                buttontext: string
+            },
+            id: string,
+            isHidden: boolean,
+            type: "navigateProjectsByTags"
+        },
+    }
+    |
+    {
+        image: IApiImage[],
+        content: {
+            content: {
+                sectiontitle: string,
+                sectionsubtitle: string,
+                image: string[],
+                cards: {
+                    title: string,
+                    subtitle: string,
+                    slug: string,
+                    color: 'green-light' | 'green-medium' | 'green-dark'
+                }[]
+            },
+            id: string,
+            isHidden: boolean,
+            type: "internalLinks"
+        },
+    }
+    |
+    {
+        image: IApiImage[],
+        highlightsItems: IApiSingleProject[],
+        content: {
+            content: {
+                highlightstitle: string,
+                highlightssubtitle: string,
+                highlightsitems: string,
+            },
+            id: string,
+            isHidden: boolean,
+            type: "highlights"
+        },
+    }
 }
 
 export interface IApiBodyContent_video {
@@ -344,20 +337,29 @@ export interface IApiImage {
     "width": number,
     "height": number,
     "resize": {
-        "tiny":     string,
-        "small":    string,
-        "reg":      string,
-        "large":    string,
-        "xxl":      string
+        "tiny": string,
+        "small": string,
+        "reg": string,
+        "large": string,
+        "xxl": string
     }
+}
+
+export interface IApiTag {
+    slug: string,
+    name: string,
+}
+
+export interface IApiProjectTags {
+    tags: IApiTag[]
 }
 
 export interface IApiProjects {
     "options": {
-        "showInNav": boolean,
-        "showNewsletter": boolean,
         "headerTitle": string,
-        "headerImage": IApiImage | null
+        "headerImage": IApiImage | null,
+        "preview": string,
+        "availableTags"?: IApiTag[],
     },
     "children": {
         [key: string]: IApiSingleProject
@@ -370,16 +372,16 @@ export interface IApiSingleProject {
     "content": {
         "title": string,
         "headerimage": string,
-        "showinnav": "false" | "true",
-        "shownewsletter": "true" | "false",
         "headertitle": string,
         "body": IApiBody,
         "pdffile": string,
         "uuid": string,
-        device: ApiProjectType
         datestart: string,
         isprojectwithduration: "true" | "false",
         dateend: string,
+        tags?: IApiTag[],
+        // Tag page aggregation field (from tag.json.php)
+        pageType?: 'media' | 'report' | 'project',
     }
 }
 
@@ -399,12 +401,6 @@ export interface IApiSiteInfoChildren {
     },
     "headerimage": {
         "value": string
-    },
-    "showinnav": {
-        "value": "false" | "true"
-    },
-    "shownewsletter": {
-        "value": "true" | "false"
     },
     "headertitle": {
         "value": string
@@ -464,4 +460,21 @@ export interface ApiPowerBIResponse__power_bi_page {
         id: string
     },
     image: IApiImage[]
+}
+
+// Menu system types
+export interface IApiMenuItem {
+    type: 'page' | 'external'
+    url: string
+    title: string
+    svgUrl: string | null
+    openInNewTab: boolean
+    children?: IApiMenuItem[]
+}
+
+export interface IApiMenus {
+    topMenu: IApiMenuItem[]
+    mainMenu: IApiMenuItem[]
+    bottomMenu: IApiMenuItem[]
+    footerMenu: IApiMenuItem[]
 }

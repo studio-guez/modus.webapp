@@ -15,9 +15,8 @@
 <script setup lang="ts">
 import {defineProps, Ref, UnwrapRef} from 'vue'
 import AppPage from "~/components/AppPage.vue";
-import {ApiFetchPage, ApiFetchPagesInfo} from "~/composable/adminApi/apiFetch";
+import {ApiFetchPage} from "~/composable/adminApi/apiFetch";
 import {IApiBody} from "~/composable/adminApi/apiDefinitions";
-import {siteInfo} from "~/composable/main";
 
 // const props = defineProps<{
 //     message?: string

@@ -1,10 +1,9 @@
 <template>
-  <section
+  <header
           class="v-app-header-home"
   >
     <div
             class="v-app-header-home__container"
-            :style="`transform: translate(0, -${bodyScrollInfoStore.top / 4}px)`"
     >
       <div
               class="v-app-header-home__container__graphic-box"
@@ -26,11 +25,11 @@
       </div>
     </div>
 
-    <div
+    <h1
             class="v-app-header-home__signature"
-            :style="`transform: translate(0, -${bodyScrollInfoStore.top / 1.05}px)`"
-    >{{text}}</div>
-  </section>
+            v-html="formattedText"
+    />
+  </header>
 </template>
 
 
@@ -38,15 +37,17 @@
 
 
 <script lang="ts" setup>
-import {bodyScrollInfo} from "~/composable/main";
+import { markModus } from '~/utils/markModus'
 
-const bodyScrollInfoStore = bodyScrollInfo()
-
-defineProps<{
+const props = defineProps<{
     bgImage: string,
     text?: string,
 }>()
 
+const formattedText = computed(() => {
+    if (!props.text) return ''
+    return markModus(props.text)
+})
 </script>
 
 
@@ -55,14 +56,16 @@ defineProps<{
 
 <style lang="scss" scoped >
 .v-app-header-home {
+  box-sizing: border-box;
   background: white;
   width: 100%;
+  padding: 6rem var(--app-base-padding-x) 6rem var(--app-base-padding-x);
   height: var(--app-header-height);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
   position: relative;
 
 
@@ -80,22 +83,19 @@ defineProps<{
 }
 
 .v-app-header-home__signature {
-  line-height: 1em;
-  font-size: 5.65vw;
-  letter-spacing: -.0125em;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  width: 100%;
-  padding: var(--app-gutter);
-  color: var(--app-color-main);
-  z-index: 100;
+  z-index: 1;
+  color: var(--app-color-white);
+  font-size: var(--app-header-title-size);
+  text-align: center;
+  text-wrap: balance;
+  margin: 0;
+  text-shadow: 0 4px 64.4px rgba(0, 0, 0, 0.30);
+  max-width: 68.3333333333rem;
 
-
-  @media (max-width: 900px) {
-    font-size: 10vw;
-    background: var(--app-color-grey);
+  &:deep(mark) {
+      background: transparent;
+      color: var(--app-color-main);
+      padding: 0;
   }
 }
 
@@ -111,12 +111,9 @@ defineProps<{
 
 .v-app-header-home__graphic-box__module_1 {
   position: relative;
-  top: var(--app-nav__height);
-  height: calc( 125% );
+  top: 0;
+  height: var(--app-header-height);
 
-  @media (max-width: 900px) {
-    height: calc( 110% );
-  }
   .v-app-header-home__container__graphic-box + .v-app-header-home__container__graphic-box & {
     transform: translate3d(100%, 0, 0);
   }
@@ -128,43 +125,6 @@ defineProps<{
   }
   100% {
     transform: translateX(-100%);
-  }
-}
-
-.v-app-header-home__graphic-box__item {
-  fill: #461818;
-  position: absolute;
-  width: 40vw;
-  height: 40vw;
-
-  &:nth-child(1) {
-    top: 0;
-    left: 0;
-    transform: translate(-22vw, -4vw);
-  }
-
-  &:nth-child(2) {
-    top: 0;
-    left: 0;
-    transform: translate(6.4vw, -12vw);
-  }
-
-  &:nth-child(3) {
-    top: 50%;
-    left: 0;
-    transform: translate(38vw, calc(-50% + 2vw) ) rotate(-135deg);
-  }
-
-  &:nth-child(4) {
-    top: 50%;
-    left: 0;
-    transform: translate(62vw, calc(-50% + 2vw) ) rotate(45deg);
-  }
-
-  &:nth-child(5) {
-    bottom: 0;
-    left: 0;
-    transform: translate(15.2vw, 10vw);
   }
 }
 </style>

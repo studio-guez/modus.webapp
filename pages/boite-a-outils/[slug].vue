@@ -1,6 +1,6 @@
 <template>
     <section
-        class="v-project-slug"
+        class="v-tool-slug"
     >
         <app-page
             :header-cover="headerCover"
@@ -10,9 +10,6 @@
             :path="true"
             :header-size="'small'"
             :header-text="headerText"
-            :date_start="dateStart"
-            :is_project_with_duration="isProjectWithDuration"
-            :date_end="dateEnd"
             :power_subpages="powerSubpages"
         />
         <app-share-link />
@@ -21,13 +18,10 @@
 </template>
 
 
-
-
-
 <script setup lang="ts">
-import {defineProps, Ref, UnwrapRef} from 'vue'
+import {Ref, UnwrapRef} from 'vue'
 import AppPage from "~/components/AppPage.vue";
-import {IApiBody, IApiPage__subpage} from "~/composable/adminApi/apiDefinitions";
+import {IApiBody} from "~/composable/adminApi/apiDefinitions";
 import {ApiFetchPage} from "~/composable/adminApi/apiFetch";
 
 const headerCover: Ref<UnwrapRef<undefined | string>> = ref(undefined)
@@ -37,20 +31,22 @@ const headerText: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 const bodyTitle: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 const bodyContent: Ref<UnwrapRef<undefined | IApiBody>> = ref(undefined)
 
-const dateStart: Ref<UnwrapRef<undefined | string>>              = ref(undefined)
-const isProjectWithDuration: Ref<UnwrapRef<undefined | string>>  = ref(undefined)
-const dateEnd: Ref<UnwrapRef<undefined | string>>                = ref(undefined)
-
-const powerSubpages: Ref<UnwrapRef<undefined | IApiPage__subpage[]>>            = ref(undefined)
-
 onMounted(async () => {
     const slug = useRoute()?.params?.slug
 
     if(typeof slug !== 'string') return
 
-    const pageData = await ApiFetchPage(`projects/${slug}`)
+    const pageData = await ApiFetchPage(`boite-a-outils/${slug}`)
 
-    console.log(pageData)
+    // External tools should not have an internal page
+    if (pageData.options.isExternalLink) {
+        if (pageData.options.externalUrl) {
+            window.location.href = pageData.options.externalUrl
+        } else {
+            throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+        }
+        return
+    }
 
     headerCover.value = pageData.options.headerImage?.mediaUrl
     headerFocus.value = pageData.options.headerImage?.focus
@@ -58,11 +54,5 @@ onMounted(async () => {
 
     bodyTitle.value = pageData.options.preview
     bodyContent.value = pageData.body
-
-    dateStart.value = pageData.options.dateStart
-    isProjectWithDuration.value = pageData.options.isProjectWithDuration
-    dateEnd.value = pageData.options.dateEnd
-
-    powerSubpages.value = pageData.options.subpages
 })
 </script>

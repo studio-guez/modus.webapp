@@ -110,6 +110,8 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 
+const config = useRuntimeConfig()
+const apiBaseUrl = config.public.apiBaseUrl as string
 
 interface QuestionConditions {
     isBlocking?: boolean; // Si true, bloque les questions suivantes
@@ -971,7 +973,7 @@ const questions: QuestionType[] = [
           Pour évaluer l’efficacité de la démarche « Déclic mobilité » et faire un retour sur les enseignements à tirer de cette expérience, nous avons besoin de mesurer la manière dont les participant·e·s font évoluer leurs pratiques de mobilité à l’occasion de cette initiative.
         </p>
         <p style="text-align: left !important;">
-          Pour cela, l’équipe organisatrice du « Déclic mobilité » vous invite à participer à une campagne de suivi GPS avec l’application Mov’us, de la Fondation Modus. Ce suivi permettra de mesurer et analyser les évolutions des pratiques pendant trois semaines en amont de l’expérience, pendant celle-ci, puis pendant deux semaine après cell-ci. Votre participation à ce suivi est importante pour le bon fonctionnement du projet. Vous pouvez en savoir plus sur l’utilisation de vos données et les mesures de protection mises en place en cliquant sur le lien suivant : <a target="_blank" href="https://modus-admin.sdrvl.ch/declic-mobilite-notice-protection-globale.pdf" >Notice d’utilisation et de protection des données.</a>
+          Pour cela, l’équipe organisatrice du « Déclic mobilité » vous invite à participer à une campagne de suivi GPS avec l’application Mov’us, de la Fondation Modus. Ce suivi permettra de mesurer et analyser les évolutions des pratiques pendant trois semaines en amont de l’expérience, pendant celle-ci, puis pendant deux semaine après cell-ci. Votre participation à ce suivi est importante pour le bon fonctionnement du projet. Vous pouvez en savoir plus sur l’utilisation de vos données et les mesures de protection mises en place en cliquant sur le lien suivant : <a target="_blank" href="${apiBaseUrl}/declic-mobilite-notice-protection-globale.pdf" >Notice d’utilisation et de protection des données.</a>
         </p>`
   },
 
@@ -986,7 +988,7 @@ const questions: QuestionType[] = [
       'oui',
       'non',
     ],
-    text: `Confirmez-vous avoir lu la notice d’utilisation et de <a target="_blank" href="https://modus-admin.sdrvl.ch/declic-mobilite-notice-protection-globale.pdf" >protection des données</a>, et accepteriez-vous de participer au suivi GPS ?`
+    text: `Confirmez-vous avoir lu la notice d’utilisation et de <a target="_blank" href="${apiBaseUrl}/declic-mobilite-notice-protection-globale.pdf" >protection des données</a>, et accepteriez-vous de participer au suivi GPS ?`
   },
 
 

@@ -1,5 +1,5 @@
 import {Ref} from "vue";
-import {IApiSiteInfo} from "~/composable/adminApi/apiDefinitions";
+import {IApiMenus} from "~/composable/adminApi/apiDefinitions";
 
 export const arrayOfH2TitleIdInCurrentPage: () => Ref<{ anchor: string; name: string }[]> = () => {
     return useState(
@@ -7,13 +7,6 @@ export const arrayOfH2TitleIdInCurrentPage: () => Ref<{ anchor: string; name: st
         () => []
     )
 }
-
-export const useIsIntersected: () => Ref<boolean> = () => {
-    return useState('isIntersected', () => {
-        return false
-    })
-}
-
 
 export const bodyScrollInfo: () => Ref<{ top: number }> = () => {
     return useState(
@@ -41,8 +34,31 @@ export const cookieIsValidate: () => Ref<boolean> = () => {
 export const showMenu: () => Ref<boolean> =
     () => useState('showMenu', () => false)
 
-export const siteInfo: () => Ref<IApiSiteInfo | null > =
-    () => useState('siteInfo', () => null)
+export const useMenus: () => Ref<IApiMenus | null> =
+    () => useState('menus', () => null)
 
 export const useStateNavBarreMsgMessage: () => Ref<null | string> =
     () => useState('FixedHeaderMessage', () => null)
+
+// Podcast player state
+export const useSpotifyUrl: () => Ref<string | null> =
+    () => useState('spotifyUrl', () => null)
+
+export const useSpotifyTitle: () => Ref<string | null> =
+    () => useState('spotifyTitle', () => null)
+
+export const usePodcastPlayerIsOpen: () => Ref<boolean> =
+    () => useState('podcastPlayerIsOpen', () => false)
+
+export const useSpotifyIsPlaying: () => Ref<boolean> =
+    () => useState('spotifyIsPlaying', () => false)
+
+export const useSpotifyTogglePlay: () => Ref<(() => void) | null> =
+    () => useState('spotifyTogglePlay', () => null)
+
+// YouTube player state
+export const useYoutubeUrl: () => Ref<string | null> =
+    () => useState('youtubeUrl', () => null)
+
+export const useYoutubeTitle: () => Ref<string | null> =
+    () => useState('youtubeTitle', () => null)
