@@ -66,7 +66,7 @@
             <template v-if="segment.type === 'breakout'">
               <div class="v-app-page__breakout" v-if="segment.item.content.type === 'internalLink'">
                 <app-internal-link
-                  :src="segment.item.image[0].resize.xxl"
+                  :src="segment.item.image[0]"
                   :title="segment.item.content.content.linktitle"
                   :description="segment.item.content.content.text"
                   :href="segment.item.content.content.link"
@@ -76,7 +76,7 @@
               </div>
               <div class="v-app-page__breakout" v-else-if="segment.item.content.type === 'internalLinks'">
                 <app-internal-links
-                  :src="segment.item.image[0]?.resize?.xxl"
+                  :src="segment.item.image[0]"
                   :title="segment.item.content.content.sectiontitle"
                   :subtitle="segment.item.content.content.sectionsubtitle"
                   :cards="segment.item.content.content.cards"
