@@ -29,6 +29,41 @@
             class="v-app-header-home__signature"
             v-html="formattedText"
     />
+
+    <!-- Actualités banners -->
+    <div v-if="visibleActualites.length > 0" class="v-app-header-home__actualites">
+      <div
+        v-for="(actualite, index) in visibleActualites"
+        :key="index"
+        class="v-app-header-home__actualite"
+      >
+        <div class="v-app-header-home__actualite__scroll-container">
+          <component
+            :is="actualite.link ? 'a' : 'div'"
+            :href="actualite.link || undefined"
+            :target="actualite.link ? '_blank' : undefined"
+            class="v-app-header-home__actualite__scroll"
+          >
+            <span class="v-app-header-home__actualite__item">
+              <span class="v-app-header-home__actualite__text">{{ actualite.title }}</span>
+              <svg-actualites class="v-app-header-home__actualite__logo" />
+            </span>
+            <span class="v-app-header-home__actualite__item">
+              <span class="v-app-header-home__actualite__text">{{ actualite.title }}</span>
+              <svg-actualites class="v-app-header-home__actualite__logo" />
+            </span>
+          </component>
+        </div>
+        <button
+          type="button"
+          class="v-app-header-home__actualite__close"
+          @click="dismissActualite(index)"
+          aria-label="Fermer"
+        >
+          <svg-close />
+        </button>
+      </div>
+    </div>
   </header>
 </template>
 
@@ -39,15 +74,38 @@
 <script lang="ts" setup>
 import { markModus } from '~/utils/markModus'
 
+export interface IActualite {
+  title: string
+  link?: string
+}
+
 const props = defineProps<{
     bgImage: string,
     text?: string,
+    actualites?: IActualite[]
 }>()
 
 const formattedText = computed(() => {
     if (!props.text) return ''
     return markModus(props.text)
 })
+
+const dismissedIndices = ref<number[]>([])
+
+const visibleActualites = computed(() => {
+  if (!props.actualites) return []
+  return props.actualites.filter((_, index) => !dismissedIndices.value.includes(index))
+})
+
+function dismissActualite(index: number) {
+  const actualIndex = props.actualites?.findIndex((act, i) => 
+    !dismissedIndices.value.includes(i) && 
+    visibleActualites.value.indexOf(act) === index
+  )
+  if (actualIndex !== undefined && actualIndex !== -1) {
+    dismissedIndices.value = [...dismissedIndices.value, actualIndex]
+  }
+}
 </script>
 
 
@@ -59,7 +117,7 @@ const formattedText = computed(() => {
   box-sizing: border-box;
   background: white;
   width: 100%;
-  padding: 6rem var(--app-base-padding-x) 6rem var(--app-base-padding-x);
+  padding: 6rem var(--app-base-padding-x) 0 var(--app-base-padding-x);
   height: var(--app-header-height);
   overflow: hidden;
   display: flex;
@@ -125,6 +183,109 @@ const formattedText = computed(() => {
   }
   100% {
     transform: translateX(-100%);
+  }
+}
+
+// Actualités styles
+.v-app-header-home__actualites {
+  position: absolute;
+  bottom: 1.77777777778rem;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  color: var(--app-color-black)
+}
+
+.v-app-header-home__actualite {
+  display: flex;
+  align-items: center;
+  background-color: var(--app-color-teal);
+  height: 3.5rem;
+  overflow: hidden;
+  position: relative;
+
+  & + & {
+    background-color: var(--app-color-sage);
+    & .v-app-header-home__actualite__close {
+      background-color: var(--app-color-sage);
+    }
+  }
+}
+
+.v-app-header-home__actualite__scroll-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+}
+
+.v-app-header-home__actualite__scroll {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  animation: scrollActualite 20s linear infinite;
+  width: max-content;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+.v-app-header-home__actualite__item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-left: 1.5rem;
+  white-space: nowrap;
+  &:last-child {
+    padding-right: 1.5rem;
+  }
+  svg {
+    flex-shrink: 0;
+    height: 2.5rem;
+    width: auto;
+  }
+}
+
+.v-app-header-home__actualite__text {
+  font-size: 2rem;
+  font-weight: 700;;
+}
+
+.v-app-header-home__actualite__logo {
+  height: 1.75rem;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.v-app-header-home__actualite__close {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  background-color: var(--app-color-teal);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease;
+
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+@keyframes scrollActualite {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }
 </style>
