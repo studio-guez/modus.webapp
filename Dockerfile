@@ -2,6 +2,10 @@
 FROM node:20 AS build
 WORKDIR /app
 
+# Accept env vars as build arguments for client-side code
+ARG NUXT_PUBLIC_API_BASE_URL=http://localhost:8080
+ENV NUXT_PUBLIC_API_BASE_URL=$NUXT_PUBLIC_API_BASE_URL
+
 COPY package*.json ./
 RUN npm install
 
