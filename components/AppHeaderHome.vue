@@ -240,6 +240,10 @@ function dismissActualite(index: number) {
   overflow: hidden;
   position: relative;
 
+  @media (max-width: 900px) {
+    height: 2.5rem;
+  }
+
   & + & {
     background-color: var(--app-color-sage);
     & .v-app-header-home__actualite__close {
@@ -275,25 +279,38 @@ function dismissActualite(index: number) {
   gap: 1.5rem;
   padding-left: 1.5rem;
   white-space: nowrap;
+
+  @media (max-width: 900px) {
+    gap: 0.5rem;
+    padding-left: 0.5rem;
+  }
+
   &:last-child {
     padding-right: 1.5rem;
-  }
-  svg {
-    flex-shrink: 0;
-    height: 2.5rem;
-    width: auto;
+
+    @media (max-width: 900px) {
+      padding-right: 0.5rem;
+    }
   }
 }
 
 .v-app-header-home__actualite__text {
   font-size: 2rem;
-  font-weight: 700;;
+  font-weight: 700;
+
+  @media (max-width: 900px) {
+    font-size: 1.25rem;
+  }
 }
 
 .v-app-header-home__actualite__logo {
-  height: 1.75rem;
-  width: auto;
-  flex-shrink: 0;
+    flex-shrink: 0;
+    height: 2.5rem;
+    width: auto;
+
+    @media (max-width: 900px) {
+      height: 1.5rem;
+    }
 }
 
 .v-app-header-home__actualite__close {
@@ -308,9 +325,19 @@ function dismissActualite(index: number) {
   flex-shrink: 0;
   transition: background-color 0.2s ease;
 
+  @media (max-width: 900px) {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
   svg {
     width: 1.5rem;
     height: 1.5rem;
+
+    @media (max-width: 900px) {
+      width: 1rem;
+      height: 1rem;
+    }
   }
 }
 
