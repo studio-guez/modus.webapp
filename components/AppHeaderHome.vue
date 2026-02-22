@@ -1,10 +1,9 @@
 <template>
-  <section
+  <header
           class="v-app-header-home"
   >
     <div
             class="v-app-header-home__container"
-            :style="`transform: translate(0, -${bodyScrollInfoStore.top / 4}px)`"
     >
       <div
               class="v-app-header-home__container__graphic-box"
@@ -26,11 +25,46 @@
       </div>
     </div>
 
-    <div
+    <h1
             class="v-app-header-home__signature"
-            :style="`transform: translate(0, -${bodyScrollInfoStore.top / 1.05}px)`"
-    >{{text}}</div>
-  </section>
+            v-html="formattedText"
+    />
+
+    <!-- Actualités banners -->
+    <div v-if="visibleActualites.length > 0" class="v-app-header-home__actualites">
+      <div
+        v-for="(actualite, index) in visibleActualites"
+        :key="index"
+        class="v-app-header-home__actualite"
+      >
+        <div class="v-app-header-home__actualite__scroll-container">
+          <component
+            :is="actualite.link ? 'a' : 'div'"
+            :href="actualite.link || undefined"
+            :target="actualite.link ? '_blank' : undefined"
+            class="v-app-header-home__actualite__scroll"
+          >
+            <span 
+              v-for="n in getRepeatCount(index)" 
+              :key="n" 
+              class="v-app-header-home__actualite__item"
+            >
+              <span class="v-app-header-home__actualite__text">{{ actualite.title }}</span>
+              <svg-actualites class="v-app-header-home__actualite__logo" />
+            </span>
+          </component>
+        </div>
+        <button
+          type="button"
+          class="v-app-header-home__actualite__close"
+          @click="dismissActualite(index)"
+          aria-label="Fermer"
+        >
+          <svg-close />
+        </button>
+      </div>
+    </div>
+  </header>
 </template>
 
 
@@ -38,15 +72,74 @@
 
 
 <script lang="ts" setup>
-import {bodyScrollInfo} from "~/composable/main";
+import { markModus } from '~/utils/markModus'
 
-const bodyScrollInfoStore = bodyScrollInfo()
+export interface IActualite {
+  title: string
+  link?: string
+}
 
-defineProps<{
+const props = defineProps<{
     bgImage: string,
     text?: string,
+    actualites?: IActualite[]
 }>()
 
+const formattedText = computed(() => {
+    if (!props.text) return ''
+    return markModus(props.text)
+})
+
+const dismissedIndices = ref<number[]>([])
+
+const visibleActualites = computed(() => {
+  if (!props.actualites) return []
+  return props.actualites.filter((_, index) => !dismissedIndices.value.includes(index))
+})
+
+// Repeat counts for infinite scroll - updates on resize, one per actualité
+const windowWidth = ref(0)
+
+const repeatCounts = computed(() => {
+  if (!props.actualites) return []
+  return props.actualites.map((actualite) => {
+    // Estimate width based on text length (roughly 20px per character + 150px for logo/padding)
+    const estimatedItemWidth = actualite.title.length * 20 + 150
+    const neededWidth = windowWidth.value * 2
+    return Math.max(4, Math.ceil(neededWidth / estimatedItemWidth) + 2)
+  })
+})
+
+function getRepeatCount(index: number): number {
+  const actualIndex = props.actualites?.findIndex((act, i) => 
+    !dismissedIndices.value.includes(i) && 
+    visibleActualites.value.indexOf(act) === index
+  )
+  return repeatCounts.value[actualIndex ?? 0] ?? 4
+}
+
+function updateWindowWidth() {
+  windowWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+  updateWindowWidth()
+  window.addEventListener('resize', updateWindowWidth)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateWindowWidth)
+})
+
+function dismissActualite(index: number) {
+  const actualIndex = props.actualites?.findIndex((act, i) => 
+    !dismissedIndices.value.includes(i) && 
+    visibleActualites.value.indexOf(act) === index
+  )
+  if (actualIndex !== undefined && actualIndex !== -1) {
+    dismissedIndices.value = [...dismissedIndices.value, actualIndex]
+  }
+}
 </script>
 
 
@@ -55,14 +148,16 @@ defineProps<{
 
 <style lang="scss" scoped >
 .v-app-header-home {
+  box-sizing: border-box;
   background: white;
   width: 100%;
+  padding: 6rem var(--app-base-padding-x) 0 var(--app-base-padding-x);
   height: var(--app-header-height);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
   position: relative;
 
 
@@ -80,22 +175,19 @@ defineProps<{
 }
 
 .v-app-header-home__signature {
-  line-height: 1em;
-  font-size: 5.65vw;
-  letter-spacing: -.0125em;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  width: 100%;
-  padding: var(--app-gutter);
-  color: var(--app-color-main);
-  z-index: 100;
+  z-index: 1;
+  color: var(--app-color-white);
+  font-size: var(--app-header-title-size);
+  text-align: center;
+  text-wrap: balance;
+  margin: 0;
+  text-shadow: 0 4px 64.4px rgba(0, 0, 0, 0.30);
+  max-width: 68.3333333333rem;
 
-
-  @media (max-width: 900px) {
-    font-size: 10vw;
-    background: var(--app-color-grey);
+  &:deep(mark) {
+      background: transparent;
+      color: var(--app-color-main);
+      padding: 0;
   }
 }
 
@@ -111,12 +203,9 @@ defineProps<{
 
 .v-app-header-home__graphic-box__module_1 {
   position: relative;
-  top: var(--app-nav__height);
-  height: calc( 125% );
+  top: 0;
+  height: var(--app-header-height);
 
-  @media (max-width: 900px) {
-    height: calc( 110% );
-  }
   .v-app-header-home__container__graphic-box + .v-app-header-home__container__graphic-box & {
     transform: translate3d(100%, 0, 0);
   }
@@ -131,40 +220,136 @@ defineProps<{
   }
 }
 
-.v-app-header-home__graphic-box__item {
-  fill: #461818;
+// Actualités styles
+.v-app-header-home__actualites {
   position: absolute;
-  width: 40vw;
-  height: 40vw;
+  bottom: 1.77777777778rem;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  color: var(--app-color-black)
+}
 
-  &:nth-child(1) {
-    top: 0;
-    left: 0;
-    transform: translate(-22vw, -4vw);
+.v-app-header-home__actualite {
+  display: flex;
+  align-items: center;
+  background-color: var(--app-color-teal);
+  height: 3.5rem;
+  overflow: hidden;
+  position: relative;
+
+  @media (max-width: 900px) {
+    height: 2.5rem;
   }
 
-  &:nth-child(2) {
-    top: 0;
-    left: 0;
-    transform: translate(6.4vw, -12vw);
+  & + & {
+    background-color: var(--app-color-sage);
+    & .v-app-header-home__actualite__close {
+      background-color: var(--app-color-sage);
+    }
+  }
+}
+
+.v-app-header-home__actualite__scroll-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+}
+
+.v-app-header-home__actualite__scroll {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  animation: scrollActualite 30s linear infinite;
+  width: max-content;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    animation-play-state: paused;
+  }
+  @media(max-width: 900px) {
+    animation-duration: 20s;
+  }
+}
+
+.v-app-header-home__actualite__item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-left: 1.5rem;
+  white-space: nowrap;
+
+  @media (max-width: 900px) {
+    gap: 0.5rem;
+    padding-left: 0.5rem;
   }
 
-  &:nth-child(3) {
-    top: 50%;
-    left: 0;
-    transform: translate(38vw, calc(-50% + 2vw) ) rotate(-135deg);
+  &:last-child {
+    padding-right: 1.5rem;
+
+    @media (max-width: 900px) {
+      padding-right: 0.5rem;
+    }
+  }
+}
+
+.v-app-header-home__actualite__text {
+  font-size: 2rem;
+  font-weight: 700;
+
+  @media (max-width: 900px) {
+    font-size: 1.25rem;
+  }
+}
+
+.v-app-header-home__actualite__logo {
+    flex-shrink: 0;
+    height: 2.5rem;
+    width: auto;
+
+    @media (max-width: 900px) {
+      height: 1.5rem;
+    }
+}
+
+.v-app-header-home__actualite__close {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  background-color: var(--app-color-teal);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease;
+
+  @media (max-width: 900px) {
+    width: 2.5rem;
+    height: 2.5rem;
   }
 
-  &:nth-child(4) {
-    top: 50%;
-    left: 0;
-    transform: translate(62vw, calc(-50% + 2vw) ) rotate(45deg);
-  }
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
 
-  &:nth-child(5) {
-    bottom: 0;
-    left: 0;
-    transform: translate(15.2vw, 10vw);
+    @media (max-width: 900px) {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+}
+
+@keyframes scrollActualite {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }
 </style>

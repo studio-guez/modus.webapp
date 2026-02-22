@@ -3,7 +3,7 @@
 export const generatedRoutes: string[] = [
   "/home",
   "/projects",
-  "/dispositifs",
+  "/bibliotheque",
   "/proposer-un-projet",
   "/modus",
   "/protection-des-donnees-personnelles",

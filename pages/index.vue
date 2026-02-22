@@ -6,6 +6,7 @@
         :header-cover="headerCover"
         :header-text="headerText"
         :body-content="bodyContent"
+        :actualites="actualites"
       />
       <app-page-footer/>
     </div>
@@ -15,9 +16,13 @@
 <script setup lang="ts">
 import {defineProps, Ref, UnwrapRef} from 'vue'
 import AppPage from "~/components/AppPage.vue";
-import {ApiFetchPage, ApiFetchPagesInfo} from "~/composable/adminApi/apiFetch";
+import {ApiFetchPage} from "~/composable/adminApi/apiFetch";
 import {IApiBody} from "~/composable/adminApi/apiDefinitions";
-import {siteInfo} from "~/composable/main";
+
+export interface IActualite {
+  title: string
+  link?: string
+}
 
 // const props = defineProps<{
 //     message?: string
@@ -37,6 +42,7 @@ const headerCover: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 const headerText: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 
 const bodyContent: Ref<UnwrapRef<undefined | IApiBody>> = ref(undefined)
+const actualites: Ref<UnwrapRef<IActualite[]>> = ref([])
 
 onMounted(async () => {
   const pageData = await ApiFetchPage('home')
@@ -45,6 +51,22 @@ onMounted(async () => {
   headerText.value = pageData.options.headerTitle
 
   bodyContent.value = pageData.body
+
+  // Build actualités array
+  const acts: IActualite[] = []
+  if (pageData.options.actualite1title) {
+    acts.push({
+      title: pageData.options.actualite1title,
+      link: pageData.options.actualite1link || undefined
+    })
+  }
+  if (pageData.options.actualite2title) {
+    acts.push({
+      title: pageData.options.actualite2title,
+      link: pageData.options.actualite2link || undefined
+    })
+  }
+  actualites.value = acts
 })
 
 </script>
