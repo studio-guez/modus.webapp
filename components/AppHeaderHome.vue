@@ -44,11 +44,11 @@
             :target="actualite.link ? '_blank' : undefined"
             class="v-app-header-home__actualite__scroll"
           >
-            <span class="v-app-header-home__actualite__item">
-              <span class="v-app-header-home__actualite__text">{{ actualite.title }}</span>
-              <svg-actualites class="v-app-header-home__actualite__logo" />
-            </span>
-            <span class="v-app-header-home__actualite__item">
+            <span 
+              v-for="n in getRepeatCount(index)" 
+              :key="n" 
+              class="v-app-header-home__actualite__item"
+            >
               <span class="v-app-header-home__actualite__text">{{ actualite.title }}</span>
               <svg-actualites class="v-app-header-home__actualite__logo" />
             </span>
@@ -95,6 +95,40 @@ const dismissedIndices = ref<number[]>([])
 const visibleActualites = computed(() => {
   if (!props.actualites) return []
   return props.actualites.filter((_, index) => !dismissedIndices.value.includes(index))
+})
+
+// Repeat counts for infinite scroll - updates on resize, one per actualité
+const windowWidth = ref(0)
+
+const repeatCounts = computed(() => {
+  if (!props.actualites) return []
+  return props.actualites.map((actualite) => {
+    // Estimate width based on text length (roughly 20px per character + 150px for logo/padding)
+    const estimatedItemWidth = actualite.title.length * 20 + 150
+    const neededWidth = windowWidth.value * 2
+    return Math.max(4, Math.ceil(neededWidth / estimatedItemWidth) + 2)
+  })
+})
+
+function getRepeatCount(index: number): number {
+  const actualIndex = props.actualites?.findIndex((act, i) => 
+    !dismissedIndices.value.includes(i) && 
+    visibleActualites.value.indexOf(act) === index
+  )
+  return repeatCounts.value[actualIndex ?? 0] ?? 4
+}
+
+function updateWindowWidth() {
+  windowWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+  updateWindowWidth()
+  window.addEventListener('resize', updateWindowWidth)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateWindowWidth)
 })
 
 function dismissActualite(index: number) {
