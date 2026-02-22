@@ -235,7 +235,6 @@ export interface IApiBody {
         content: {
             content: {
                 title: string,
-                buttontext: string
             },
             id: string,
             isHidden: boolean,
@@ -254,7 +253,8 @@ export interface IApiBody {
                     title: string,
                     subtitle: string,
                     slug: string,
-                    color: 'green-light' | 'green-medium' | 'green-dark'
+                    color: 'green-light' | 'green-medium' | 'green-dark',
+                    buttontext: string
                 }[]
             },
             id: string,

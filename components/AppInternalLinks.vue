@@ -20,7 +20,7 @@
                         class="v-app-internal-links__card"
                         :class="`v-app-internal-links__card--${card.color || 'green-light'}`"
                     >
-                        <span class="v-app-internal-links__card__badge app-button app-button--small">Découvrir</span>
+                        <span class="v-app-internal-links__card__badge app-button app-button--small">{{ card.buttontext || 'Découvrir' }}</span>
                         <div class="v-app-internal-links__card__body">
                             <h5 class="v-app-internal-links__card__title">{{ card.title }}</h5>
                             <p class="v-app-internal-links__card__subtitle">{{ card.subtitle }}</p>
@@ -43,6 +43,7 @@ defineProps<{
         subtitle: string
         slug: string
         color?: 'green-light' | 'green-medium' | 'green-dark'
+        buttontext?: string
     }[]
 }>()
 </script>

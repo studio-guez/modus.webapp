@@ -16,12 +16,6 @@
 
     <div class="v-navigate-tags__action">
       <h4 v-if="title" class="v-navigate-tags__title">{{ title }}</h4>
-      <nuxt-link
-        class="app-button app-button--small v-navigate-tags__button"
-        :href="projectsUrl"
-      >
-        {{ buttonText || 'Voir les projets' }} →
-      </nuxt-link>
     </div>
   </div>
 </template>
@@ -34,7 +28,6 @@ import { ApiFetchProjectTags } from '~/composable/adminApi/apiFetch'
 
 const props = defineProps<{
   title?: string
-  buttonText?: string
 }>()
 
 const tags = ref<IApiTag[]>([])
