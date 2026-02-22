@@ -4,6 +4,7 @@
         <app-header-home
           :text="headerText"
           :bg-image="headerCover"
+          :actualites="actualites"
         />
       </template>
       <template v-else-if="headerType === 'list'">
@@ -300,6 +301,11 @@ import AppDropDown from "~/components/AppDropDown.vue";
 import {ApiFetchPage_powerBiSubPage} from "~/composable/adminApi/apiFetch";
 import {videoPlatformUrlFormat} from "~/composable/videoPlatformUrlFormat";
 
+export interface IActualite {
+  title: string
+  link?: string
+}
+
 const props = defineProps<{
   headerText?: string
   headerCover?: string
@@ -313,6 +319,7 @@ const props = defineProps<{
   is_project_with_duration?: "true" | "false",
   date_end?: string,
   power_subpages?: IApiPage__subpage[]
+  actualites?: IActualite[]
 }>()
 
 const parentSlug = useRoute().path
