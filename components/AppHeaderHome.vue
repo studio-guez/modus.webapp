@@ -263,13 +263,16 @@ function dismissActualite(index: number) {
   display: flex;
   align-items: center;
   height: 100%;
-  animation: scrollActualite 20s linear infinite;
+  animation: scrollActualite 30s linear infinite;
   width: max-content;
   text-decoration: none;
   color: inherit;
 
   &:hover {
     animation-play-state: paused;
+  }
+  @media(max-width: 900px) {
+    animation-duration: 20s;
   }
 }
 
