@@ -1,17 +1,14 @@
 <template>
   <div class="v-navigate-tags">
     <div class="v-navigate-tags__tags">
-      <button
+      <nuxt-link
         v-for="tag of tags"
         :key="tag.slug"
-        type="button"
+        :to="`/tag/${tag.slug}`"
         class="v-navigate-tags__tag"
-        :class="{ 'v-navigate-tags__tag--active': isSelected(tag.slug) }"
-        :aria-pressed="isSelected(tag.slug)"
-        @click="toggleTag(tag.slug)"
       >
         {{ tag.name }}
-      </button>
+      </nuxt-link>
     </div>
 
     <div class="v-navigate-tags__action">
@@ -22,7 +19,7 @@
 
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { IApiTag } from '~/composable/adminApi/apiDefinitions'
 import { ApiFetchProjectTags } from '~/composable/adminApi/apiFetch'
 
@@ -31,25 +28,6 @@ const props = defineProps<{
 }>()
 
 const tags = ref<IApiTag[]>([])
-const selectedTags = ref<string[]>([])
-
-function isSelected(slug: string): boolean {
-  return selectedTags.value.includes(slug)
-}
-
-function toggleTag(slug: string) {
-  const index = selectedTags.value.indexOf(slug)
-  if (index === -1) {
-    selectedTags.value = [...selectedTags.value, slug]
-  } else {
-    selectedTags.value = selectedTags.value.filter((t: string) => t !== slug)
-  }
-}
-
-const projectsUrl = computed(() => {
-  if (selectedTags.value.length === 0) return '/projects'
-  return `/projects?tags=${selectedTags.value.join(',')}`
-})
 
 onMounted(async () => {
   const data = await ApiFetchProjectTags()
@@ -88,7 +66,7 @@ onMounted(async () => {
 .v-navigate-tags__tag {
   all: revert;
   box-sizing: border-box;
-  appearance: none;
+  text-decoration: none;
   font-family: inherit;
   font-weight: inherit;
   display: inline-flex;
@@ -114,16 +92,6 @@ onMounted(async () => {
   &:focus-visible {
     outline: 2px solid var(--app-color-orange-bright);
     outline-offset: 2px;
-  }
-
-  &.v-navigate-tags__tag--active {
-    background-color: var(--app-color-orange-bright);
-    color: var(--app-color-black);
-    border-color: var(--app-color-orange-bright);
-
-    &:hover {
-      filter: brightness(0.9);
-    }
   }
 }
 
