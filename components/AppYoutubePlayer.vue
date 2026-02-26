@@ -19,8 +19,10 @@
       <div class="v-youtube-player__iframe-container">
         <iframe
           :src="embedUrl"
+          :title="youtubeTitle || 'YouTube video player'"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
           allowfullscreen
         ></iframe>
       </div>
@@ -69,10 +71,14 @@ const embedUrl = computed(() => {
     return null
   }
 
+  // Use youtube-nocookie.com and add origin parameter for Safari compatibility (Error 153 fix)
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
+  const baseUrl = `https://www.youtube-nocookie.com/embed/${videoId}`
+  
   if (isShort.value) {
-    return `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}`
+    return `${baseUrl}?autoplay=1&loop=1&playlist=${videoId}&origin=${origin}`
   }
-  return `https://www.youtube.com/embed/${videoId}?autoplay=1`
+  return `${baseUrl}?autoplay=1&origin=${origin}`
 })
 
 function closePlayer() {
