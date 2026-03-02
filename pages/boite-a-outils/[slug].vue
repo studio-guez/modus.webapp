@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import {Ref, UnwrapRef} from 'vue'
 import AppPage from "~/components/AppPage.vue";
-import {IApiBody} from "~/composable/adminApi/apiDefinitions";
+import {IApiBody, IApiPage__subpage} from "~/composable/adminApi/apiDefinitions";
 import {ApiFetchPage} from "~/composable/adminApi/apiFetch";
 
 const headerCover: Ref<UnwrapRef<undefined | string>> = ref(undefined)
@@ -30,6 +30,7 @@ const headerText: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 
 const bodyTitle: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 const bodyContent: Ref<UnwrapRef<undefined | IApiBody>> = ref(undefined)
+const powerSubpages: Ref<UnwrapRef<undefined | IApiPage__subpage[]>> = ref(undefined)
 
 onMounted(async () => {
     const slug = useRoute()?.params?.slug
@@ -54,5 +55,6 @@ onMounted(async () => {
 
     bodyTitle.value = pageData.options.preview
     bodyContent.value = pageData.body
+    powerSubpages.value = pageData.options.subpages
 })
 </script>
