@@ -264,8 +264,10 @@
 
           <div class="v-app-page__content__grid">
             <div class="v-app-page__section v-app-page__section--full v-app-page__section--power-bi">
-              <nuxt-link class="app-button app-button--var-white v-app-page__subpage-button"
-                         :href="`${parentSlug}/${power_subpages[0].slug}`"
+              <a class="app-button app-button--var-white v-app-page__subpage-button"
+                 :href="power_subpages[0].content.power_bi_link"
+                 target="_blank"
+                 rel="noopener noreferrer"
               >
                 <div>Tous les chiffres →</div>
                 <svg width="106" height="83" viewBox="0 0 106 83" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -274,7 +276,7 @@
                   <rect x="72.2832" y="20.6892" width="19.1892" height="61.8108" fill="#009E3D" stroke="white"/>
                   <line x1="-8.37027e-08" y1="82" x2="105.432" y2="82" stroke="#009E3D" stroke-width="2"/>
                 </svg>
-                </nuxt-link>
+              </a>
             </div>
           </div>
         </template>
