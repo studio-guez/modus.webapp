@@ -15,7 +15,15 @@
         >
           <span
             v-for="n in getRepeatCount(index)"
-            :key="n"
+            :key="'a' + n"
+            class="v-actualites-bar__scroll-item"
+          >
+            <span class="v-actualites-bar__text">{{ actualite.title }}</span>
+            <svg-actualites class="v-actualites-bar__logo" />
+          </span>
+          <span
+            v-for="n in getRepeatCount(index)"
+            :key="'b' + n"
             class="v-actualites-bar__scroll-item"
           >
             <span class="v-actualites-bar__text">{{ actualite.title }}</span>
@@ -120,7 +128,7 @@ function dismissActualite(index: number) {
   display: flex;
   align-items: center;
   height: 100%;
-  animation: scrollActualiteBar 30s linear infinite;
+  animation: scrollActualiteBar 60s linear infinite;
   width: max-content;
   text-decoration: none;
   color: inherit;
@@ -129,7 +137,7 @@ function dismissActualite(index: number) {
     animation-play-state: paused;
   }
   @media (max-width: 900px) {
-    animation-duration: 20s;
+    animation-duration: 40s;
   }
 }
 
