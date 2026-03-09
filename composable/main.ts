@@ -62,3 +62,13 @@ export const useYoutubeUrl: () => Ref<string | null> =
 
 export const useYoutubeTitle: () => Ref<string | null> =
     () => useState('youtubeTitle', () => null)
+
+// Actualités (news) state
+export interface IActualiteGlobal {
+  title: string
+  link?: string
+  color: string
+}
+
+export const useActualites: () => Ref<IActualiteGlobal[]> =
+    () => useState('actualites', () => [])

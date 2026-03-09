@@ -482,3 +482,12 @@ export interface IApiMenus {
     bottomMenu: IApiMenuItem[]
     footerMenu: IApiMenuItem[]
 }
+
+export interface IApiNews {
+    actualite1title: string | null
+    actualite1link: string | null
+    actualite1color: string
+    actualite2title: string | null
+    actualite2link: string | null
+    actualite2color: string
+}

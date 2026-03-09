@@ -137,18 +137,14 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .v-podcast-player {
-  position: fixed;
-  bottom: 0;
-  left: 0;
   width: 100%;
-  height: calc(var(--app-podcast-player-header-height) + var(--app-podcast-player-iframe-height));
+  max-height: var(--app-podcast-player-header-height);
+  overflow: hidden;
   color: var(--app-color-black);
-  transform: translateY(var(--app-podcast-player-iframe-height));
-  transition: transform 0.25s ease-in-out;
+  transition: max-height 0.25s ease-in-out;
   background: var(--app-color-yellow-light);
-  z-index: 100;
   &.v-podcast-player--is-open {
-    transform: translateY(0);
+    max-height: calc(var(--app-podcast-player-header-height) + var(--app-podcast-player-iframe-height));
   }
 }
 
