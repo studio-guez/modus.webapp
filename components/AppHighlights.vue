@@ -215,7 +215,7 @@ onMounted(() => {
   transition: opacity 0.2s ease;
   padding: 0;
 
-  @media (max-width: 767px) {
+  @media (max-width: 900px) {
     display: none;
   }
 
@@ -266,13 +266,18 @@ onMounted(() => {
   &.v-app-highlights__track--pointer {
     overflow-x: hidden;
     scroll-snap-type: none;
+
+    @media (max-width: 900px) {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+    }
   }
 }
 
 .v-app-highlights__item {
   flex: 0 0 max(22rem, calc(33vw - 0.74074074074rem));
   display: flex;
-  @media (max-width: 767px) {
+  @media (max-width: 900px) {
     flex: 0 0 95%;
   }
   @media (min-width: 1921px) {
