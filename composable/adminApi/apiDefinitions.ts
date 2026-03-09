@@ -9,10 +9,6 @@ export interface IApiPage {
         isExternalLink?: boolean,
         externalUrl?: string,
         preview?: string,
-        actualite1title?: string,
-        actualite1link?: string,
-        actualite2title?: string,
-        actualite2link?: string,
     },
     "body": IApiBody,
     title?: {
