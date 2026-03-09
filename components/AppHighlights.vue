@@ -1,32 +1,51 @@
 <template>
-  <!-- Outer wrapper: on pointer devices, its height creates the vertical scroll runway
-       that drives horizontal movement while the section stays pinned via sticky -->
-  <div
-    ref="outerRef"
-    class="v-app-highlights-outer"
-    :style="outerStyle"
-  >
-    <section
-      class="v-app-highlights"
-      :class="{ 'v-app-highlights--sticky': isPointerDevice }"
-    >
+  <div class="v-app-highlights-outer">
+    <section class="v-app-highlights">
       <div class="v-app-highlights__header">
         <h2 v-if="title" class="v-app-highlights__title">{{ title }}</h2>
         <p v-if="subtitle" class="v-app-highlights__subtitle">{{ subtitle }}</p>
       </div>
 
-      <div
-        ref="trackRef"
-        class="v-app-highlights__track"
-        :class="{ 'v-app-highlights__track--pointer': isPointerDevice }"
-      >
-        <div class="v-app-highlights__item" v-for="(item, idx) in items" :key="idx">
-          <app-item-card
-            v-bind="mapItemToCardProps(item)"
-            @play-video="handlePlayVideo"
-            @play-podcast="handlePlayPodcast"
-          />
+      <div class="v-app-highlights__track-wrapper">
+        <button
+          v-if="canScrollPrev"
+          class="v-app-highlights__nav v-app-highlights__nav--prev"
+          @click="scrollPrev"
+          aria-label="Previous"
+        >
+          <div class="v-app-highlights__nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="21" viewBox="0 0 15 21" fill="none">
+              <path d="M0.949951 1.16089L11.95 10.1609L0.949951 19.1609" stroke="#016052" stroke-width="3"/>
+            </svg>
+          </div>
+        </button>
+
+        <div
+          ref="trackRef"
+          class="v-app-highlights__track"
+          :class="{ 'v-app-highlights__track--pointer': isPointerDevice }"
+        >
+          <div class="v-app-highlights__item" v-for="(item, idx) in items" :key="idx">
+            <app-item-card
+              v-bind="mapItemToCardProps(item)"
+              @play-video="handlePlayVideo"
+              @play-podcast="handlePlayPodcast"
+            />
+          </div>
         </div>
+
+        <button
+          v-if="canScrollNext"
+          class="v-app-highlights__nav v-app-highlights__nav--next"
+          @click="scrollNext"
+          aria-label="Next"
+        >
+          <div class="v-app-highlights__nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="21" viewBox="0 0 15 21" fill="none">
+              <path d="M0.949951 1.16089L11.95 10.1609L0.949951 19.1609" stroke="#016052" stroke-width="3"/>
+            </svg>
+          </div>
+        </button>
       </div>
     </section>
   </div>
@@ -74,46 +93,34 @@ function handlePlayPodcast(mediaUrl: string, title: string) {
     playerIsOpen.value = false
   }
 }
-const outerRef = ref<HTMLElement | null>(null)
 const trackRef = ref<HTMLElement | null>(null)
 const isPointerDevice = ref(false)
-const scrollableDistance = ref(0)
+const canScrollPrev = ref(false)
+const canScrollNext = ref(false)
 
-// How much vertical scroll is needed per pixel of horizontal travel.
-// Higher = slower horizontal movement.  1 = 1:1, 1.6 = 60 % slower
-const SCROLL_SPEED = 1.8
-
-// Outer wrapper height = section height + scaled horizontal overflow distance
-// This creates the vertical "runway" for scroll-jacking
-const outerStyle = computed(() => {
-  if (!isPointerDevice.value || scrollableDistance.value <= 0) return {}
-  return {
-    height: `calc(100vh + ${scrollableDistance.value * SCROLL_SPEED}px)`,
-  }
-})
-
-function updateScrollableDistance() {
+function updateScrollState() {
   const track = trackRef.value
   if (!track) return
-  scrollableDistance.value = track.scrollWidth - track.clientWidth
+  canScrollPrev.value = track.scrollLeft > 1
+  canScrollNext.value = track.scrollLeft < track.scrollWidth - track.clientWidth - 1
 }
 
-function onScroll() {
-  if (!isPointerDevice.value) return
-  const outer = outerRef.value
+function scrollPrev() {
   const track = trackRef.value
-  if (!outer || !track) return
+  if (!track) return
+  const item = track.querySelector('.v-app-highlights__item') as HTMLElement
+  if (!item) return
+  const gap = parseFloat(getComputedStyle(track).gap) || 0
+  track.scrollBy({ left: -(item.offsetWidth + gap), behavior: 'smooth' })
+}
 
-  const maxScroll = track.scrollWidth - track.clientWidth
-  if (maxScroll <= 0) return
-
-  // How far the outer wrapper has scrolled past the top of the viewport
-  const rect = outer.getBoundingClientRect()
-  const scrolled = -rect.top // 0 when top is at viewport top, increases as we scroll down
-
-  // Scale down by SCROLL_SPEED so horizontal travel is slower
-  const progress = Math.max(0, Math.min(scrolled / SCROLL_SPEED, maxScroll))
-  track.scrollLeft = progress
+function scrollNext() {
+  const track = trackRef.value
+  if (!track) return
+  const item = track.querySelector('.v-app-highlights__item') as HTMLElement
+  if (!item) return
+  const gap = parseFloat(getComputedStyle(track).gap) || 0
+  track.scrollBy({ left: item.offsetWidth + gap, behavior: 'smooth' })
 }
 
 onMounted(() => {
@@ -122,25 +129,21 @@ onMounted(() => {
 
   const updatePointerType = (e: MediaQueryListEvent) => {
     isPointerDevice.value = e.matches
-    nextTick(updateScrollableDistance)
+    nextTick(updateScrollState)
   }
   mql.addEventListener('change', updatePointerType)
 
-  // Measure the horizontal overflow to size the outer wrapper
-  nextTick(updateScrollableDistance)
+  nextTick(updateScrollState)
 
-  // Listen to page scroll to drive horizontal position
-  window.addEventListener('scroll', onScroll, { passive: true })
+  // Update button visibility on track scroll
+  trackRef.value?.addEventListener('scroll', updateScrollState, { passive: true })
 
   // Recalculate on resize
-  const ro = new ResizeObserver(() => {
-    updateScrollableDistance()
-    onScroll()
-  })
+  const ro = new ResizeObserver(() => updateScrollState())
   if (trackRef.value) ro.observe(trackRef.value)
 
   onBeforeUnmount(() => {
-    window.removeEventListener('scroll', onScroll)
+    trackRef.value?.removeEventListener('scroll', updateScrollState)
     mql.removeEventListener('change', updatePointerType)
     ro.disconnect()
   })
@@ -156,13 +159,6 @@ onMounted(() => {
 .v-app-highlights {
   width: 100%;
   padding: 4.22222222222rem 0;
-}
-
-/* On pointer devices the section sticks to the top while
-   the outer wrapper's extra height scrolls through */
-.v-app-highlights--sticky {
-  position: sticky;
-  top: 0;
 }
 
 .v-app-highlights__header {
@@ -197,6 +193,65 @@ onMounted(() => {
   max-width: none;
 }
 
+/* Track wrapper with nav buttons */
+.v-app-highlights__track-wrapper {
+  position: relative;
+}
+
+.v-app-highlights__nav {
+  all: unset;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 4.94444444444rem;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--app-color-grey);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  padding: 0;
+
+  @media (max-width: 767px) {
+    display: none;
+  }
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  svg {
+    display: block;
+    flex-shrink: 0;
+    height: 1rem;
+  }
+}
+
+.v-app-highlights__nav-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--app-color-main--dark);
+  border-radius: 50%;
+  width: 2.77777777778rem;
+  height: 2.77777777778rem;
+}
+
+.v-app-highlights__nav--prev {
+  left: 0;
+
+  svg {
+    transform: rotate(180deg);
+  }
+}
+
+.v-app-highlights__nav--next {
+  right: 0;
+}
+
 /* Scrollable track */
 .v-app-highlights__track {
   --padding-x: max(var(--app-gutter), calc((100vw - 1300px ) / 2 + var(--app-gutter)));
@@ -207,7 +262,7 @@ onMounted(() => {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
 
-  /* Pointer devices: scrollbar hidden, scroll driven by sticky mechanism */
+  /* Pointer devices: hide scrollbar, navigation via buttons */
   &.v-app-highlights__track--pointer {
     overflow-x: hidden;
     scroll-snap-type: none;
