@@ -911,13 +911,13 @@ const questions: QuestionType[] = [
             <li>Bons pour accès à un espace de coworking</li>
           </ul>
           <p>
-            Trois périodes sont possibles pour l’activation du kit mobilité, merci de mentionner la ou les périodes pour lesquelles vous seriez intéressé.e à participer :
+            Deux périodes sont possibles pour l’activation du kit mobilité, merci de mentionner la ou les périodes pour lesquelles vous seriez intéressé.e à participer :
             <br><small>Plusieurs réponses possibles</small>
           </p>
         `,
         type: 'checkbox',
         options: [
-          "du 13 avril au 12 mai",
+          "du 13 avril au 13 mai",
           "du 18 mai au 17 juin",
         ]
     },
