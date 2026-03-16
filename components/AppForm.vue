@@ -26,7 +26,8 @@
 
         <div style="text-align: center"
              v-if="responseMassage.length > 0"
-        >{{responseMassage}}</div>
+             v-html="responseMassage"
+        ></div>
     </form>
 </template>
 
