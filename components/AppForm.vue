@@ -103,9 +103,11 @@ async function sendMessageData() {
         window.setTimeout(() => {
 
             if(jsonResponse.succes === false) {
-                responseMassage.value  = 'Problème(s):'
-                    + '-' + 'error: ' + jsonResponse.alert.error
-                    + '-' + 'name: ' + jsonResponse.alert.name
+                let errorMessage = 'Problème(s):'
+                if (jsonResponse.alert?.error) {
+                    errorMessage += ' ' + jsonResponse.alert.error
+                }
+                responseMassage.value  = errorMessage
                 status.value           = 'sending ERROR'
 
             } else {
