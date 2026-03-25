@@ -11,11 +11,11 @@
             />
             <input type="hidden"
                    name="key"
-                   value="eyJpdiI6InNGaGhYV2owa1ltM3F4SXBZVCtucW9XSUlKc3lXcHJmQkljb0xTZHdcL1BjPSIsInZhbHVlIjoiQXVsaW9XUXZVMlFRa3dFUk1UMWVMYzFPRDhjeUN6eDVjRGkrWlM4RndZWT0iLCJtYWMiOiJiYWQ2OWYyYzVhYmI5MDQzN2FkNmUyYjZhNjAxNjc0M2ZjZDNlZDUyZTBiY2I0YmY0NTlkOWNiZmExOTdiNzg4In0="
+                   value="eyJpdiI6Im5zaVRib1JKaGJtemhFN1pNNjltZmROUktkZzFiTHVuRlJvc2JRWnRic0U9IiwibWFjIjoiMDMyMmE5ZmZhMzkzYzZiOGM3ZjNmNjUxZmIwNTMyNDYyMWZmOTBiZThlYjE5NDI0YzQzM2Q4NTY0ZWQ4NzllZCIsInZhbHVlIjoiTUowcHBcL01URFNlc1lMbUNyM2h1eUg4M2xtczFqS2tnY1huVnB4c1plU2M9In0="
             >
             <input type="hidden"
                    name="webform_id"
-                   value="15587"
+                   value="23661"
             >
             <input
                 class="v-app-newsletter__input"
@@ -49,7 +49,7 @@ async function submitNewsletter(event: Event) {
     feedbackMessage.value = ''
 
     try {
-        const response = await fetch('https://newsletter.infomaniak.com/external/submit', {
+        const response = await fetch('https://newsletter.infomaniak.com/v3/api/1/newsletters/webforms/23661/submit', {
             method: 'POST',
             body: formData,
         })
