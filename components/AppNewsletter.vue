@@ -4,10 +4,7 @@
             class="v-app-newsletter__title"
         >Laissez vos coordonnées pour recevoir nos informations</p
         >
-        <form method="post"
-              action="https://newsletter.infomaniak.com/external/submit"
-              target="_blank"
-        >
+        <form @submit.prevent="submitNewsletter">
             <input type="email"
                    name="email"
                    style="display:none"
@@ -29,7 +26,8 @@
                 required="required"
                 data-inf-error="Merci de renseigner une adresse email"
             />
-            <input class="app-button app-button--small" type="submit" name="" value="Envoyer">
+            <input class="app-button app-button--small" type="submit" name="" value="Envoyer" :disabled="isSubmitting">
+            <p v-if="feedbackMessage" :class="feedbackClass" class="v-app-newsletter__feedback">{{ feedbackMessage }}</p>
         </form>
     </section>
 </template>
@@ -39,9 +37,41 @@
 
 
 <script lang="ts" setup>
-// defineProps<{
-// }>()
+const isSubmitting = ref(false)
+const feedbackMessage = ref('')
+const feedbackClass = ref('')
 
+async function submitNewsletter(event: Event) {
+    const form = event.target as HTMLFormElement
+    const formData = new FormData(form)
+
+    isSubmitting.value = true
+    feedbackMessage.value = ''
+
+    try {
+        const response = await fetch('https://newsletter.infomaniak.com/external/submit', {
+            method: 'POST',
+            body: formData,
+        })
+
+        const data = await response.json()
+
+        if (data.result === 'success') {
+            feedbackMessage.value = 'Inscription réussie ! Merci.'
+            feedbackClass.value = 'v-app-newsletter__feedback--success'
+            form.reset()
+        } else {
+            feedbackMessage.value = data.error || 'Une erreur est survenue. Veuillez réessayer.'
+            feedbackClass.value = 'v-app-newsletter__feedback--error'
+        }
+    } catch (error) {
+        console.error('Newsletter submission failed:', error)
+        feedbackMessage.value = 'Une erreur est survenue. Veuillez réessayer.'
+        feedbackClass.value = 'v-app-newsletter__feedback--error'
+    } finally {
+        isSubmitting.value = false
+    }
+}
 </script>
 
 
@@ -112,6 +142,25 @@ input[type='submit'] {
     &:hover {
         background-color: var(--app-color-yellow-light);
         color: var(--app-color-black);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.v-app-newsletter__feedback {
+    margin-top: 1rem;
+    font-size: 1rem;
+    text-align: center;
+
+    &--success {
+        color: #a8e6a3;
+    }
+
+    &--error {
+        color: #ffb3b3;
     }
 }
 
