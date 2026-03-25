@@ -49,7 +49,7 @@ async function submitNewsletter(event: Event) {
     feedbackMessage.value = ''
 
     try {
-        const response = await fetch('https://newsletter.infomaniak.com/v3/api/1/newsletters/webforms/23661/submit', {
+        const response = await fetch('/api/newsletter', {
             method: 'POST',
             body: formData,
         })
