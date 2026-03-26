@@ -22,7 +22,7 @@
         >Envoyer</button>
         <div style="text-align: center"
                 v-else-if="status === 'sending PROGRESS'"
-        >Envoie en cours…</div>
+        >Envoi en cours…</div>
 
         <div style="text-align: center"
              v-if="responseMassage.length > 0"
