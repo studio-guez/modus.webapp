@@ -911,15 +911,10 @@ const questions: QuestionType[] = [
             <li>Bons pour accès à un espace de coworking</li>
           </ul>
           <p>
-            Deux périodes sont possibles pour l’activation du kit mobilité, merci de mentionner la ou les périodes pour lesquelles vous seriez intéressé.e à participer :
-            <br><small>Plusieurs réponses possibles</small>
+                        Une unique période reste possible pour activer le kit mobilité et elle se déroulera du 18 mai au 17 juin.
           </p>
         `,
-        type: 'checkbox',
-        options: [
-          "du 13 avril au 13 mai",
-          "du 18 mai au 17 juin",
-        ]
+                type: 'message',
     },
 
 
