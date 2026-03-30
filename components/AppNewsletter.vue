@@ -173,5 +173,6 @@ input[type='submit'] {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    max-width: 100%;
 }
 </style>
