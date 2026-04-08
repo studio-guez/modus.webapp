@@ -19,6 +19,7 @@
         <template v-else-if="item.content?.type === 'mdreportimage'">
           <app-report-image :image="item.image?.[0]" :size="item.content.content.size || 'large'"
             :alt="item.content.content.alt" :caption="item.content.content.caption"
+            :alignment="item.content.content.alignment || 'left'"
             class="v-report-tab-rapport__section" :class="{
               'v-report-tab-rapport__section--full': item.content.content.size === 'full' || item.content.content.size === 'large'
             }" />
