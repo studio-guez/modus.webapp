@@ -159,7 +159,13 @@ export function mapItemToCardProps(
         actionLabel: config.actionLabel,
         imgSrc: item.headerImage?.[0]?.resize?.reg,
         objectPosition: item.headerImage?.[0]?.focus,
-        dateLabel: config.hasDateLabel && content.datestart && content.dateend && (content.datestart !== content.dateend) ? formatDateRange(content.datestart, content.dateend) : undefined,
+        dateLabel: config.hasDateLabel && content.datestart
+            ? (cardType === 'video' || cardType === 'podcast')
+                ? formatDateRange(content.datestart)
+                : content.dateend && content.dateend !== content.datestart
+                    ? formatDateRange(content.datestart, content.dateend)
+                    : undefined
+            : undefined,
         title: content.headertitle,
         preview: content.preview,
         status,
