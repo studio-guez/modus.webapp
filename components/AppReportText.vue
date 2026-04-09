@@ -62,6 +62,15 @@ defineProps<{
     color: var(--app-color-main);
   }
 
+  :deep(mark.figure-ref) {
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--app-color-main--dark);
+    }
+  }
+
   :deep(ul),
   :deep(ol) {
     margin: 0 0 1rem 0;

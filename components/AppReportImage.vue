@@ -1,7 +1,8 @@
 <template>
   <figure 
     class="v-report-image" 
-    :class="[`v-report-image--${size}`, alignment ? `v-report-image--align-${alignment}` : '']" 
+    :class="[`v-report-image--${size}`, alignment ? `v-report-image--align-${alignment}` : '']"
+    :id="figureNumber ? `figure-${figureNumber}` : undefined"
   >
     <img 
       class="v-report-image__img"
@@ -10,10 +11,11 @@
       loading="lazy"
     />
     <figcaption 
-      v-if="caption" 
+      v-if="caption || figureNumber" 
       class="v-report-image__caption"
-      v-html="caption"
-    />
+    >
+      <span v-if="figureNumber" class="v-report-image__figure-label">Figure {{ figureNumber }}{{ caption ? ' — ' : '' }}</span><span v-if="caption" v-html="caption" />
+    </figcaption>
   </figure>
 </template>
 
@@ -39,6 +41,7 @@ const props = defineProps<{
   alt?: string
   caption?: string
   alignment?: 'left' | 'center' | 'right'
+  figureNumber?: number | null
 }>()
 
 const imageSrc = computed(() => {
@@ -130,5 +133,9 @@ const imageSrc = computed(() => {
   .v-report-image--full & {
   padding: 0 var(--app-report-tab-padding-x);
   }
+}
+
+.v-report-image__figure-label {
+  font-weight: 700;
 }
 </style>
