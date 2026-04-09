@@ -29,7 +29,7 @@
               :date-start="dateStart" />
 
             <!-- Tab: En lien -->
-            <app-report-tab-en-lien v-show="activeTab === 'en-lien'" :tags="parsedTags" :related-reports="relatedReports" />
+            <app-report-tab-en-lien v-show="activeTab === 'en-lien'" :tags="parsedTags" :related-reports="relatedReports" :linked-projects="linkedProjects" />
           </div>
           <!-- Download PDF Button -->
           <a :href="pdfDownloadUrl" class="v-report-page__download" :class="{ 'v-report-page__download--hidden': !isMainVisible }" target="_blank" rel="noopener" title="Télécharger le rapport au format PDF" aria-label="Télécharger le rapport au format PDF">
@@ -96,7 +96,7 @@ const tabs = computed(() => {
     result.push({ key: 'bibliographie', label: 'Bibliographie' })
   }
   result.push({ key: 'citations', label: 'Citations' })
-  if (parsedTags.value && parsedTags.value.length > 0) {
+  if ((parsedTags.value && parsedTags.value.length > 0) || linkedProjects.value.length > 0) {
     result.push({ key: 'en-lien', label: 'En lien' })
   }
   return result
@@ -123,6 +123,7 @@ const tags: Ref<UnwrapRef<Tag[]>> = ref([])
 const summary: Ref<UnwrapRef<string | undefined>> = ref(undefined)
 const bibliography: Ref<UnwrapRef<BibliographyItem[]>> = ref([])
 const relatedReports: Ref<UnwrapRef<RelatedReport[]>> = ref([])
+const linkedProjects: Ref<UnwrapRef<{ slug: string; title: string; dateStart?: string }[]>> = ref([])
 const currentSlug: Ref<UnwrapRef<string | undefined>> = ref(undefined)
 
 // Main element ref and visibility tracking
@@ -216,6 +217,7 @@ onMounted(async () => {
   summary.value = (pageData as any).summary
   bibliography.value = (pageData as any).bibliography || []
   relatedReports.value = (pageData as any).relatedReports || []
+  linkedProjects.value = (pageData as any).linkedProjects || []
 
   // Set up scroll listener for button visibility
   scrollHandler = () => checkButtonVisibility()

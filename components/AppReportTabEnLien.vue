@@ -5,7 +5,15 @@
         {{ tag.name }}
       </nuxt-link>
     </div>
+    <div v-if="linkedProjects.length > 0" class="v-report-tab-enlien__related-list">
+      <h3 class="v-report-tab-enlien__section-title">Projets en lien</h3>
+      <nuxt-link v-for="project in linkedProjects" :key="project.slug" :href="`/project/${project.slug}`"
+        class="v-report-tab-enlien__related-item">
+        <span class="v-report-tab-enlien__related-title">{{ project.title }}</span> – <span class="v-report-tab-enlien__related-year">{{ formatYear(project.dateStart) }}</span>
+      </nuxt-link>
+    </div>
     <div v-if="relatedReports.length > 0" class="v-report-tab-enlien__related-list">
+      <h3 class="v-report-tab-enlien__section-title">Rapports en lien</h3>
       <nuxt-link v-for="report in relatedReports" :key="report.slug" :href="`/rapport/${report.slug}`"
         class="v-report-tab-enlien__related-item">
         <span class="v-report-tab-enlien__related-title">{{ report.title }}</span> – <span class="v-report-tab-enlien__related-year">{{ formatYear(report.dateStart) }}</span>
@@ -26,9 +34,16 @@ interface RelatedReport {
   dateStart?: string
 }
 
+interface LinkedProject {
+  slug: string
+  title: string
+  dateStart?: string
+}
+
 defineProps<{
   tags: Tag[]
   relatedReports: RelatedReport[]
+  linkedProjects: LinkedProject[]
 }>()
 
 function formatYear(dateStr?: string): string {
@@ -78,6 +93,12 @@ function formatYear(dateStr?: string): string {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+
+.v-report-tab-enlien__section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
 }
 
 .v-report-tab-enlien__related-item {
