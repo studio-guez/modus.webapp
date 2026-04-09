@@ -1,9 +1,9 @@
 <template>
   <section class="v-report-tab-enlien">
     <div v-if="tags.length > 0" class="v-report-tab-enlien__tags">
-      <div v-for="tag in tags" :key="tag.slug" class="v-report-tab-enlien__tag">
+      <nuxt-link v-for="tag in tags" :key="tag.slug" :href="`/tag/${tag.slug}`" class="v-report-tab-enlien__tag">
         {{ tag.name }}
-      </div>
+      </nuxt-link>
     </div>
     <div v-if="relatedReports.length > 0" class="v-report-tab-enlien__related-list">
       <nuxt-link v-for="report in relatedReports" :key="report.slug" :href="`/rapport/${report.slug}`"
@@ -66,6 +66,12 @@ function formatYear(dateStr?: string): string {
   color: var(--app-color-black);
   border: 2px solid var(--app-color-black);
   background-color: transparent;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
+  &:hover{
+    border-color: var(--app-color-orange-bright);
+    background: var(--app-color-orange-bright);
+  }
 }
 
 .v-report-tab-enlien__related-list {
