@@ -205,8 +205,6 @@ onMounted(async () => {
 
   const pageData = await ApiFetchPage(`bibliotheque/${slug}`)
 
-  console.log(pageData)
-
   headerCover.value = pageData.options.headerImage?.mediaUrl
   headerFocus.value = pageData.options.headerImage?.focus
   headerText.value = pageData.options.headerTitle

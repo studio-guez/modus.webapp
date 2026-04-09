@@ -46,8 +46,6 @@ const subpageData: Ref<null | IApiPage__subpage__power_bi_pages> = ref(null)
 
 onMounted(async () => {
     subpageData.value = await ((await fetch(`${props.url}.json`)).json()) as IApiPage__subpage__power_bi_pages
-
-    console.log(subpageData.value)
 })
 
 </script>
