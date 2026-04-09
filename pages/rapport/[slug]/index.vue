@@ -22,7 +22,7 @@
             <app-report-tab-rapport v-show="activeTab === 'rapport'" :body-content="bodyContentArray" :title="headerText" :bibliography="bibliography" />
 
             <!-- Tab: Bibliographie -->
-            <app-report-tab-bibliographie v-show="activeTab === 'bibliographie'" :bibliography="bibliography" />
+            <app-report-tab-bibliographie v-show="activeTab === 'bibliographie'" :bibliography="bibliography" @go-to-ref="goToRef" />
 
             <!-- Tab: Citations -->
             <app-report-tab-citations v-show="activeTab === 'citations'" :title="headerText || ''" :slug="currentSlug || ''" :summary="summary"
@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import type { Ref, UnwrapRef } from 'vue'
 import { ApiFetchPage } from '~/composable/adminApi/apiFetch'
 import { buildPdfUrl } from '~/utils/backendUrl'
@@ -128,6 +128,19 @@ const currentSlug: Ref<UnwrapRef<string | undefined>> = ref(undefined)
 // Main element ref and visibility tracking
 const mainRef = ref<HTMLElement | null>(null)
 const isMainVisible = ref(true)
+
+const goToRef = (index: number | undefined) => {
+  if (index == null) return
+  activeTab.value = 'rapport'
+  nextTick(() => {
+    const el = document.querySelector<HTMLElement>(`.bib-ref[data-ref="${index}"]`)
+    if (!el) return
+    const navEl = document.querySelector<HTMLElement>('.v-app-nav')
+    const offset = navEl ? navEl.getBoundingClientRect().height : 0
+    const top = el.getBoundingClientRect().top + window.scrollY - offset - 16
+    window.scrollTo({ top, behavior: 'smooth' })
+  })
+}
 
 // Calculate if button overlaps outside main based on scroll position
 const checkButtonVisibility = () => {
