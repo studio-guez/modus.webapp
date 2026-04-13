@@ -910,7 +910,7 @@ const questions: QuestionType[] = [
             <li>Atelier de remise en selle ou coaching vélo individualisé</li>
             <li>Bons pour accès à un espace de coworking</li>
           </ul>
-          <p>
+          <p style="color:#ff4d84; font-weight: bold;">
                         Une unique période reste possible pour activer le kit mobilité et elle se déroulera du 18 mai au 17 juin.
           </p>
         `,
