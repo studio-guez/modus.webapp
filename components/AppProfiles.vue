@@ -208,6 +208,7 @@ function toggleFlip(index: number) {
   width: 100%;
   background-color: var(--app-color-grey--dark);
   object-fit: cover;
+  object-position: top;
   aspect-ratio: 320/360;
 }
 
@@ -288,15 +289,24 @@ function toggleFlip(index: number) {
 }
 
 .v-app-profiles__card__name {
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: var(--card-text);
+
+  @media (max-width: 900px) {
+    font-size: 1.4rem;
+  }
 }
 
 .v-app-profiles__card__role {
   font-size: 1.11111111111rem;
   color: var(--app-color-main);
   margin-top: 0.25rem;
+  line-height: 1.1;
+
+  @media (max-width: 900px) {
+    font-size: 1rem;
+  }
 }
 
 // Back — description
