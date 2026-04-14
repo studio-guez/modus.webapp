@@ -762,7 +762,8 @@ function handlePdfDownload(pdfUrl: string) {
   &.v-project-list__filter--link {
     text-decoration: none;
 
-    &:hover {
+    &:hover,
+    &.router-link-exact-active {
       background-color: var(--app-color-orange-bright);
       color: var(--app-color-black);
       border-color: var(--app-color-orange-bright);
