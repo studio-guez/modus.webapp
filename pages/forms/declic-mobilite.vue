@@ -10,11 +10,11 @@
     />
     <div class="v-proto-form__bottom_content" >
       <div class="v-proto-form__bottom_content__section">
-
-        <template v-if=" ! (isChecked_moreThan18YearOld && isChecked_readPolicy) ">
-          <h2 style="margin-top: 0; text-align: center;"
-          >Pour commencer la procédure d’enregistrement,
-            <br>cochez les cases ci-après.</h2>
+          <h2 style="margin-top: 0; text-align: center; padding-top:4rem;"
+          >Les enregistrements sont clos pour l’initiative Déclic Mobilité du printemps 2026</h2>
+        
+        <!--
+          <template v-if=" ! (isChecked_moreThan18YearOld && isChecked_readPolicy) ">
 
           <div class="app-form__section"
                :class="{'app-form__section--valid': isChecked_moreThan18YearOld}"
@@ -42,10 +42,11 @@
           <h2 style="margin-top: 0; text-align: center;"
           >C'est parti!</h2>
         </template>
+        --->
 
       </div>
     </div>
-
+    <!--
     <div class="v-proto-form__bottom_content"
          v-if="isChecked_moreThan18YearOld && isChecked_readPolicy"
     >
@@ -74,6 +75,7 @@
         </div>
       </div>
     </div>
+  --->
 
 
 
