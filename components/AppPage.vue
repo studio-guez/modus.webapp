@@ -6,19 +6,11 @@
           :bg-image="headerCover"
         />
       </template>
-      <template v-else-if="headerType === 'list'">
+      <template v-else>
         <app-header-list
                 :text="headerText"
                 :bg-image="headerCover"
                 :bg_focus="header_focus"
-        />
-      </template>
-      <template v-else>
-        <app-header
-                :text="headerText"
-                :bg-image="headerCover"
-                :bg_focus="header_focus"
-                :headerSize="headerSize"
         />
       </template>
     </template>
@@ -89,6 +81,12 @@
                   :items="segment.item.highlightsItems || []"
                 />
               </div>
+              <div class="v-app-page__breakout" v-else-if="segment.item.content.type === 'profiles'">
+                <app-profiles
+                  :profiles-data="segment.item.content.content"
+                  :profiles-images-data="segment.item.profilesImages"
+                />
+              </div>
             </template>
 
             <!-- Grid segment: regular content inside the 2-column grid -->
@@ -142,15 +140,6 @@
                   <template v-else-if="bodyContentItem.content.type === 'body'">
                     <div class="v-app-page__section v-app-page__section--body v-app-page__section--full">
                       <div v-html="addIdsToH2(bodyContentItem.content.content.text)"/>
-                    </div>
-                  </template>
-
-                  <template v-else-if="bodyContentItem.content.type === 'profiles'">
-                    <div class="v-app-page__section v-app-page__section--full">
-                      <app-profiles
-                        :profiles-data="bodyContentItem.content.content"
-                        :profiles-images-data="bodyContentItem.profilesImages"
-                      />
                     </div>
                   </template>
 
@@ -321,6 +310,7 @@ function isBreakoutItem(item: any): boolean {
     return (item.content.type === 'internalLink' && item.content.content.width === 'true')
         || item.content.type === 'internalLinks'
         || item.content.type === 'highlights'
+        || item.content.type === 'profiles'
 }
 
 type BodyContentSegment =
@@ -623,7 +613,7 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
     }
 
     h2, h3 {
-        color: var(--app-color-main);
+        color: var(--app-color-black);
         text-align: center;
     }
 

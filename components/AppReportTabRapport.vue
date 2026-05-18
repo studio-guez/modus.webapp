@@ -19,6 +19,8 @@
         <template v-else-if="item.content?.type === 'mdreportimage'">
           <app-report-image :image="item.image?.[0]" :size="item.content.content.size || 'large'"
             :alt="item.content.content.alt" :caption="item.content.content.caption"
+            :alignment="item.content.content.alignment || 'left'"
+            :figure-number="item.figureNumber"
             class="v-report-tab-rapport__section" :class="{
               'v-report-tab-rapport__section--full': item.content.content.size === 'full' || item.content.content.size === 'large'
             }" />
@@ -111,9 +113,32 @@ const setupObserver = () => {
   })
 }
 
+const scrollToFigure = (figureNumber: number) => {
+  const el = document.getElementById(`figure-${figureNumber}`)
+  if (!el) return
+  const navEl = document.querySelector<HTMLElement>('.v-app-nav')
+  const offset = navEl ? navEl.getBoundingClientRect().height : 0
+  const top = el.getBoundingClientRect().top + window.scrollY - offset - 16
+  window.scrollTo({ top, behavior: 'smooth' })
+}
+
+const setupFigureRefClickHandlers = () => {
+  if (!articleRef.value) return
+  const figureRefs = articleRef.value.querySelectorAll('.figure-ref[data-figure]')
+  figureRefs.forEach((el: Element) => {
+    const htmlEl = el as HTMLElement
+    htmlEl.style.cursor = 'pointer'
+    htmlEl.addEventListener('click', () => {
+      const figNum = parseInt(htmlEl.dataset.figure || '', 10)
+      if (!isNaN(figNum)) scrollToFigure(figNum)
+    })
+  })
+}
+
 onMounted(() => {
   nextTick(() => {
     setupObserver()
+    setupFigureRefClickHandlers()
   })
 })
 
@@ -121,6 +146,7 @@ onMounted(() => {
 watch(() => props.bodyContent, () => {
   nextTick(() => {
     setupObserver()
+    setupFigureRefClickHandlers()
   })
 }, { deep: true })
 

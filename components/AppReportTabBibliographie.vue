@@ -1,7 +1,7 @@
 <template>
   <section class="v-report-tab-bibliographie">
       <div v-for="(item, index) in bibliography" :key="item.id || index" class="v-report-tab-bibliographie__item">
-        <span class="v-report-tab-bibliographie__number">[{{ item.index }}]</span> <span v-html="item.text"></span>
+        <button class="v-report-tab-bibliographie__number" @click="emit('go-to-ref', item.index)">[{{ item.index }}]</button> <span v-html="item.text"></span>
       </div>
   </section>
 </template>
@@ -15,6 +15,10 @@ interface BibliographyItem {
 
 defineProps<{
   bibliography: BibliographyItem[]
+}>()
+
+const emit = defineEmits<{
+  'go-to-ref': [index: number | undefined]
 }>()
 </script>
 
@@ -37,6 +41,19 @@ defineProps<{
 
 .v-report-tab-bibliographie__number {
   font-weight: 700;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+  &:hover{
+    color: var(--app-color-orange-bright);
+  }
 }
 
 .v-report-tab-bibliographie__item :deep(a) {

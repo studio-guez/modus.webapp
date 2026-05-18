@@ -1308,7 +1308,6 @@ const submitForm = async () => {
             }
           })
         }
-        console.log("Formulaire soumis :", jsonData)
 
         const url = "https://mail-recording.villa1203.deno.net/data";
 
@@ -1329,7 +1328,6 @@ const submitForm = async () => {
 
             alert(`Formulaire soumis, merci!`)
             clearResponse()
-            console.log("Réponse du serveur:", result);
         } catch (error) {
             console.error("Erreur lors de l'envoi de la requête POST:", error);
 
@@ -1364,7 +1362,6 @@ const submitForm = async () => {
             }
           })
         }
-        console.log("Formulaire soumis (avec blocage mais email autorisé) :", jsonData)
 
         const url = "https://mail-recording.villa1203.deno.net/data";
 
@@ -1385,7 +1382,6 @@ const submitForm = async () => {
 
             alert(`Formulaire soumis, merci!`)
             clearResponse()
-            console.log("Réponse du serveur:", result);
         } catch (error) {
             console.error("Erreur lors de l'envoi de la requête POST:", error);
 

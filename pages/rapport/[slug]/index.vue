@@ -22,14 +22,14 @@
             <app-report-tab-rapport v-show="activeTab === 'rapport'" :body-content="bodyContentArray" :title="headerText" :bibliography="bibliography" />
 
             <!-- Tab: Bibliographie -->
-            <app-report-tab-bibliographie v-show="activeTab === 'bibliographie'" :bibliography="bibliography" />
+            <app-report-tab-bibliographie v-show="activeTab === 'bibliographie'" :bibliography="bibliography" @go-to-ref="goToRef" />
 
             <!-- Tab: Citations -->
             <app-report-tab-citations v-show="activeTab === 'citations'" :title="headerText || ''" :slug="currentSlug || ''" :summary="summary"
               :date-start="dateStart" />
 
             <!-- Tab: En lien -->
-            <app-report-tab-en-lien v-show="activeTab === 'en-lien'" :tags="parsedTags" :related-reports="relatedReports" />
+            <app-report-tab-en-lien v-show="activeTab === 'en-lien'" :tags="parsedTags" :related-reports="relatedReports" :linked-projects="linkedProjects" />
           </div>
           <!-- Download PDF Button -->
           <a :href="pdfDownloadUrl" class="v-report-page__download" :class="{ 'v-report-page__download--hidden': !isMainVisible }" target="_blank" rel="noopener" title="Télécharger le rapport au format PDF" aria-label="Télécharger le rapport au format PDF">
@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import type { Ref, UnwrapRef } from 'vue'
 import { ApiFetchPage } from '~/composable/adminApi/apiFetch'
 import { buildPdfUrl } from '~/utils/backendUrl'
@@ -96,7 +96,7 @@ const tabs = computed(() => {
     result.push({ key: 'bibliographie', label: 'Bibliographie' })
   }
   result.push({ key: 'citations', label: 'Citations' })
-  if (parsedTags.value && parsedTags.value.length > 0) {
+  if ((parsedTags.value && parsedTags.value.length > 0) || linkedProjects.value.length > 0) {
     result.push({ key: 'en-lien', label: 'En lien' })
   }
   return result
@@ -123,11 +123,25 @@ const tags: Ref<UnwrapRef<Tag[]>> = ref([])
 const summary: Ref<UnwrapRef<string | undefined>> = ref(undefined)
 const bibliography: Ref<UnwrapRef<BibliographyItem[]>> = ref([])
 const relatedReports: Ref<UnwrapRef<RelatedReport[]>> = ref([])
+const linkedProjects: Ref<UnwrapRef<{ slug: string; title: string; dateStart?: string }[]>> = ref([])
 const currentSlug: Ref<UnwrapRef<string | undefined>> = ref(undefined)
 
 // Main element ref and visibility tracking
 const mainRef = ref<HTMLElement | null>(null)
 const isMainVisible = ref(true)
+
+const goToRef = (index: number | undefined) => {
+  if (index == null) return
+  activeTab.value = 'rapport'
+  nextTick(() => {
+    const el = document.querySelector<HTMLElement>(`.bib-ref[data-ref="${index}"]`)
+    if (!el) return
+    const navEl = document.querySelector<HTMLElement>('.v-app-nav')
+    const offset = navEl ? navEl.getBoundingClientRect().height : 0
+    const top = el.getBoundingClientRect().top + window.scrollY - offset - 16
+    window.scrollTo({ top, behavior: 'smooth' })
+  })
+}
 
 // Calculate if button overlaps outside main based on scroll position
 const checkButtonVisibility = () => {
@@ -191,8 +205,6 @@ onMounted(async () => {
 
   const pageData = await ApiFetchPage(`bibliotheque/${slug}`)
 
-  console.log(pageData)
-
   headerCover.value = pageData.options.headerImage?.mediaUrl
   headerFocus.value = pageData.options.headerImage?.focus
   headerText.value = pageData.options.headerTitle
@@ -203,6 +215,7 @@ onMounted(async () => {
   summary.value = (pageData as any).summary
   bibliography.value = (pageData as any).bibliography || []
   relatedReports.value = (pageData as any).relatedReports || []
+  linkedProjects.value = (pageData as any).linkedProjects || []
 
   // Set up scroll listener for button visibility
   scrollHandler = () => checkButtonVisibility()

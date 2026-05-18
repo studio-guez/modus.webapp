@@ -342,8 +342,8 @@ function handleActionClick() {
 
 .v-app-item-card__overlay-icon--play,
 .v-app-item-card__overlay-icon--mic {
-    width: 4.44444444444rem;
-    height: 4.44444444444rem;
+    width: 3.5rem;
+    height: 3.5rem;
     color: var(--app-color-yellow);
 }
 

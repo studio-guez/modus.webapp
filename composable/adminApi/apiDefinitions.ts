@@ -309,13 +309,15 @@ export interface IApiProfiles {
     "profiles": {
         "image": string[],
         "name": string,
-        "description": string
+        "description": string,
+        "profiledescription": string
     }[]
 }
 
 export interface IApiProfilesImages {
     content: {
         description: string,
+        profiledescription: string,
         id: string,
         image: string[],
         name: string

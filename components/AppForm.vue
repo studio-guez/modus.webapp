@@ -98,8 +98,6 @@ async function sendMessageData() {
 
         const jsonResponse = await response.json()
 
-        console.log(jsonResponse)
-
         window.setTimeout(() => {
 
             if(jsonResponse.succes === false) {

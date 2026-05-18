@@ -20,8 +20,8 @@ export interface CardConfig {
 }
 
 export const CARD_CONFIG: Record<CardType, CardConfig> = {
-  'video':             { actionLabel: 'Regarder',  clickBehavior: 'play-video',   overlayIcon: 'play' },
-  'podcast':           { actionLabel: 'Écouter',   clickBehavior: 'play-podcast', overlayIcon: 'mic' },
+  'video':             { actionLabel: 'Regarder',  clickBehavior: 'play-video',   overlayIcon: 'play', hasDateLabel: true },
+  'podcast':           { actionLabel: 'Écouter',   clickBehavior: 'play-podcast', overlayIcon: 'mic',  hasDateLabel: true },
   'report':            { actionLabel: 'Consulter', clickBehavior: 'navigate',     overlayIcon: null, hasPdfButton: true },
   'tool-internal':     { actionLabel: 'Tester',   clickBehavior: 'navigate',     overlayIcon: null },
   'tool-external':     { actionLabel: 'Tester', clickBehavior: 'external',     overlayIcon: null },

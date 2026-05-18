@@ -1,7 +1,8 @@
 <template>
   <figure 
     class="v-report-image" 
-    :class="`v-report-image--${size}`"
+    :class="[`v-report-image--${size}`, alignment ? `v-report-image--align-${alignment}` : '']"
+    :id="figureNumber ? `figure-${figureNumber}` : undefined"
   >
     <img 
       class="v-report-image__img"
@@ -10,10 +11,11 @@
       loading="lazy"
     />
     <figcaption 
-      v-if="caption" 
+      v-if="caption || figureNumber" 
       class="v-report-image__caption"
-      v-html="caption"
-    />
+    >
+      <span v-if="figureNumber" class="v-report-image__figure-label">Figure {{ figureNumber }}{{ caption ? ' — ' : '' }}</span><span v-if="caption" v-html="caption" />
+    </figcaption>
   </figure>
 </template>
 
@@ -35,9 +37,11 @@ export interface ReportImageData {
 
 const props = defineProps<{
   image?: ReportImageData
-  size?: 'full' | 'large' | 'small'
+  size?: 'full' | 'large' | 'medium' | 'small'
   alt?: string
   caption?: string
+  alignment?: 'left' | 'center' | 'right'
+  figureNumber?: number | null
 }>()
 
 const imageSrc = computed(() => {
@@ -47,6 +51,8 @@ const imageSrc = computed(() => {
   if (props.image.resize) {
     if (props.size === 'full' || props.size === 'large') {
       return props.image.resize.large || props.image.resize.xxl || props.image.mediaUrl
+    } else if (props.size === 'medium') {
+      return props.image.resize.reg || props.image.resize.large || props.image.mediaUrl
     } else if (props.size === 'small') {
       return props.image.resize.reg || props.image.resize.small || props.image.mediaUrl
     }
@@ -82,10 +88,38 @@ const imageSrc = computed(() => {
   }
 }
 
+.v-report-image--medium {
+  @media (min-width: 768px) {
+    width: 44.4444444444rem;
+    max-width: 100%;
+  }
+}
+
 .v-report-image--small {
   @media (min-width: 768px) {
     width: 35.1111111111rem;
     max-width: 100%;
+  }
+}
+
+.v-report-image--align-left {
+  @media (min-width: 768px) {
+    margin-left: 0;
+    margin-right: auto;
+  }
+}
+
+.v-report-image--align-center {
+  @media (min-width: 768px) {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.v-report-image--align-right {
+  @media (min-width: 768px) {
+    margin-left: auto;
+    margin-right: 0;
   }
 }
 
@@ -99,5 +133,9 @@ const imageSrc = computed(() => {
   .v-report-image--full & {
   padding: 0 var(--app-report-tab-padding-x);
   }
+}
+
+.v-report-image__figure-label {
+  font-weight: 700;
 }
 </style>
