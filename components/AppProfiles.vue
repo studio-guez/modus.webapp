@@ -78,7 +78,9 @@
                     </a>
                   </div>
                 </div>
+                <div class="v-app-profiles__card__description_wrapper">
                 <div class="v-app-profiles__card__description">{{ profileImageItem.content.profiledescription }}</div>
+                </div>
               </div>
             </div>
           </article>
@@ -136,15 +138,15 @@ function toggleFlip(index: number) {
   padding: 3rem var(--app-base-padding-x);
   background: var(--app-color-grey);
 
-  @media (min-width: 741px) {
+  @media (min-width: 841px) {
     --item-per-row: 2;
   }
 
-  @media (min-width: 901px) {
+  @media (min-width: 1341px) {
     --item-per-row: 3;
   }
 
-  @media (min-width: 1381px) {
+  @media (min-width: 1641px) {
     --item-per-row: 4;
   }
 
@@ -310,16 +312,21 @@ function toggleFlip(index: number) {
 }
 
 // Back — description
-.v-app-profiles__card__description {
+.v-app-profiles__card__description_wrapper {
   box-sizing: border-box;
   padding: 0 1.66666666667rem 1.66666666667rem 1.66666666667rem;
-  margin: auto 0 1.66666666667rem 0;
-  font-size: 1.33333333333rem;
-  max-height: calc(100% - 6rem);
+  margin: auto 0 0 0;
+}
+.v-app-profiles__card__description {
+  box-sizing: border-box;
+  font-size: 1.1rem;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 10;
+  -webkit-line-clamp: 20;
   line-height: 1.25;
+  @media (max-width: 900px) {
+    font-size: 1rem;
+  }
 }
 </style>
