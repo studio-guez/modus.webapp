@@ -76,7 +76,7 @@ async function sendMessageData() {
     status.value = "sending PROGRESS"
     responseMassage.value  = ''
 
-    if(formData.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g) === null) {
+    if(formData.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/g) === null) {
         status.value           = 'sending ERROR'
         responseMassage.value  = 'Adresse mail incorrecte'
         return
