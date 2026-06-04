@@ -42,7 +42,9 @@ const filterGroups: FilterGroup[] = [
             const content = item.content as Record<string, unknown>
             const isProjectWithDuration = content.isprojectwithduration === 'true'
             const dateEnd = content.dateend as string | undefined
-            const isOngoing = isProjectWithDuration && dateEnd && new Date(dateEnd) > new Date()
+            const isOngoing = isProjectWithDuration
+                ? !!(dateEnd && new Date(dateEnd) > new Date())
+                : content.projectstatus === 'en-cours'
             const computedStatus = isOngoing ? 'en-cours' : 'termine'
             return selectedKeys.includes(computedStatus)
         }

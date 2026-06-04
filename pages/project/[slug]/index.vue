@@ -13,6 +13,7 @@
             :date_start="dateStart"
             :is_project_with_duration="isProjectWithDuration"
             :date_end="dateEnd"
+            :project_status="projectStatus"
             :power_subpages="powerSubpages"
         />
         <app-share-link />
@@ -40,6 +41,7 @@ const bodyContent: Ref<UnwrapRef<undefined | IApiBody>> = ref(undefined)
 const dateStart: Ref<UnwrapRef<undefined | string>>              = ref(undefined)
 const isProjectWithDuration: Ref<UnwrapRef<undefined | string>>  = ref(undefined)
 const dateEnd: Ref<UnwrapRef<undefined | string>>                = ref(undefined)
+const projectStatus: Ref<UnwrapRef<undefined | string>>          = ref(undefined)
 
 const powerSubpages: Ref<UnwrapRef<undefined | IApiPage__subpage[]>>            = ref(undefined)
 
@@ -60,6 +62,7 @@ onMounted(async () => {
     dateStart.value = pageData.options.dateStart
     isProjectWithDuration.value = pageData.options.isProjectWithDuration
     dateEnd.value = pageData.options.dateEnd
+    projectStatus.value = pageData.options.projectStatus
 
     powerSubpages.value = pageData.options.subpages
 })
