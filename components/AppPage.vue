@@ -301,6 +301,7 @@ const props = defineProps<{
   date_start?: string,
   is_project_with_duration?: "true" | "false",
   date_end?: string,
+  project_status?: string,
   power_subpages?: IApiPage__subpage[]
 }>()
 
@@ -340,7 +341,9 @@ const bodyContentSegments = computed<BodyContentSegment[]>(() => {
 })
 
 const status: ComputedRef<null | 'En cours' | 'Terminé'> = computed(() => {
-    if(props.is_project_with_duration === 'false') return null
+    if(props.is_project_with_duration === 'false') {
+        return props.project_status === 'en-cours' ? 'En cours' : 'Terminé'
+    }
 
     if( props.date_end === undefined ) return 'En cours'
 

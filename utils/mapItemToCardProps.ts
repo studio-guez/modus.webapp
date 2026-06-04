@@ -30,6 +30,7 @@ interface ItemContent {
     datestart?: string
     dateend?: string
     isprojectwithduration?: 'true' | 'false'
+    projectstatus?: string
     projecttype?: string
     isexternallink?: string
     externalurl?: string
@@ -95,7 +96,9 @@ export function resolveCardType(item: ItemData, pageType?: 'media' | 'report' | 
  * Computes the project status based on dates
  */
 function computeStatus(content: ItemContent): { status: string; statusColor: string } {
-    const isOngoing = content.isprojectwithduration === 'true' && content.dateend && new Date(content.dateend) > new Date()
+    const isOngoing = content.isprojectwithduration === 'true'
+        ? !!(content.dateend && new Date(content.dateend) > new Date())
+        : content.projectstatus === 'en-cours'
     return {
         status: isOngoing ? 'En cours' : 'Terminé',
         statusColor: isOngoing ? 'var(--app-color-orange)' : 'var(--app-color-black)'
