@@ -37,7 +37,7 @@
                 class="v-app-page-footer__bottom__contact"
             >
                 <a href="mailto:info@modus-ge.ch" target="_blank">info@modus-ge.ch</a>
-                <address class="v-app-page-footer__bottom__address"><a href="https://maps.app.goo.gl/JFB5uPAcHgqTwReH8" target="_blank">Rte de la Galaise 15A, 1228 Plan-les-Ouates</a></address>
+                <address class="v-app-page-footer__bottom__address"><a href="https://maps.app.goo.gl/JFB5uPAcHgqTwReH8" target="_blank">Rte de la Galaise 25, 1228 Plan-les-Ouates</a></address>
                 <div class="app__icon">
                     <a href="https://ch.linkedin.com/company/fondation-modus" target="_blank">
                         <SvgLinkedin />
