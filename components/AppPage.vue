@@ -499,7 +499,6 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
       text-decoration: none;
       position: relative;
       display: inline-block;
-      transform: translate(-25%, 0) rotate(-15deg) scale(1.25);
 
       &:hover {
         opacity: 1;
