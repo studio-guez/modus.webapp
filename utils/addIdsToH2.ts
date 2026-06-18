@@ -12,14 +12,6 @@ export function addIdsToH2(html: string): string {
 
         // Ajouter l'ID à l'élément <h2>
         header.id = headerText;
-
-        // Créer une ancre avec un lien vers cet ID
-        const anchor = doc.createElement('a');
-        anchor.href = `#${headerText}`;
-        anchor.textContent = '#'; // Optionnel : symbole ou texte pour le lien
-
-        // Ajouter l'ancre au début du <h2>
-        header.prepend(anchor);
     });
 
     // Extraire le HTML modifié

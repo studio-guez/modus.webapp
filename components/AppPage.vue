@@ -139,7 +139,7 @@
 
                   <template v-else-if="bodyContentItem.content.type === 'body'">
                     <div class="v-app-page__section v-app-page__section--body v-app-page__section--full">
-                      <div v-html="addIdsToH2(bodyContentItem.content.content.text)"/>
+                      <div :style="{ textAlign: bodyContentItem.content.content.alignment || 'left' }" v-html="addIdsToH2(bodyContentItem.content.content.text)"/>
                     </div>
                   </template>
 
@@ -490,8 +490,8 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
   }
 
   &.v-app-page__section--body {
-    &:deep(h2) {
-      text-align: left;
+    &:deep(*) {
+      text-align: inherit;
     }
 
     &:deep(h2 a) {
@@ -499,7 +499,6 @@ const statusColor: ComputedRef< 'var(--app-color-orange)' | 'var(--app-color-mai
       text-decoration: none;
       position: relative;
       display: inline-block;
-      transform: translate(-25%, 0) rotate(-15deg) scale(1.25);
 
       &:hover {
         opacity: 1;
