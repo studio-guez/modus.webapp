@@ -152,7 +152,8 @@ export interface IApiBody {
         "image": IApiImage[],
         "content": {
             "content": {
-                "text": string
+                "text": string,
+                "alignment": "left" | "center" | "right" | "justify"
             },
             "id": string,
             "isHidden": boolean,
