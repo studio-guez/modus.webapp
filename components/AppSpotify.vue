@@ -13,7 +13,7 @@
       </div>
       <div class="v-app-spotify__caption">
         {{podcast_caption}}
-        <br>{{spotifyData.content.credits}}, publié le {{formatDate(spotifyData.content.date ?? '')}}
+        <br>{{spotifyData.content.credits}}<template v-if="spotifyData.content.date">, publié le {{formatDate(spotifyData.content.date)}}</template>
       </div>
     </section>
 </template>
