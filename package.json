@@ -16,11 +16,10 @@
     "roso-modus-mailsignature": "^0.2.1"
   },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
-    "nuxt": "^3.7.4",
-    "sass": "^1.69.4",
-    "typescript": "^4.9.4",
-    "vue": "^3.3.4",
-    "vue-router": "^4.2.5"
+    "nuxt": "^4.4.8",
+    "sass": "^1.101.0",
+    "typescript": "^6.0.3",
+    "vue": "^3.5.39",
+    "vue-router": "^5.1.0"
   }
 }
