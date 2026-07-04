@@ -11,7 +11,7 @@
         <img
                 class="v-app-header-home__graphic-box__module_1"
                 alt="image graphique de ville pour habiller le header du site"
-                :src="bgImage"
+                :src="bgImage ? bgImage : '/header--default.jpg'"
         />
       </div>
       <div
@@ -20,7 +20,7 @@
         <img
                 class="v-app-header-home__graphic-box__module_1"
                 alt="image graphique de ville pour habiller le header du site"
-                :src="bgImage"
+                :src="bgImage ? bgImage : '/header--default.jpg'"
         />
       </div>
     </div>
@@ -41,7 +41,7 @@
 import { markModus } from '~/utils/markModus'
 
 const props = defineProps<{
-    bgImage: string,
+    bgImage?: string,
     text?: string,
 }>()
 

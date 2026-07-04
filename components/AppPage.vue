@@ -3,7 +3,7 @@
       <template v-if="useRoute().path === '/'">
         <app-header-home
           :text="headerText"
-          :bg-image="headerCover ?? ''"
+          :bg-image="headerCover"
         />
       </template>
       <template v-else>
