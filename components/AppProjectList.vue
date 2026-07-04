@@ -132,7 +132,7 @@
             <TransitionGroup name="list-fade">
               <app-item-card v-for="item of itemsToShow" :key="item.slug"
                 v-bind="mapItemToCardProps(item, pageType)" @play-video="handlePlayVideo"
-                @play-podcast="handlePlayPodcast" @pdf-download="handlePdfDownload" />
+                @play-podcast="handlePlayPodcast" />
             </TransitionGroup>
           </div>
         </template>
@@ -192,7 +192,6 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{
   (e: 'play-video', mediaUrl: string, title: string): void
   (e: 'play-podcast', mediaUrl: string, title: string): void
-  (e: 'pdf-download', pdfUrl: string): void
 }>()
 
 // Mobile filter modal state
@@ -469,10 +468,6 @@ function handlePlayVideo(mediaUrl: string, title: string) {
 
 function handlePlayPodcast(mediaUrl: string, title: string) {
   emit('play-podcast', mediaUrl, title)
-}
-
-function handlePdfDownload(pdfUrl: string) {
-  emit('pdf-download', pdfUrl)
 }
 </script>
 
