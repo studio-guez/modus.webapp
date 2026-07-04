@@ -90,29 +90,16 @@
 
 
 <script setup lang="ts">
-import type {Ref, UnwrapRef} from 'vue'
 import AppPage from "~/components/AppPage.vue";
 import type {IApiBody, IApiImage} from "~/composable/adminApi/apiDefinitions";
 import {ApiFetchPage} from "~/composable/adminApi/apiFetch";
 import AppFormDeclicMobility2 from "~/components/AppFormDeclicMobility-2.vue";
 
-// const props = defineProps<{
-//     message?: string
-// }>()
+const {data: pageData} = await useAsyncData('page-declic-mobilite', () => ApiFetchPage('proposer-un-projet'))
 
-const headerCover: Ref<UnwrapRef<undefined | string>> = ref(undefined)
-const headerText: Ref<UnwrapRef<undefined | string>> = ref(undefined)
-
-const bodyContent: Ref<UnwrapRef<undefined | IApiBody>> = ref(undefined)
-
-onMounted(async () => {
-    const pageData = await ApiFetchPage('proposer-un-projet')
-
-    headerCover.value = '/declic-mobilite/header_web_page_declic.jpg'
-    headerText.value = pageData.options.headerTitle
-
-    bodyContent.value = pageData.body
-})
+const headerCover = ref('/declic-mobilite/header_web_page_declic.jpg')
+const headerText = computed(() => pageData.value?.options.headerTitle)
+const bodyContent = computed(() => pageData.value?.body)
 
 const isChecked_moreThan18YearOld = ref(false)
 const isChecked_readPolicy = ref(false)

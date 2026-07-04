@@ -5,9 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
+import { computed } from 'vue'
 import AppProjectList, { type FilterGroup, type FilterOption } from "~/components/AppProjectList.vue"
-import type { IApiSingleProject, IApiProjects } from "~/composable/adminApi/apiDefinitions"
+import type { IApiSingleProject } from "~/composable/adminApi/apiDefinitions"
 import { ApiFetchProjects } from "~/composable/adminApi/apiFetch"
 import { useSpotifyUrl, useSpotifyTitle, usePodcastPlayerIsOpen, useYoutubeUrl, useYoutubeTitle } from '~/composable/main'
 
@@ -22,21 +22,19 @@ const playerIsOpen = usePodcastPlayerIsOpen()
 const youtubeUrl = useYoutubeUrl()
 const youtubeTitle = useYoutubeTitle()
 
-// Track if we have projects in the content
-const hasProjects = ref(false)
-
 // Fetch data to check if we have projects
-onMounted(async () => {
-    try {
-        const data: IApiProjects = await ApiFetchProjects(apiEndpoint.value)
-        const children = Object.values(data.children)
-        hasProjects.value = children.some((item: IApiSingleProject) => {
-            const content = item.content as Record<string, unknown>
-            return content.pageType === 'project'
-        })
-    } catch (e) {
-        console.error('Failed to fetch tag data:', e)
-    }
+const {data: tagData} = await useAsyncData(
+    () => `tag-${slug.value}`,
+    () => ApiFetchProjects(apiEndpoint.value),
+    {watch: [slug]}
+)
+
+const hasProjects = computed(() => {
+    if (!tagData.value) return false
+    return Object.values(tagData.value.children).some((item: IApiSingleProject) => {
+        const content = item.content as Record<string, unknown>
+        return content.pageType === 'project'
+    })
 })
 
 // Status filter options - same as projects page

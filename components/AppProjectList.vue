@@ -224,11 +224,19 @@ const backendBaseUrl = runtimeConfig.public.backendBaseUrl as string
 const route = useRoute()
 const router = useRouter()
 
-const headerCover: Ref<UnwrapRef<undefined | string>> = ref(undefined)
-const headerText: Ref<UnwrapRef<undefined | string>> = ref(undefined)
-const preview: Ref<UnwrapRef<undefined | string>> = ref(undefined)
-const items: Ref<UnwrapRef<undefined | IApiSingleProject[]>> = ref(undefined)
-const availableTags: Ref<UnwrapRef<IApiTag[]>> = ref([])
+const {data: pageData} = await useAsyncData(
+  () => `projectlist-${props.apiEndpoint}`,
+  () => ApiFetchProjects(props.apiEndpoint),
+  {watch: [() => props.apiEndpoint]}
+)
+
+const headerText = computed(() => pageData.value?.options.headerTitle)
+const preview = computed(() => pageData.value?.options.preview)
+const items = computed<IApiSingleProject[] | undefined>(() => pageData.value ? Object.values(pageData.value.children) : undefined)
+const availableTags = computed<IApiTag[]>(() => pageData.value?.options.availableTags ?? [])
+
+// headerCover starts as the low-res image (rendered on the server) and is upgraded on the client
+const headerCover = ref<string | undefined>(pageData.value?.options.headerImage?.resize.tiny)
 
 // Query params: tags for tag filter (comma-separated for multiple)
 const selectedTags: Ref<UnwrapRef<string[]>> = ref(parseTagsFromQuery(route.query.tags))
@@ -383,20 +391,8 @@ function getVisibleOptions(group: FilterGroup): FilterOption[] {
   })
 }
 
-onMounted(async () => {
-  const pageData = await ApiFetchProjects(props.apiEndpoint)
-
-  headerCover.value = pageData.options.headerImage?.resize.tiny
-  headerText.value = pageData.options.headerTitle
-  preview.value = pageData.options.preview
-  items.value = Object.values(pageData.children)
-
-  // Get available tags from backend
-  if (pageData.options.availableTags) {
-    availableTags.value = pageData.options.availableTags
-  }
-
-  lazyLoadHeadImage(pageData.options.headerImage?.url || '')
+onMounted(() => {
+  lazyLoadHeadImage(pageData.value?.options.headerImage?.url || '')
 })
 
 function lazyLoadHeadImage(largeImageUrl: string) {
