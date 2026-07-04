@@ -26,7 +26,7 @@
                 <!-- Textarea pour "autre" -->
                 <textarea
                     v-if="question.hasOtherOption && responses[question.id] === 'autre'"
-                    v-model="responses[`${question.id}_other`]"
+                    v-model="(responses[`${question.id}_other`] as string)"
                     placeholder="Précisez votre réponse"
                 ></textarea>
             </template>
@@ -40,7 +40,7 @@
             <template v-else-if="question.type === 'number'">
                 <div v-for="(option, key) in question.values" :key="option" class="app-form__section__subsections">
                     <label>{{ option }}</label>
-                    <input v-model="responses[question.id][key]" type="number" />
+                    <input v-model="(responses[question.id] as (string | number)[])[key as number]" type="number" />
                 </div>
             </template>
 
@@ -54,7 +54,7 @@
 
             <!-- Textarea -->
             <template v-else-if="question.type === 'textarea'">
-                <textarea v-model="responses[question.id]" :placeholder="question.placeholder"></textarea>
+                <textarea v-model="(responses[question.id] as string)" :placeholder="question.placeholder"></textarea>
             </template>
 
             <!-- Mail -->
@@ -180,7 +180,7 @@ interface Question_family_code extends Question {
 }
 
 interface Responses {
-    [key: number | string]: any;
+    [key: number | string]: string | (string | number)[] | undefined;
 }
 
 type QuestionType =
@@ -1204,7 +1204,7 @@ const isFormValid: ComputedRef<{
         }
 
         if (question.type === 'mail') {
-            const email: string | number | string[] | boolean | undefined = responses.value[question.id]
+            const email: string | (string | number)[] | undefined = responses.value[question.id]
 
             if( email === undefined )  {
               msg = {
@@ -1296,7 +1296,7 @@ const submitForm = async () => {
         const jsonData: {
           value: {
             question: QuestionType,
-            response: string | number | string[] | boolean | undefined,
+            response: string | (string | number)[] | undefined,
           }[],
           mail: string
         } = {
@@ -1348,7 +1348,7 @@ const submitForm = async () => {
         const jsonData: {
           value: {
             question: QuestionType,
-            response: string | number | string[] | boolean | undefined,
+            response: string | (string | number)[] | undefined,
           }[],
           mail: string,
           blockedSubmission: boolean
