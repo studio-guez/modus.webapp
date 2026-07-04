@@ -1,5 +1,5 @@
-import {Ref} from "vue";
-import {IApiMenus} from "~/composable/adminApi/apiDefinitions";
+import type {Ref} from "vue";
+import type {IApiMenus} from "~/composable/adminApi/apiDefinitions";
 
 export const arrayOfH2TitleIdInCurrentPage: () => Ref<{ anchor: string; name: string }[]> = () => {
     return useState(

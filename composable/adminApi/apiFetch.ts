@@ -1,4 +1,4 @@
-import {ApiPowerBIResponse, IApiMenus, IApiNews, IApiPage, IApiProjectTags, IApiProjects} from "~/composable/adminApi/apiDefinitions";
+import type {ApiPowerBIResponse, IApiMenus, IApiNews, IApiPage, IApiProjectTags, IApiProjects} from "~/composable/adminApi/apiDefinitions";
 
 function getBaseUrl(): string {
     const config = useRuntimeConfig()

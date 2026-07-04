@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { IApiTag } from '~/composable/adminApi/apiDefinitions'
+import type { IApiTag } from '~/composable/adminApi/apiDefinitions'
 import { ApiFetchProjectTags } from '~/composable/adminApi/apiFetch'
 
 const props = defineProps<{

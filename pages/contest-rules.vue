@@ -85,7 +85,7 @@ import {getValueToPercent} from "~/utils/precent";
 
 
 import {bodyScrollInfo} from "~/composable/main";
-import {ComputedRef} from "vue";
+import type {ComputedRef} from "vue";
 
 useHead({
     title: 'modus',

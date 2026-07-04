@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 
-import {UnwrapNestedRefs, UnwrapRef} from "vue";
+import type {UnwrapNestedRefs, UnwrapRef} from "vue";
 
 const config = useRuntimeConfig()
 const apiBaseUrl = config.public.apiBaseUrl as string

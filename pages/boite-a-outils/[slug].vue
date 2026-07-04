@@ -19,9 +19,9 @@
 
 
 <script setup lang="ts">
-import {Ref, UnwrapRef} from 'vue'
+import type {Ref, UnwrapRef} from 'vue'
 import AppPage from "~/components/AppPage.vue";
-import {IApiBody, IApiPage__subpage} from "~/composable/adminApi/apiDefinitions";
+import type {IApiBody, IApiPage__subpage} from "~/composable/adminApi/apiDefinitions";
 import {ApiFetchPage} from "~/composable/adminApi/apiFetch";
 
 const headerCover: Ref<UnwrapRef<undefined | string>> = ref(undefined)

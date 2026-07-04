@@ -180,7 +180,7 @@ interface Question_family_code extends Question {
 }
 
 interface Responses {
-    [key: number | string]: string | number | string[] | boolean | undefined;
+    [key: number | string]: any;
 }
 
 type QuestionType =
@@ -1177,13 +1177,13 @@ function updateContent() {
 const isFormValid: ComputedRef<{
     isValid: boolean,
     message: string,
-    allowEmailSubmission: boolean,
+    allowEmailSubmission?: boolean,
 }> = computed(() => {
 
     let msg: {
         isValid: boolean,
         message: string,
-        allowEmailSubmission: boolean,
+        allowEmailSubmission?: boolean,
     } = {
         message: '',
         isValid: true,

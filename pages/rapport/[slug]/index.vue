@@ -19,7 +19,7 @@
           <!-- Main Content Area -->
           <div class="v-report-page__content">
             <!-- Tab: Rapport -->
-            <app-report-tab-rapport v-show="activeTab === 'rapport'" :body-content="bodyContentArray" :title="headerText" :bibliography="bibliography" />
+            <app-report-tab-rapport v-show="activeTab === 'rapport'" :body-content="bodyContentArray" :title="headerText ?? ''" :bibliography="bibliography" />
 
             <!-- Tab: Bibliographie -->
             <app-report-tab-bibliographie v-show="activeTab === 'bibliographie'" :bibliography="bibliography" @go-to-ref="goToRef" />

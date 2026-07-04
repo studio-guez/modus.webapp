@@ -6,8 +6,8 @@
 
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue'
-import AppProjectList, { FilterGroup, FilterOption } from "~/components/AppProjectList.vue"
-import { IApiSingleProject, IApiProjects } from "~/composable/adminApi/apiDefinitions"
+import AppProjectList, { type FilterGroup, type FilterOption } from "~/components/AppProjectList.vue"
+import type { IApiSingleProject, IApiProjects } from "~/composable/adminApi/apiDefinitions"
 import { ApiFetchProjects } from "~/composable/adminApi/apiFetch"
 import { useSpotifyUrl, useSpotifyTitle, usePodcastPlayerIsOpen, useYoutubeUrl, useYoutubeTitle } from '~/composable/main'
 

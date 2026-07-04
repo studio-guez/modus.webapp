@@ -131,7 +131,7 @@
           <div class="v-project-list__content__grid">
             <TransitionGroup name="list-fade">
               <app-item-card v-for="item of itemsToShow" :key="item.slug"
-                v-bind="mapItemToCardProps(item, pageType, backendBaseUrl)" @play-video="handlePlayVideo"
+                v-bind="mapItemToCardProps(item, pageType)" @play-video="handlePlayVideo"
                 @play-podcast="handlePlayPodcast" @pdf-download="handlePdfDownload" />
             </TransitionGroup>
           </div>
@@ -149,9 +149,9 @@
 
 
 <script setup lang="ts">
-import { ComputedRef, Ref, UnwrapRef } from 'vue'
+import type { ComputedRef, Ref, UnwrapRef } from 'vue'
 import AppPage from "~/components/AppPage.vue";
-import { IApiSingleProject, IApiTag } from "~/composable/adminApi/apiDefinitions";
+import type { IApiSingleProject, IApiTag } from "~/composable/adminApi/apiDefinitions";
 import { ApiFetchProjects } from "~/composable/adminApi/apiFetch";
 import AppItemCard from "~/components/AppItemCard.vue";
 import { mapItemToCardProps } from '~/utils/mapItemToCardProps';
@@ -281,7 +281,7 @@ function toggleFilter(group: FilterGroup, key: string) {
   updateQueryParams()
 }
 
-function parseTagsFromQuery(queryValue: string | (string | null)[] | undefined): string[] {
+function parseTagsFromQuery(queryValue: string | null | (string | null)[] | undefined): string[] {
   if (!queryValue) return []
   if (Array.isArray(queryValue)) {
     return queryValue.filter((v): v is string => typeof v === 'string')

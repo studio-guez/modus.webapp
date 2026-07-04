@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import {ApiFetchPagePowerBIPage} from "~/composable/adminApi/apiFetch";
-import {ApiPowerBIResponse} from "~/composable/adminApi/apiDefinitions";
+import type {ApiPowerBIResponse} from "~/composable/adminApi/apiDefinitions";
 
 const pageData: Ref<null | ApiPowerBIResponse> = ref(null)
 

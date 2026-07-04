@@ -26,9 +26,9 @@
 
 
 <script setup lang="ts">
-import {defineProps, Ref, UnwrapRef} from 'vue'
+import type {Ref, UnwrapRef} from 'vue'
 import AppPage from "~/components/AppPage.vue";
-import {IApiBody, IApiPage__subpage} from "~/composable/adminApi/apiDefinitions";
+import type {IApiBody, IApiPage__subpage} from "~/composable/adminApi/apiDefinitions";
 import {ApiFetchPage} from "~/composable/adminApi/apiFetch";
 
 const headerCover: Ref<UnwrapRef<undefined | string>> = ref(undefined)
@@ -39,7 +39,7 @@ const bodyTitle: Ref<UnwrapRef<undefined | string>> = ref(undefined)
 const bodyContent: Ref<UnwrapRef<undefined | IApiBody>> = ref(undefined)
 
 const dateStart: Ref<UnwrapRef<undefined | string>>              = ref(undefined)
-const isProjectWithDuration: Ref<UnwrapRef<undefined | string>>  = ref(undefined)
+const isProjectWithDuration: Ref<UnwrapRef<undefined | "true" | "false">>  = ref(undefined)
 const dateEnd: Ref<UnwrapRef<undefined | string>>                = ref(undefined)
 const projectStatus: Ref<UnwrapRef<undefined | string>>          = ref(undefined)
 

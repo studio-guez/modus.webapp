@@ -90,9 +90,9 @@
 
 
 <script setup lang="ts">
-import {defineProps, Ref, UnwrapRef} from 'vue'
+import type {Ref, UnwrapRef} from 'vue'
 import AppPage from "~/components/AppPage.vue";
-import {IApiBody, IApiImage} from "~/composable/adminApi/apiDefinitions";
+import type {IApiBody, IApiImage} from "~/composable/adminApi/apiDefinitions";
 import {ApiFetchPage} from "~/composable/adminApi/apiFetch";
 import AppFormDeclicMobility2 from "~/components/AppFormDeclicMobility-2.vue";
 
@@ -170,7 +170,8 @@ const formBodyContent: IApiBody = {
                           <br>Elles seront utilisées pour la mise en place du recrutement des participants à l’initiative « Déclic Mobilité » et à des fins statistiques pour en évaluer les effets en matière de modifications des comportements de mobilité et de l’équipement en moyens de transports individuels motorisés.
                           <br>Elles ne seront pas transmises à des tiers et seront détruites à la fin de l’opération en Décembre 2026.
                         </p>
-  `
+  `,
+                "alignment": "left"
             },
             "id": "",
             "isHidden": false,
