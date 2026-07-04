@@ -1,7 +1,7 @@
 <template>
     <app-project-list :api-endpoint="apiEndpoint" :filter-groups="computedFilterGroups" :tags-as-links="true"
         empty-message="Aucun contenu ne correspond à votre recherche." @play-video="handlePlayVideo"
-        @play-podcast="handlePlayPodcast" @pdf-download="handlePdfDownload" />
+        @play-podcast="handlePlayPodcast" />
 </template>
 
 <script setup lang="ts">
@@ -103,9 +103,5 @@ function handlePlayPodcast(mediaUrl: string, title: string) {
     if (!wasAlreadyOpen) {
         playerIsOpen.value = false
     }
-}
-
-function handlePdfDownload(pdfUrl: string) {
-    window.open(pdfUrl, '_blank')
 }
 </script>
