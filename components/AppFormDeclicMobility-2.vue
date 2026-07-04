@@ -1291,7 +1291,10 @@ const submitForm = async () => {
       const questionForMailAdresse = visibleQuestions.value.find(q => q.id === idOfQuestionForMailAdress)
 
       const mailOfUser = questionForMailAdresse ? responses.value[questionForMailAdresse.id] : undefined
-      const mailToSendValidationMail = (typeof mailOfUser === 'string')? mailOfUser : 'nico+logerror@villa1203.ch'
+      if (!mailOfUser || typeof mailOfUser !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mailOfUser)) {
+          alert("Veuillez renseigner une adresse email valide pour continuer.")
+          return
+      }
 
         const jsonData: {
           value: {
@@ -1300,7 +1303,7 @@ const submitForm = async () => {
           }[],
           mail: string
         } = {
-          mail: mailToSendValidationMail,
+          mail: mailOfUser,
           value: visibleQuestions.value.map((question) => {
             return {
               question: question,
