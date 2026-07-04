@@ -88,7 +88,7 @@ const formattedText = computed(() => {
 .v-app-header-home__signature {
   z-index: 1;
   color: var(--app-color-white);
-  font-size: var(--app-header-title-size);
+  font-size: var(--app-header-home-title-size);
   text-align: center;
   text-wrap: balance;
   margin: 0;
