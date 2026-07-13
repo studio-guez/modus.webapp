@@ -12,7 +12,7 @@ import { ApiFetchProjects } from "~/composable/adminApi/apiFetch"
 import { useSpotifyUrl, useSpotifyTitle, usePodcastPlayerIsOpen, useYoutubeUrl, useYoutubeTitle } from '~/composable/main'
 
 const route = useRoute()
-const slug = computed(() => route.params.slug as string)
+const slug = computed(() => String(Array.isArray(route.params.slug) ? route.params.slug[0] : route.params.slug ?? ''))
 const apiEndpoint = computed(() => `tags/${slug.value}`)
 
 // Media player state

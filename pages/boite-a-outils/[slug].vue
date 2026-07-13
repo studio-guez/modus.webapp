@@ -34,7 +34,7 @@ const {data: pageData} = await useAsyncData(
 // External tools should not have an internal page
 if (pageData.value?.options.isExternalLink) {
     if (pageData.value.options.externalUrl) {
-        await navigateTo(pageData.value.options.externalUrl, {external: true})
+        return navigateTo(pageData.value.options.externalUrl, {external: true})
     } else {
         throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
     }

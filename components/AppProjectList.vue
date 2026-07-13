@@ -238,6 +238,13 @@ const availableTags = computed<IApiTag[]>(() => pageData.value?.options.availabl
 // headerCover starts as the low-res image (rendered on the server) and is upgraded on the client
 const headerCover = ref<string | undefined>(pageData.value?.options.headerImage?.resize.tiny)
 
+watch(pageData, (newData) => {
+  headerCover.value = newData?.options.headerImage?.resize.tiny
+  if (import.meta.client) {
+    lazyLoadHeadImage(newData?.options.headerImage?.url || '')
+  }
+})
+
 // Query params: tags for tag filter (comma-separated for multiple)
 const selectedTags: Ref<UnwrapRef<string[]>> = ref(parseTagsFromQuery(route.query.tags))
 

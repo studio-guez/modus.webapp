@@ -21,10 +21,13 @@ import {ApiFetchPagePowerBIPage} from "~/composable/adminApi/apiFetch";
 
 const route = useRoute()
 
+const slug = computed(() => String(Array.isArray(route.params.slug) ? route.params.slug[0] : route.params.slug ?? ''))
+const powerBiSlug = computed(() => String(Array.isArray(route.params.power_bi_slug) ? route.params.power_bi_slug[0] : route.params.power_bi_slug ?? ''))
+
 const {data: pageData} = await useAsyncData(
-    () => `powerbi-tool-${route.params.slug}-${route.params.power_bi_slug}`,
-    () => ApiFetchPagePowerBIPage(`boite-a-outils/${route.params.slug}/${route.params.power_bi_slug}`),
-    {watch: [() => route.params.slug, () => route.params.power_bi_slug]}
+    () => `powerbi-tool-${slug.value}-${powerBiSlug.value}`,
+    () => ApiFetchPagePowerBIPage(`boite-a-outils/${slug.value}/${powerBiSlug.value}`),
+    {watch: [slug, powerBiSlug]}
 )
 
 </script>
