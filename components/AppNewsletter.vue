@@ -67,10 +67,6 @@ useHead({
             defer: true,
         },
         {
-            src: 'https://newsletter.storage5.infomaniak.com/mcaptcha/altcha.js',
-            defer: true,
-        },
-        {
             src: 'https://newsletter.infomaniak.com/v3/static/webform_index.js?v=1774452332',
             type: 'text/javascript',
         },
