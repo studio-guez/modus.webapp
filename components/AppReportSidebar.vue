@@ -84,7 +84,7 @@ const headings = computed<HeadingItem[]>(() => {
       const h2Regex = /<h2[^>]*>(.*?)<\/h2>/gi
       let match
       while ((match = h2Regex.exec(htmlText)) !== null) {
-        const text = match[1].replace(/<[^>]*>/g, '')
+        const text = match[1]?.replace(/<[^>]*>/g, '') ?? ''
         const id = text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '')
         if (text) {
           result.push({ id, text })
@@ -118,9 +118,11 @@ function handleScroll() {
   const scrollPos = window.scrollY + 100
   
   for (let i = headings.value.length - 1; i >= 0; i--) {
-    const el = document.getElementById(headings.value[i].id)
+    const heading = headings.value[i]
+    if (!heading) continue
+    const el = document.getElementById(heading.id)
     if (el && el.offsetTop <= scrollPos) {
-      activeId.value = headings.value[i].id
+      activeId.value = heading.id
       return
     }
   }

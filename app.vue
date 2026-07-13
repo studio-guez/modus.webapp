@@ -25,12 +25,9 @@ import {
     cookieIsValidate,
     showCookieBanner,
     showMenu,
-    useActualites,
-    useMenus,
     useStateNavBarreMsgMessage
 } from "~/composable/main";
 import AppCookie from "~/components/AppCookie.vue";
-import {ApiFetchMenus, ApiFetchNews} from "~/composable/adminApi/apiFetch";
 import {getCookieBannerValue, setCookieBannerValue} from "~/utils/cookieBannerLocalStorage";
 import {matomo, updateMatomoWithNavigation} from "~/utils/matomo";
 
@@ -41,23 +38,10 @@ if (import.meta.client) {
     })
 }
 
-onMounted(async () => {
+onMounted(() => {
     window.addEventListener('scroll', () => {
         bodyScrollInfo().value = {top: window.scrollY }
     })
-
-    useMenus().value = await ApiFetchMenus()
-
-    // Fetch actualités from site-level endpoint
-    const newsData = await ApiFetchNews()
-    const acts: { title: string; link?: string; color: string }[] = []
-    if (newsData.actualite1title) {
-      acts.push({ title: newsData.actualite1title, link: newsData.actualite1link || undefined, color: newsData.actualite1color || 'teal' })
-    }
-    if (newsData.actualite2title) {
-      acts.push({ title: newsData.actualite2title, link: newsData.actualite2link || undefined, color: newsData.actualite2color || 'sage' })
-    }
-    useActualites().value = acts
 
     if(useRouter().currentRoute.value.path === '/declic-mobilite') useRouter().push('/forms/declic-mobilite')
 })

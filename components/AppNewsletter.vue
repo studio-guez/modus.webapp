@@ -35,7 +35,7 @@
                     data-inf-meta="1"
                     type="email"
                     placeholder="@"
-                    required="required"
+                    required
                     data-inf-error="Merci de renseigner une adresse email"
                 />
 
