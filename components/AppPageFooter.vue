@@ -72,6 +72,7 @@ withDefaults(defineProps<{
 const bodyScrollInfoStore = bodyScrollInfo()
 
 const transformYValue: ComputedRef<number> = computed(() => {
+    if (import.meta.server) return 0
     return getValueToPercent(bodyScrollInfoStore.value.top, document.body.scrollHeight - window.innerHeight)
 })
 </script>

@@ -8,8 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "typecheck": "nuxi typecheck",
-    "build.github.page": "rm -rf ./docs && rm -rf ./.output && npm run generate && cp -r ./.output/public ./docs"
+    "typecheck": "nuxi typecheck"
   },
   "dependencies": {
     "@types/vimeo__player": "^2.18.3",
