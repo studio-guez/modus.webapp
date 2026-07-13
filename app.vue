@@ -3,9 +3,11 @@
 
   <nuxt-page/>
 
-  <div class="v-app__cookie" v-if="!cookieIsValidate().value && showCookieBanner().value">
-      <app-cookie/>
-  </div>
+  <ClientOnly>
+    <div class="v-app__cookie" v-if="!cookieIsValidate().value && showCookieBanner().value">
+        <app-cookie/>
+    </div>
+  </ClientOnly>
 
   <div class="v-app__bottom-bar">
     <app-actualites-bar/>
