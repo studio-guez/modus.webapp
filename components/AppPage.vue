@@ -276,8 +276,7 @@
 
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
-import {
+import type {
     IApiBody,
     IApiPage__subpage
 } from "~/composable/adminApi/apiDefinitions";
@@ -294,7 +293,7 @@ const props = defineProps<{
   headerCover?: string
   header_focus?: string
   bodyContent?: IApiBody
-  headerSize?: 'small'
+  headerSize?: 'small' | 'regular'
   headerType?: 'default' | 'list'
   titleContent?: string
   path?: boolean
