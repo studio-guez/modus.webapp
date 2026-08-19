@@ -4,6 +4,7 @@
     >
         <app-page
             :header-cover="headerCover"
+            :header_focus="headerFocus"
             :header-text="headerText"
             :body-content="bodyContent"
         />
@@ -29,6 +30,7 @@ const {data: pageData} = await useAsyncData(
 )
 
 const headerCover = computed(() => pageData.value?.options.headerImage?.mediaUrl)
+const headerFocus = computed(() => pageData.value?.options.headerImage?.focus)
 const headerText = computed(() => pageData.value?.options.headerTitle)
 const bodyContent = computed(() => pageData.value?.body)
 </script>
