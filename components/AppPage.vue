@@ -101,7 +101,13 @@
 
                 <template v-for="bodyContentItem of segment.items">
 
-                  <template v-if="bodyContentItem.content.type === 'mdheading'">
+                  <template v-if="bodyContentItem.content.type === 'pageIntro'">
+                    <div class="v-app-page__section v-app-page__section--full">
+                      <h1 v-html="bodyContentItem.content.content.text" />
+                    </div>
+                  </template>
+
+                  <template v-else-if="bodyContentItem.content.type === 'mdheading'">
                     <template v-if="bodyContentItem.content.content.level === 'h2'">
                       <div class="v-app-page__section v-app-page__section--full">
                         <h2 v-html="bodyContentItem.content.content.text" />
