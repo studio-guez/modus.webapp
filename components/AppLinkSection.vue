@@ -8,15 +8,18 @@
 
     <h3 v-if="!isCollapsible" style="text-align: left">{{title}}</h3>
 
-    <button v-else
-            class="v-app-link-section__header"
-            type="button"
-            :aria-expanded="isOpen"
-            @click="isOpen = !isOpen"
+    <div v-else
+         class="v-app-link-section__header"
+         role="button"
+         tabindex="0"
+         :aria-expanded="isOpen"
+         @click="isOpen = !isOpen"
+         @keydown.enter.prevent="isOpen = !isOpen"
+         @keydown.space.prevent="isOpen = !isOpen"
     >
-      <span class="v-app-link-section__header__title">{{title}}</span>
+      <h3 style="text-align: left">{{title}}</h3>
       <svg-caret class="v-app-link-section__header__arrow" />
-    </button>
+    </div>
 
     <div class="v-app-link-section__box" v-if="!isCollapsible || isOpen">
       <a class="v-app-link-section__box__item"
@@ -67,29 +70,15 @@ const isOpen = ref(isOpenByDefault.value)
   display: flex;
   align-items: center;
   gap: 1rem;
-  width: 100%;
-  padding: 0;
-  border: none;
-  background: none;
-  font: inherit;
-  color: var(--app-color-main--dark);
-  text-align: left;
   cursor: pointer;
   user-select: none;
-
-  &:hover {
-    color: var(--app-color-main);
-  }
-}
-
-.v-app-link-section__header__title {
-  font-size: inherit;
-  font-weight: 600;
 }
 
 .v-app-link-section__header__arrow {
   flex: 0 0 auto;
+  height: 2.2rem;
   padding-left: 0;
+  color: var(--app-color-black);
   transition: transform .2s ease;
 
   .v-app-link-section--open & {
