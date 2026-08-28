@@ -221,6 +221,8 @@ export interface IApiBody {
         content: {
             content: {
                 title: string,
+                collapsible?: "true" | "false",
+                openbydefault?: "true" | "false",
                 links: {
                     name: "Instagram.com, Genève en selle",
                     url: "https://www.instagram.com/geneve_en_selle/"

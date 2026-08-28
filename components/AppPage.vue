@@ -207,6 +207,8 @@
                       <app-link-section
                               :title="bodyContentItem.content.content.title"
                               :links="bodyContentItem.content.content.links"
+                              :collapsible="bodyContentItem.content.content.collapsible"
+                              :open-by-default="bodyContentItem.content.content.openbydefault"
                       />
                     </div>
                   </template>
