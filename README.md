@@ -1,3 +1,15 @@
+> [!IMPORTANT]
+> **Archived — this repository is read-only.**
+>
+> The code has moved to the **[studio-guez/modus](https://github.com/studio-guez/modus)**
+> monorepo, where it now lives under `website/`. Every commit of this repository was
+> imported there with `git subtree` and is an ancestor of the monorepo's `main`,
+> so the whole history is preserved — nothing here is lost.
+>
+> Open issues and pull requests, and all new work, belong in the monorepo.
+> Everything below describes the old standalone setup and is kept for reference
+> only; the current instructions are in the monorepo's `README.md`.
+
 # Modus Webapp - Nuxt 4 Application
 
 A modern web application built with Nuxt 4, running on Node.js 24 in a Docker environment.
